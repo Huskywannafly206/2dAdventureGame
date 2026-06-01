@@ -256,17 +256,23 @@ public class GameScreen extends ScreenAdapter {
         float playerXp = xp != null ? xp.getXp() : 0f;
         int level = xp != null ? xp.getLevel() : 1;
 
-        // B. Thực hiện chuyển map không đồng bộ bằng postRunnable để tránh lỗi đa luồng trong Ashley
+        // Thực hiện chuyển map không đồng bộ bằng postRunnable để tránh lỗi đa luồng trong Ashley
         com.badlogic.gdx.Gdx.app.postRunnable(() -> {
             // 1. Giải phóng tất cả Entity hiện tại (Box2D bodies của chúng sẽ tự động bị hủy)
             engine.removeAllEntities();
 
-            // 2. Tải và thiết lập map mới
+            // 2. Reset trạng thái bàn phím để tránh Player bị trượt hướng sau khi chuyển map.
+            //    Vì commandState[] trong KeyboardController vẫn ghi nhớ các phím đang giữ,
+            //    nếu không reset thì khi player thả phím, ControllerSystem sẽ nhận lệnh
+            //    "released" và dịch chuyển Player theo hướng ngược lại trong một frame.
+            keyboardController.setActiveState(GameControllerState.class);
+
+            // 3. Tải và thiết lập map mới
             MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr.toUpperCase());
             TiledMap newMap = tiledService.loadMap(targetMapAsset);
             tiledService.setMap(newMap);
 
-            // 3. Khôi phục trạng thái cho Player được tạo mới ở bản đồ tiếp theo
+            // 4. Khôi phục trạng thái cho Player được tạo mới ở bản đồ tiếp theo
             ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
             if (players.size() > 0) {
                 Entity newPlayer = players.first();
@@ -285,14 +291,27 @@ public class GameScreen extends ScreenAdapter {
                     viewModel.updateXpInfo(playerXp, level * 100f, level, false);
                 }
 
-                // 4. Nếu có cấu hình vị trí spawn đích, dịch chuyển Player tới tọa độ đó
+                // 5. Nếu có cấu hình vị trí spawn đích, dịch chuyển Player tới tọa độ đó.
+                //    Tiled dùng hệ tọa độ Y từ trên xuống (y-down), nhưng Box2D dùng Y từ dưới lên (y-up).
+                //    LibGDX tự động flip Y khi tạo entity từ bản đồ, nên targetY cũng cần được flip:
+                //      worldY = (mapHeight_pixels - targetY) * UNIT_SCALE
                 if (targetX != null && targetY != null) {
                     Physic physic = Physic.MAPPER.get(newPlayer);
                     if (physic != null) {
+                        int mapHeightTiles = newMap.getProperties().get("height", 0, Integer.class);
+                        int tileHeightPx  = newMap.getProperties().get("tileheight", 16, Integer.class);
+                        float mapHeightPx = mapHeightTiles * tileHeightPx;
+
                         float worldX = targetX * GdxGame.UNIT_SCALE;
-                        float worldY = targetY * GdxGame.UNIT_SCALE;
+                        float worldY = (mapHeightPx - targetY) * GdxGame.UNIT_SCALE;
                         physic.getBody().setTransform(worldX, worldY, 0f);
                         physic.getPrevPosition().set(worldX, worldY);
+
+                        // Cập nhật Transform để RenderSystem vẽ đúng vị trí ngay lập tức
+                        Transform transform = Transform.MAPPER.get(newPlayer);
+                        if (transform != null) {
+                            transform.getPosition().set(worldX, worldY);
+                        }
                     }
                 }
             }

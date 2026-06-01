@@ -26,8 +26,8 @@
    <properties>
     <property name="sensor" type="bool" value="true"/>
     <property name="targetMap" value="MAP1"/>
-    <property name="targetX" type="float" value="38.115616911"/>
-    <property name="targetY" type="float" value="245.715271786"/>
+    <property name="targetX" type="float" value="25"/>
+    <property name="targetY" type="float" value="214"/>
    </properties>
   </object>
  </objectgroup>

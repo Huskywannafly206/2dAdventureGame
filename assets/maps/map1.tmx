@@ -8,7 +8,7 @@
   </data>
  </layer>
  <objectgroup id="2" name="objects">
-  <object id="2" name="Player" gid="194" x="38.1156" y="245.715" width="32" height="32">
+  <object id="2" name="Player" gid="194" x="25" y="214" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>

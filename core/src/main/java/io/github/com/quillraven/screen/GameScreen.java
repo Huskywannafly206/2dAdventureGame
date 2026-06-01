@@ -128,7 +128,7 @@ public class GameScreen extends ScreenAdapter {
             data = saveService.load();
             if(data != null && data.mapName != null){
                 try{
-                    startMapAsset = MapAsset.valueOf(data.mapName);
+                    startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
                 } catch(IllegalArgumentException e){
                     startMapAsset = MapAsset.MAIN;
                 }
@@ -152,7 +152,7 @@ public class GameScreen extends ScreenAdapter {
 
                 Experience xp = Experience.MAPPER.get(player);
                 if(xp != null){
-                    xp.setXp(data.playerHp);
+                    xp.setXp(data.playerXp);
                     xp.setLevel(data.playerLevel);
                     xp.setXpToNextLevel(data.playerLevel * 100f);
                     viewModel.updateXpInfo(data.playerXp, data.playerLevel*100f, data.playerLevel, false);
@@ -196,11 +196,11 @@ public class GameScreen extends ScreenAdapter {
                 }
 
                // data.mapName = "MAIN"; // currently only main map
-                MapAsset currentAsset = MapAsset.MAIN;
-                if(tiledService.getCurrentMap() != null){
-                    currentAsset = tiledService.getCurrentMap().getProperties().get("MapAsset", MapAsset.class);
-                }
-                data.mapName = currentAsset.name();
+                 MapAsset currentAsset = MapAsset.MAIN;
+                 if(tiledService.getCurrentMap() != null){
+                     currentAsset = tiledService.getCurrentMap().getProperties().get("mapAsset", MapAsset.class);
+                 }
+                 data.mapName = currentAsset.name();
                 saveService.save(data);
             }
         }
@@ -262,7 +262,7 @@ public class GameScreen extends ScreenAdapter {
             engine.removeAllEntities();
 
             // 2. Tải và thiết lập map mới
-            MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr);
+            MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr.toUpperCase());
             TiledMap newMap = tiledService.loadMap(targetMapAsset);
             tiledService.setMap(newMap);
 

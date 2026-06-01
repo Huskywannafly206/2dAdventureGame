@@ -76,11 +76,10 @@ public class CameraSystem extends IteratingSystem {
         mapW = width * tileW * GdxGame.UNIT_SCALE;
         mapH = height * tileH * GdxGame.UNIT_SCALE;
 
-        Entity camEntity = getEntities().first();
-        if (camEntity == null) {
+        if (getEntities().size() == 0) {
             return;
         }
-
+        Entity camEntity = getEntities().first();
         processEntity(camEntity, 0f);
     }
 }

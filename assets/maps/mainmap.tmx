@@ -25,7 +25,7 @@
   <object id="18" name="portal_trigger" x="272.333" y="128.333" width="14.3333" height="15.3333">
    <properties>
     <property name="sensor" type="bool" value="true"/>
-    <property name="targetMap" value="map1"/>
+    <property name="targetMap" value="MAP1"/>
     <property name="targetX" type="float" value="38.115616911"/>
     <property name="targetY" type="float" value="245.715271786"/>
    </properties>

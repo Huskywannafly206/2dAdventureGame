@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.utils.Timer;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.audio.AudioService;
 import io.github.com.group31.component.Animation2D;
@@ -65,31 +66,62 @@ public class TriggerSystem extends IteratingSystem {
     }
 
     /**
-     * Handles trap trigger effects including animation and damage.
-     * Uses targetTiledId from the Trigger component — no more hardcoded ID.
+     * Handles trap trigger: gây 3 damage ngay khi chạm, rồi gây thêm 3 damage mỗi giây
+     * miễn là player vẫn còn đứng trong vùng trap (triggeringEntity != null).
+     * Khi player rời khỏi vùng (endContact → triggeringEntity = null), timer dừng.
      */
     private void trapTrigger(Trigger trigger, Entity triggeringEntity) {
         Entity trapEntity = getByTiledId(trigger.getTargetTiledId());
-        if (trapEntity != null) {
-            // Play trap animation
-            Animation2D animation2D = Animation2D.MAPPER.get(trapEntity);
-            animation2D.setSpeed(1f);
-            animation2D.setPlayMode(Animation.PlayMode.NORMAL);
-            audioService.playSound(SoundAsset.TRAP);
-            // Reset animation after 2.5 s
-            com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-                @Override
-                public void run() {
+        if (trapEntity == null) return;
+
+        // Play trap animation
+        Animation2D animation2D = Animation2D.MAPPER.get(trapEntity);
+        animation2D.setSpeed(1f);
+        animation2D.setPlayMode(Animation.PlayMode.NORMAL);
+        audioService.playSound(SoundAsset.TRAP);
+
+        // Gây damage ngay lập tức
+        applyTrapDamage(triggeringEntity, 3f);
+
+        // Gây damage liên tục mỗi giây khi còn đứng trong vùng
+        // Dùng timer lặp — kiểm tra mỗi lần xem entity có còn trong trigger không
+        // (PhysicSystem.endContact sẽ gọi trigger.setTriggeringEntity(null) khi rời)
+        Timer.schedule(new Timer.Task() {
+            private int ticks = 0;
+
+            @Override
+            public void run() {
+                ticks++;
+                // Dừng sau tối đa 10 giây (đề phòng memory leak)
+                if (ticks > 10) {
+                    cancel();
                     animation2D.setSpeed(0f);
                     animation2D.setType(Animation2D.AnimationType.IDLE);
+                    return;
                 }
-            }, 2.5f);
 
-            // Damage triggering entity
-            Life life = Life.MAPPER.get(triggeringEntity);
-            if (life != null) {
-                life.addLife(-2f);
+                Life life = Life.MAPPER.get(triggeringEntity);
+                if (life == null || life.getLife() <= 0f) {
+                    // Player đã chết, dừng timer
+                    cancel();
+                    return;
+                }
+
+                // Kiểm tra entity có còn trong engine không (tránh NPE nếu bị xóa)
+                applyTrapDamage(triggeringEntity, 3f);
+
+                if (life.getLife() <= 0f) {
+                    cancel();
+                }
             }
+        }, 1f, 1f); // delay 1s, interval 1s
+    }
+
+    private void applyTrapDamage(Entity entity, float damage) {
+        Life life = Life.MAPPER.get(entity);
+        if (life != null && life.getLife() > 0f) {
+            life.addLife(-damage);
+            com.badlogic.gdx.Gdx.app.debug("TriggerSystem", "Trap damage! HP now: " + life.getLife());
         }
     }
 }

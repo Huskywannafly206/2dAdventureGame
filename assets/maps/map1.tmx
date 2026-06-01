@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="32" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="2">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="32" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="3">
  <tileset firstgid="1" source="tileset.tsx"/>
  <tileset firstgid="193" source="objects.tsx"/>
  <layer id="1" name="Tile Layer 1" width="32" height="20">
@@ -7,5 +7,12 @@
    eJyLZGBgiBzFo3gUj+JRPIpHMN42CNwwikcxPTEAmvne3g==
   </data>
  </layer>
- <objectgroup id="2" name="Object Layer 1"/>
+ <objectgroup id="2" name="objects">
+  <object id="2" name="Player" gid="194" x="38.1156" y="245.715" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -27,6 +27,10 @@ public class TiledService {
 
     private TiledMap currentMap;
 
+    public TiledMap getCurrentMap(){
+        return currentMap;
+    }
+
     private Consumer<TiledMap> mapChangeConsumer;
     private BiConsumer<String, MapObject> loadTriggerConsumer;
     private Consumer<TiledMapTileMapObject> loadObjectConsumer;

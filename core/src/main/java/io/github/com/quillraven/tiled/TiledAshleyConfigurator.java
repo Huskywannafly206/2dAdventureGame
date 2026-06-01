@@ -86,7 +86,7 @@ public class TiledAshleyConfigurator {
                 tmpVec2.set(rect.getX(), rect.getY()).scl(GdxGame.UNIT_SCALE),
                 entity);
             int targetId = rectMapObj.getProperties().get("targetId", 0, Integer.class);
-            entity.add(new Trigger(triggerName, targetId));
+            entity.add(new Trigger(triggerName, targetId, rectMapObj));
             entity.add(new Tiled(rectMapObj));
             this.engine.addEntity(entity);
         } else {

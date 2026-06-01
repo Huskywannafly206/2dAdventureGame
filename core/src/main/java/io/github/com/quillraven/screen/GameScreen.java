@@ -1,6 +1,7 @@
 package io.github.com.quillraven.screen;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -16,11 +17,7 @@ import io.github.com.quillraven.GdxGame;
 import io.github.com.quillraven.asset.MapAsset;
 import io.github.com.quillraven.asset.SkinAsset;
 import io.github.com.quillraven.audio.AudioService;
-import io.github.com.quillraven.component.Experience;
-import io.github.com.quillraven.component.Life;
-import io.github.com.quillraven.component.Physic;
-import io.github.com.quillraven.component.Player;
-import io.github.com.quillraven.component.Transform;
+import io.github.com.quillraven.component.*;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import io.github.com.quillraven.input.GameControllerState;
@@ -118,37 +115,53 @@ public class GameScreen extends ScreenAdapter {
         this.tiledService.setLoadObjectConsumer(tiledAshleyConfigurator::onLoadObject);
         this.tiledService.setLoadTileConsumer(tiledAshleyConfigurator::onLoadTile);
 
-        TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
-        this.tiledService.setMap(startMap);
+//        TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
+//        this.tiledService.setMap(startMap);
 
         // Load Game State
+
+        this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
+        MapAsset startMapAsset = MapAsset.MAIN;
         SaveService saveService = game.getSaveService();
-        if (saveService != null && saveService.hasSaveFile()) {
-            SaveData data = saveService.load();
-            if (data != null) {
-                ImmutableArray<com.badlogic.ashley.core.Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
-                if (players.size() > 0) {
-                    com.badlogic.ashley.core.Entity player = players.first();
+        SaveData data = null;
+        if(saveService != null && saveService.hasSaveFile()){
+            data = saveService.load();
+            if(data != null && data.mapName != null){
+                try{
+                    startMapAsset = MapAsset.valueOf(data.mapName);
+                } catch(IllegalArgumentException e){
+                    startMapAsset = MapAsset.MAIN;
+                }
+            }
+        }
 
-                    Life life = Life.MAPPER.get(player);
-                    if (life != null) {
-                        life.setLife(data.playerHp);
-                        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
-                    }
+        TiledMap startMap = this.tiledService.loadMap(startMapAsset);
+        this.tiledService.setMap(startMap);
 
-                    Experience xp = Experience.MAPPER.get(player);
-                    if (xp != null) {
-                        xp.setXp(data.playerXp);
-                        xp.setLevel(data.playerLevel);
-                        xp.setXpToNextLevel(data.playerLevel * 100f);
-                        viewModel.updateXpInfo(data.playerXp, data.playerLevel * 100f, data.playerLevel, false);
-                    }
+        if (data != null) {
+            ImmutableArray<com.badlogic.ashley.core.Entity> players =
+                engine.getEntitiesFor(Family.all(Player.class).get());
+            if(players.size() > 0){
+                com.badlogic.ashley.core.Entity player = players.first();
 
-                    Physic physic = Physic.MAPPER.get(player);
-                    if (physic != null) {
-                        physic.getBody().setTransform(data.playerX, data.playerY, 0f);
-                        physic.getPrevPosition().set(data.playerX, data.playerY);
-                    }
+                Life life = Life.MAPPER.get(player);
+                if(life != null){
+                    life.setLife(data.playerHp);
+                    viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+                }
+
+                Experience xp = Experience.MAPPER.get(player);
+                if(xp != null){
+                    xp.setXp(data.playerHp);
+                    xp.setLevel(data.playerLevel);
+                    xp.setXpToNextLevel(data.playerLevel * 100f);
+                    viewModel.updateXpInfo(data.playerXp, data.playerLevel*100f, data.playerLevel, false);
+                }
+
+                Physic physic = Physic.MAPPER.get(player);
+                if(physic != null){
+                    physic.getBody().setTransform(data.playerX, data.playerY, 0f);
+                    physic.getPrevPosition().set(data.playerX, data.playerY);
                 }
             }
         }
@@ -182,7 +195,12 @@ public class GameScreen extends ScreenAdapter {
                     data.playerY = physic.getBody().getPosition().y;
                 }
 
-                data.mapName = "MAIN"; // currently only main map
+               // data.mapName = "MAIN"; // currently only main map
+                MapAsset currentAsset = MapAsset.MAIN;
+                if(tiledService.getCurrentMap() != null){
+                    currentAsset = tiledService.getCurrentMap().getProperties().get("MapAsset", MapAsset.class);
+                }
+                data.mapName = currentAsset.name();
                 saveService.save(data);
             }
         }
@@ -218,5 +236,66 @@ public class GameScreen extends ScreenAdapter {
         }
         this.physicWorld.dispose();
         this.stage.dispose();
+    }
+
+
+    private void portalTrigger(Trigger trigger, Entity player) {
+        if (trigger.getMapObject() == null) return;
+
+        String targetMapStr = trigger.getMapObject().getProperties().get("targetMap", String.class);
+        if (targetMapStr == null) return;
+
+        Float targetX = trigger.getMapObject().getProperties().get("targetX", Float.class);
+        Float targetY = trigger.getMapObject().getProperties().get("targetY", Float.class);
+
+        // Lưu lại các thông số cốt lõi của player
+        Life life = Life.MAPPER.get(player);
+        float hp = life != null ? life.getLife() : 100f;
+
+        Experience xp = Experience.MAPPER.get(player);
+        float playerXp = xp != null ? xp.getXp() : 0f;
+        int level = xp != null ? xp.getLevel() : 1;
+
+        // B. Thực hiện chuyển map không đồng bộ bằng postRunnable để tránh lỗi đa luồng trong Ashley
+        com.badlogic.gdx.Gdx.app.postRunnable(() -> {
+            // 1. Giải phóng tất cả Entity hiện tại (Box2D bodies của chúng sẽ tự động bị hủy)
+            engine.removeAllEntities();
+
+            // 2. Tải và thiết lập map mới
+            MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr);
+            TiledMap newMap = tiledService.loadMap(targetMapAsset);
+            tiledService.setMap(newMap);
+
+            // 3. Khôi phục trạng thái cho Player được tạo mới ở bản đồ tiếp theo
+            ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
+            if (players.size() > 0) {
+                Entity newPlayer = players.first();
+
+                Life newLife = Life.MAPPER.get(newPlayer);
+                if (newLife != null) {
+                    newLife.setLife(hp);
+                    viewModel.updateLifeInfo(newLife.getMaxLife(), newLife.getLife());
+                }
+
+                Experience newXp = Experience.MAPPER.get(newPlayer);
+                if (newXp != null) {
+                    newXp.setXp(playerXp);
+                    newXp.setLevel(level);
+                    newXp.setXpToNextLevel(level * 100f);
+                    viewModel.updateXpInfo(playerXp, level * 100f, level, false);
+                }
+
+                // 4. Nếu có cấu hình vị trí spawn đích, dịch chuyển Player tới tọa độ đó
+                if (targetX != null && targetY != null) {
+                    Physic physic = Physic.MAPPER.get(newPlayer);
+                    if (physic != null) {
+                        float worldX = targetX * GdxGame.UNIT_SCALE;
+                        float worldY = targetY * GdxGame.UNIT_SCALE;
+                        physic.getBody().setTransform(worldX, worldY, 0f);
+                        physic.getPrevPosition().set(worldX, worldY);
+                    }
+                }
+            }
+        });
     }
 }

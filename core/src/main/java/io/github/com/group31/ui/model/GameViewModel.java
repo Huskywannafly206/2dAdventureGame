@@ -1,5 +1,6 @@
 package io.github.com.group31.ui.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import io.github.com.group31.GdxGame;
 import io.github.com.group31.asset.SoundAsset;
@@ -76,6 +77,7 @@ public class GameViewModel extends ViewModel {
 
     /** Called by LifeSystem when player life reaches 0. */
     public void onPlayerDead() {
+        Gdx.app.debug("GameViewModel", "onPlayerDead() called → firing PLAYER_DEAD event");
         this.propertyChangeSupport.firePropertyChange(PLAYER_DEAD, false, true);
     }
 

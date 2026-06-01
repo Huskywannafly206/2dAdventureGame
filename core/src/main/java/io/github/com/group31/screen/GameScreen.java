@@ -103,6 +103,7 @@ public class GameScreen extends ScreenAdapter {
         this.stage.addActor(new GameView(stage, skin, this.viewModel));
         this.viewModel.onPropertyChange(GameViewModel.PLAYER_DEAD, Boolean.class, isDead -> {
             if (Boolean.TRUE.equals(isDead)) {
+                com.badlogic.gdx.Gdx.app.debug("GameScreen", "PLAYER_DEAD received! Switching to GameOverScreen...");
                 // postRunnable đảm bảo chuyển màn hình xảy ra NGOÀI vòng lặp engine.update()
                 // tránh ConcurrentModificationException từ Ashley khi remove entity trong khi đang iterate
                 com.badlogic.gdx.Gdx.app.postRunnable(() -> this.game.setScreen(GameOverScreen.class));

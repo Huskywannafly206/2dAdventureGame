@@ -85,9 +85,9 @@ public class TriggerSystem extends IteratingSystem {
                 }
             }, 2.5f);
 
-            // Damage triggering entity (environment source → null sourceEntity)
+            // Damage triggering entity
             Life life = Life.MAPPER.get(triggeringEntity);
-            if (life != null && life.getLife() > 2) {
+            if (life != null) {
                 life.addLife(-2f);
             }
         }

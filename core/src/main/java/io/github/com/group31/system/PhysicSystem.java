@@ -137,6 +137,31 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Object userDataA = fixtureA.getBody().getUserData();
+        Fixture fixtureB = contact.getFixtureB();
+        Object userDataB = fixtureB.getBody().getUserData();
+
+        if (!(userDataA instanceof Entity entityA) || !(userDataB instanceof Entity entityB)) {
+            return;
+        }
+
+        playerTriggerEndContact(entityA, fixtureA, entityB, fixtureB);
+    }
+
+    private static void playerTriggerEndContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
+        Trigger trigger = Trigger.MAPPER.get(entityA);
+        boolean isPlayer = Player.MAPPER.get(entityB) != null && !fixtureB.isSensor();
+        if (trigger != null && isPlayer) {
+            trigger.setTriggeringEntity(null);
+            return;
+        }
+
+        trigger = Trigger.MAPPER.get(entityB);
+        isPlayer = Player.MAPPER.get(entityA) != null && !fixtureA.isSensor();
+        if (trigger != null && isPlayer) {
+            trigger.setTriggeringEntity(null);
+        }
     }
 
     @Override

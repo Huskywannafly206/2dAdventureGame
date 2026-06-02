@@ -51,28 +51,28 @@ public class LifeSystem extends IteratingSystem implements EntityListener {
     protected void processEntity(Entity entity, float deltaTime) {
         Life life = Life.MAPPER.get(entity);
 
-        // Bỏ qua entity đã chết (đã có Dead component) - chỉ regenerate nếu còn sống
-        if (!Dead.MAPPER.has(entity)) {
-            if (life.getLife() < life.getMaxLife()) {
-                life.addLife(life.getLifePerSec() * deltaTime);
-                if (Player.MAPPER.has(entity)) {
-                    viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
-                }
-            }
-        }
-
-        // Death detection - chỉ xử lý khi chưa có Dead component
+        // Kiểm tra CHẾT TRƯỚC — trước khi hồi HP.
+        // Nếu hồi HP trước, life=0 sẽ thành 0.004 và death check sẽ không bao giờ trigger!
         if (life.getLife() <= 0f && !Dead.MAPPER.has(entity)) {
             if (Player.MAPPER.has(entity)) {
                 if (!playerDeadFired) {
                     playerDeadFired = true;
                     entity.add(new Dead());
-                    Gdx.app.debug("LifeSystem", "Player died! Firing Game Over event...");
+                    Gdx.app.debug("LifeSystem", "Player died! HP=" + life.getLife() + " → Game Over!");
                     viewModel.onPlayerDead();
                 }
             } else {
                 // Enemy/NPC died
                 entity.add(new Dead());
+            }
+            return; // Không hồi HP cho entity đã chết
+        }
+
+        // Hồi HP — chỉ khi còn sống (life > 0) và chưa đầy
+        if (!Dead.MAPPER.has(entity) && life.getLife() > 0f && life.getLife() < life.getMaxLife()) {
+            life.addLife(life.getLifePerSec() * deltaTime);
+            if (Player.MAPPER.has(entity)) {
+                viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
             }
         }
     }

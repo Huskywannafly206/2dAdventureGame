@@ -9,3 +9,9 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 }
+
+tasks.register('packTextures', JavaExec) {
+  mainClass = 'io.github.com.group31.util.TexturePackerTool'
+  classpath = sourceSets.main.runtimeClasspath
+  workingDir = rootProject.projectDir
+}

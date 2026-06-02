@@ -83,17 +83,12 @@ public class TriggerSystem extends IteratingSystem {
         // Gây damage ngay lập tức
         applyTrapDamage(triggeringEntity, 3f);
 
-        // Gây damage liên tục mỗi giây khi còn đứng trong vùng
-        // Dùng timer lặp — kiểm tra mỗi lần xem entity có còn trong trigger không
-        // (PhysicSystem.endContact sẽ gọi trigger.setTriggeringEntity(null) khi rời)
+        // Gây damage liên tục mỗi giây — dừng khi player rời trap (trigger.getTriggeringEntity() == null)
         Timer.schedule(new Timer.Task() {
-            private int ticks = 0;
-
             @Override
             public void run() {
-                ticks++;
-                // Dừng sau tối đa 10 giây (đề phòng memory leak)
-                if (ticks > 10) {
+                // Player đã rời khỏi vùng trap (endContact đã clear về null)
+                if (trigger.getTriggeringEntity() == null) {
                     cancel();
                     animation2D.setSpeed(0f);
                     animation2D.setType(Animation2D.AnimationType.IDLE);
@@ -102,12 +97,10 @@ public class TriggerSystem extends IteratingSystem {
 
                 Life life = Life.MAPPER.get(triggeringEntity);
                 if (life == null || life.getLife() <= 0f) {
-                    // Player đã chết, dừng timer
                     cancel();
                     return;
                 }
 
-                // Kiểm tra entity có còn trong engine không (tránh NPE nếu bị xóa)
                 applyTrapDamage(triggeringEntity, 3f);
 
                 if (life.getLife() <= 0f) {

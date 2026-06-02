@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -52,6 +54,7 @@ public class TiledAshleyConfigurator {
     private final MapObjects tmpMapObjects;
     private final Vector2 tmpVec2;
     private final AssetService assetService;
+    private TiledMap currentMap;
 
     public TiledAshleyConfigurator(Engine engine, World physicWorld, AssetService assetService) {
         this.engine = engine;
@@ -59,6 +62,10 @@ public class TiledAshleyConfigurator {
         this.tmpMapObjects = new MapObjects();
         this.tmpVec2 = new Vector2();
         this.assetService = assetService;
+    }
+
+    public void setCurrentMap(TiledMap map) {
+        this.currentMap = map;
     }
 
     public void onLoadTile(TiledMapTile tile, float x, float y) {
@@ -72,6 +79,15 @@ public class TiledAshleyConfigurator {
 
     public void onLoadTrigger(String triggerName, MapObject mapObject) {
         if (mapObject instanceof RectangleMapObject rectMapObj) {
+            // Spawn point: tên bắt đầu bằng "spawn_" → tạo Trigger entity đại diện cho điểm spawn (không tạo physics body)
+            if (triggerName.startsWith("spawn_")) {
+                Entity entity = this.engine.createEntity();
+                entity.add(new Trigger(triggerName, 0, rectMapObj));
+                entity.add(new Tiled(rectMapObj));
+                this.engine.addEntity(entity);
+                return;
+            }
+
             Entity entity = this.engine.createEntity();
             Rectangle rect = rectMapObj.getRectangle();
             addEntityTransform(
@@ -313,6 +329,70 @@ public class TiledAshleyConfigurator {
         size.scl(GdxGame.UNIT_SCALE);
 
         entity.add(new Transform(position, z, size, scaling, 0f, sortOffsetY));
+    }
+
+    /**
+     * Tạo một mob entity tại tọa độ thế giới (worldX, worldY) dựa trên tile ID.
+     * Được gọi từ SpawnSystem.
+     *
+     * @param mobTileId ID tile trong tileset của map hiện tại
+     * @param worldX    tọa độ X thế giới (đơn vị game)
+     * @param worldY    tọa độ Y thế giới (đơn vị game)
+     * @return entity mới hoặc null nếu không tìm thấy tile
+     */
+    public Entity spawnMob(int mobTileId, float worldX, float worldY) {
+        if (currentMap == null) {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "spawnMob: currentMap is null");
+            return null;
+        }
+
+        // Tra tile theo local ID trong tileset (firstGid + localId = globalGid)
+        TiledMapTileSets tileSets = currentMap.getTileSets();
+        TiledMapTile tile = tileSets.getTile(mobTileId);
+        if (tile == null) {
+            // Thử tìm qua từng tileset với offset firstGid
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : tileSets) {
+                tile = ts.getTile(ts.getProperties().get("firstgid", 1, Integer.class) + mobTileId - 1);
+                if (tile != null) break;
+            }
+        }
+        if (tile == null) {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator",
+                "spawnMob: cannot find tile with id=" + mobTileId);
+            return null;
+        }
+
+        // Tính kích thước texture của tile
+        TextureRegion textureRegion = getTextureRegion(tile);
+        float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class) * GdxGame.UNIT_SCALE;
+        int z = tile.getProperties().get("z", 1, Integer.class);
+
+        // Kích thước tile theo pixel → chia UNIT_SCALE để ra world units
+        float tileW = textureRegion.getRegionWidth();
+        float tileH = textureRegion.getRegionHeight();
+
+        // Tính lại pixelX/pixelY từ worldX/worldY để dùng addEntityTransform
+        // (addEntityTransform sẽ nhân UNIT_SCALE vào bên trong)
+        float pixelX = worldX / GdxGame.UNIT_SCALE - tileW * 0.5f;
+        float pixelY = worldY / GdxGame.UNIT_SCALE - tileH * 0.5f;
+
+        Entity entity = this.engine.createEntity();
+        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, sortOffsetY, entity);
+
+        BodyType bodyType = getObjectBodyType(tile);
+        addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);
+        addEntityAnimation(tile, entity);
+        addEntityMove(tile, entity);
+        addEntityLife(tile, entity);
+        addEntityAttack(tile, entity);
+        addEntityAi(tile, entity);
+        addEntityExperience(tile, entity);
+        entity.add(new Facing(FacingDirection.DOWN));
+        entity.add(new Fsm(entity));
+        entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+
+        this.engine.addEntity(entity);
+        return entity;
     }
 
 }

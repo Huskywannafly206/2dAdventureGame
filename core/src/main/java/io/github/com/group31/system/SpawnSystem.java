@@ -16,9 +16,9 @@ import io.github.com.group31.tiled.TiledAshleyConfigurator;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * SpawnSystem: mỗi frame kiểm tra các trigger bắt đầu bằng "spawn_".
- * Quản lý trạng thái spawn (timer, danh sách quái sống) cục bộ mà không cần Spawn component.
+/*
+  SpawnSystem: mỗi frame kiểm tra các trigger bắt đầu bằng "spawn_".
+  Quản lý trạng thái spawn (timer, danh sách quái sống) cục bộ mà không cần Spawn component.
  */
 public class SpawnSystem extends IteratingSystem {
 
@@ -29,7 +29,7 @@ public class SpawnSystem extends IteratingSystem {
     private final Vector2 tmpPos = new Vector2();
     private final Map<Entity, SpawnState> spawnStates = new HashMap<>();
 
-    /** Đếm tổng số quái có AI còn sống (chưa chết) trên toàn map. */
+    //Đếm tổng số quái có AI còn sống (chưa chết) trên toàn map
     private ImmutableArray<Entity> livingMobsFamily;
 
     public SpawnSystem(TiledAshleyConfigurator configurator) {

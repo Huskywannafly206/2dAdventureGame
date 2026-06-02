@@ -8,6 +8,9 @@ public enum SoundAsset implements Asset<Sound> {
     LIFE_REG("life_reg.wav"),
     TRAP("trap.wav"),
     SWING("swing.wav"),
+    HEAL("heal.wav"),
+    COIN("coin.wav"),
+    PICKUP("pickup.wav"),
     ;
 
     private final AssetDescriptor<Sound> descriptor;

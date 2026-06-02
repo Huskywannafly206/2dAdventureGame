@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Item;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
 
@@ -118,6 +119,7 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
         }
 
         playerTriggerContact(entityA, fixtureA, entityB, fixtureB);
+        playerItemContact(entityA, fixtureA, entityB, fixtureB);
     }
 
     private static void playerTriggerContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
@@ -161,6 +163,26 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
         isPlayer = Player.MAPPER.get(entityA) != null && !fixtureA.isSensor();
         if (trigger != null && isPlayer) {
             trigger.setTriggeringEntity(null);
+        }
+    }
+
+    /**
+     * Khi Player chạm vào Item (sensor), đánh dấu item để ItemSystem xử lý nhặt đồ.
+     * Item entity có body dạng sensor (isSensor=true) nên không chặn chuyển động của Player.
+     */
+    private static void playerItemContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
+        // Kiểm tra cặp (itemEntity + playerEntity)
+        Item item = Item.MAPPER.get(entityA);
+        boolean isPlayer = Player.MAPPER.get(entityB) != null && !fixtureB.isSensor();
+        if (item != null && isPlayer && item.getCollectedBy() == null) {
+            item.setCollectedBy(entityB);
+            return;
+        }
+
+        item = Item.MAPPER.get(entityB);
+        isPlayer = Player.MAPPER.get(entityA) != null && !fixtureA.isSensor();
+        if (item != null && isPlayer && item.getCollectedBy() == null) {
+            item.setCollectedBy(entityA);
         }
     }
 

@@ -45,6 +45,8 @@ import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
+import io.github.com.group31.component.Inventory;
+import io.github.com.group31.component.Item;
 
 public class TiledAshleyConfigurator {
     private static final Vector2 DEFAULT_PHYSIC_SCALING = new Vector2(1f, 1f);
@@ -127,6 +129,19 @@ public class TiledAshleyConfigurator {
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
             sortOffsetY,
             entity);
+
+        // ── Rẽ nhánh riêng cho Item tile (không cần Fsm / Facing / Move / AI) ──
+        String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
+        if (itemTypeStr != null && !itemTypeStr.isBlank()) {
+            BodyType bodyType = BodyType.StaticBody; // item không di chuyển
+            addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);
+            addEntityItem(tile, entity);
+            entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+            entity.add(new Tiled(tileMapObject));
+            this.engine.addEntity(entity);
+            return;
+        }
+
         BodyType bodyType = getObjectBodyType(tile);
         addEntityPhysic(
             tile.getObjects(),
@@ -205,7 +220,33 @@ public class TiledAshleyConfigurator {
         if ("Player".equals(tileMapObject.getName())) {
             entity.add(new Player());
             entity.add(new Experience(0f, 1, 100f));
+            entity.add(new Inventory());
         }
+    }
+
+    /**
+     * Nếu tile có property "itemType", tạo và gắn component Item tương ứng.
+     * Item entity sử dụng sensor fixture nên không cần các component AI, Move, Life.
+     */
+    private void addEntityItem(TiledMapTile tile, Entity entity) {
+        String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
+        if (itemTypeStr == null || itemTypeStr.isBlank()) return;
+
+        Item.Type type;
+        try {
+            type = Item.Type.valueOf(itemTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Unknown itemType: " + itemTypeStr);
+            return;
+        }
+
+        SoundAsset sound = switch (type) {
+            case COIN          -> SoundAsset.COIN;
+            case POTION_HEALTH -> SoundAsset.PICKUP;
+            case KEY           -> SoundAsset.PICKUP;
+        };
+
+        entity.add(new Item(type, 1f, sound));
     }
 
     private void addEntityLife(TiledMapTile tile, Entity entity) {

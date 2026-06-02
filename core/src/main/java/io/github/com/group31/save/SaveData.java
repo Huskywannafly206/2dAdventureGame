@@ -7,6 +7,9 @@ public class SaveData {
     public float playerXp;
     public int playerLevel;
     public String mapName;
+    public int playerPotions;
+    public int playerCoins;
+    public int playerKeys;
 
     public SaveData() {
         // Default constructor for libGDX JSON

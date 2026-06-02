@@ -12,14 +12,17 @@ public class GameViewModel extends ViewModel {
     public static final String LIFE_POINTS = "lifePoints";
     public static final String MAX_LIFE = "maxLife";
     public static final String PLAYER_DAMAGE = "playerDamage";
+    public static final String FLOATING_TEXT = "floatingText";
     public static final String PLAYER_DEAD = "playerDead";
     public static final String XP_CHANGED = "xpChanged";
     public static final String LEVEL_CHANGED = "levelChanged";
+    public static final String INVENTORY_CHANGED = "inventoryChanged";
 
     private final AudioService audioService;
     private int lifePoints;
     private int maxLife;
     private Map.Entry<Vector2, Integer> playerDamage;
+    private Map.Entry<Vector2, String> floatingText;
     private final Vector2 tmpVec2;
 
     // XP / Level tracking
@@ -27,16 +30,25 @@ public class GameViewModel extends ViewModel {
     private float xpToNextLevel;
     private int level;
 
+    // Inventory tracking
+    private int potions;
+    private int coins;
+    private int keys;
+
     public GameViewModel(GdxGame game) {
         super(game);
         this.audioService = game.getAudioService();
         this.lifePoints = 0;
         this.maxLife = 0;
         this.playerDamage = null;
+        this.floatingText = null;
         this.tmpVec2 = new Vector2();
         this.xp = 0f;
         this.xpToNextLevel = 100f;
         this.level = 1;
+        this.potions = 0;
+        this.coins = 0;
+        this.keys = 0;
     }
 
     public void setMaxLife(int maxLife) {
@@ -73,6 +85,35 @@ public class GameViewModel extends ViewModel {
         Vector2 position = new Vector2(x, y);
         this.playerDamage = Map.entry(position, amount);
         this.propertyChangeSupport.firePropertyChange(PLAYER_DAMAGE, null, this.playerDamage);
+    }
+
+    /**
+     * Hiển thị chữ nổi bay tại vị trí game world (dùng cho +HP, tên item, v.v.)
+     * @param text  Nội dung chữ nổi (hỗ trợ markup của TypingLabel).
+     * @param x     Toạ độ X trong game world.
+     * @param y     Toạ độ Y trong game world.
+     */
+    public void showFloatingText(String text, float x, float y) {
+        Vector2 position = new Vector2(x, y);
+        this.floatingText = Map.entry(position, text);
+        this.propertyChangeSupport.firePropertyChange(FLOATING_TEXT, null, this.floatingText);
+    }
+
+    // ── Inventory ────────────────────────────────────────────────────────────
+
+    public int getPotions() { return potions; }
+    public int getCoins()   { return coins; }
+    public int getKeys()    { return keys; }
+
+    /**
+     * Cập nhật số lượng item trong túi đồ và thông báo cho View.
+     */
+    public void updateInventory(int potions, int coins, int keys) {
+        this.potions = potions;
+        this.coins   = coins;
+        this.keys    = keys;
+        // Gửi ba số dưới dạng mảng int[] để View tự parse
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys});
     }
 
     /** Called by LifeSystem when player life reaches 0. */

@@ -54,6 +54,7 @@ public class AnimationSystem extends IteratingSystem {
 
     /**
      * Updates animation based on direction and type, using cached animations.
+     * Fallback chain: requested → DEAD → DAMAGED → IDLE
      */
     private void updateAnimation(Animation2D animation2D, FacingDirection direction) {
         AtlasAsset atlasAsset = animation2D.getAtlasAsset();
@@ -62,15 +63,33 @@ public class AnimationSystem extends IteratingSystem {
         CacheKey cacheKey = new CacheKey(atlasAsset, atlasKey, type, direction);
         Animation<TextureRegion> animation = animationCache.computeIfAbsent(cacheKey, key -> {
             TextureAtlas textureAtlas = this.assetService.get(atlasAsset);
-            String combinedKey = atlasKey + "/" + type.getAtlasKey() + "_" + direction.getAtlasKey();
-            Array<AtlasRegion> regions = textureAtlas.findRegions(combinedKey);
+            String dirKey = direction.getAtlasKey();
+
+            Array<AtlasRegion> regions = textureAtlas.findRegions(
+                atlasKey + "/" + type.getAtlasKey() + "_" + dirKey);
+
+            // Fallback 1: DEAD → DAMAGED
             if (regions.isEmpty() && type == Animation2D.AnimationType.DEAD) {
-                // Fallback: use DAMAGED animation if DEAD atlas frames are not available
-                String fallbackKey = atlasKey + "/" + Animation2D.AnimationType.DAMAGED.getAtlasKey() + "_" + direction.getAtlasKey();
-                regions = textureAtlas.findRegions(fallbackKey);
+                regions = textureAtlas.findRegions(
+                    atlasKey + "/" + Animation2D.AnimationType.DAMAGED.getAtlasKey() + "_" + dirKey);
             }
+
+            // Fallback 2: DAMAGED (or any missing) → IDLE
             if (regions.isEmpty()) {
-                throw new GdxRuntimeException("No regions found for " + key);
+                regions = textureAtlas.findRegions(
+                    atlasKey + "/" + Animation2D.AnimationType.IDLE.getAtlasKey() + "_" + dirKey);
+            }
+
+            // Fallback 3: try DOWN direction if current direction also missing
+            if (regions.isEmpty()) {
+                regions = textureAtlas.findRegions(
+                    atlasKey + "/" + Animation2D.AnimationType.IDLE.getAtlasKey() + "_"
+                    + FacingDirection.DOWN.getAtlasKey());
+            }
+
+            if (regions.isEmpty()) {
+                throw new GdxRuntimeException("No regions found for " + key
+                    + " (and all fallbacks also failed)");
             }
             return new Animation<>(FRAME_DURATION, regions);
         });

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="8" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="11" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -158,6 +158,45 @@
     </properties>
    </object>
    <object id="7" name="attack_sensor_up" x="4.74426" y="1.24537" width="23.4248" height="11.5641">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="11" type="Item">
+  <properties>
+   <property name="itemType" value="POTION_HEALTH"/>
+  </properties>
+  <image source="objects/potion_health.png" width="9" height="11"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="9" height="11">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="12" type="Item">
+  <properties>
+   <property name="itemType" value="COIN"/>
+  </properties>
+  <image source="objects/coin.png" width="7" height="7"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="7" height="7">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="13" type="Item">
+  <properties>
+   <property name="itemType" value="KEY"/>
+  </properties>
+  <image source="objects/key.png" width="12" height="8"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="12" height="8">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>

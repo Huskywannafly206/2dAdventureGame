@@ -18,6 +18,8 @@ import io.github.com.group31.asset.MapAsset;
 import io.github.com.group31.asset.SkinAsset;
 import io.github.com.group31.audio.AudioService;
 import io.github.com.group31.component.*;
+import io.github.com.group31.component.Inventory;
+import io.github.com.group31.component.Item;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import io.github.com.group31.input.GameControllerState;
@@ -33,6 +35,7 @@ import io.github.com.group31.system.DamagedSystem;
 import io.github.com.group31.system.DeadSystem;
 import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
+import io.github.com.group31.system.ItemSystem;
 import io.github.com.group31.system.LifeSystem;
 import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
@@ -87,13 +90,14 @@ public class GameScreen extends ScreenAdapter {
         // and this component is removed in the DamagedSystem.
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
+        this.engine.addSystem(new ItemSystem(audioService, viewModel));
         this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new DeadSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
-        this.engine.addSystem(new ControllerSystem(game));
+        this.engine.addSystem(new ControllerSystem(game, audioService, viewModel));
     }
 
     @Override
@@ -101,7 +105,7 @@ public class GameScreen extends ScreenAdapter {
         this.game.setInputProcessors(stage, keyboardController);
         keyboardController.setActiveState(GameControllerState.class);
 
-        this.stage.addActor(new GameView(stage, skin, this.viewModel));
+        this.stage.addActor(new GameView(stage, skin, this.viewModel, this.game.getAssetService()));
         this.viewModel.onPropertyChange(GameViewModel.PLAYER_DEAD, Boolean.class, isDead -> {
             if (Boolean.TRUE.equals(isDead)) {
                 com.badlogic.gdx.Gdx.app.debug("GameScreen", "PLAYER_DEAD received! Switching to GameOverScreen...");
@@ -169,6 +173,15 @@ public class GameScreen extends ScreenAdapter {
                     physic.getBody().setTransform(data.playerX, data.playerY, 0f);
                     physic.getPrevPosition().set(data.playerX, data.playerY);
                 }
+
+                // Khôi phục Inventory từ file lưu
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    inventory.setItemCount(Item.Type.POTION_HEALTH, data.playerPotions);
+                    inventory.setItemCount(Item.Type.COIN,          data.playerCoins);
+                    inventory.setItemCount(Item.Type.KEY,           data.playerKeys);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys);
+                }
             }
         }
     }
@@ -211,6 +224,15 @@ public class GameScreen extends ScreenAdapter {
                         currentAsset = tiledService.getCurrentMap().getProperties().get("mapAsset", MapAsset.class);
                     }
                     data.mapName = currentAsset.name();
+
+                    // Lưu trạng thái Inventory
+                    Inventory inventory = Inventory.MAPPER.get(player);
+                    if (inventory != null) {
+                        data.playerPotions = inventory.getItemCount(Item.Type.POTION_HEALTH);
+                        data.playerCoins   = inventory.getItemCount(Item.Type.COIN);
+                        data.playerKeys    = inventory.getItemCount(Item.Type.KEY);
+                    }
+
                     saveService.save(data);
                 }
             }

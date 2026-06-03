@@ -40,6 +40,9 @@
   </objectgroup>
  </tile>
  <tile id="2" type="Prop">
+  <properties>
+   <property name="sortOffsetY" type="int" value="-82"/>
+  </properties>
   <image source="objects/house.png" width="80" height="112"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="7" y="82" width="67" height="26"/>
@@ -52,6 +55,9 @@
   </objectgroup>
  </tile>
  <tile id="5" type="Prop">
+  <properties>
+   <property name="sortOffsetY" type="int" value="-54"/>
+  </properties>
   <image source="objects/oak_tree.png" width="41" height="63"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="13" y="54">

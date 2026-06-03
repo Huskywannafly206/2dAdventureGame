@@ -125,13 +125,13 @@ public class GameScreen extends ScreenAdapter {
         this.tiledService.setLoadObjectConsumer(tiledAshleyConfigurator::onLoadObject);
         this.tiledService.setLoadTileConsumer(tiledAshleyConfigurator::onLoadTile);
 
-//        TiledMap startMap = this.tiledService.loadMap(MapAsset.MAIN);
+//        TiledMap startMap = this.tiledService.loadMap(MapAsset.ICEMAP1);
 //        this.tiledService.setMap(startMap);
 
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
-        MapAsset startMapAsset = MapAsset.MAIN;
+        MapAsset startMapAsset = MapAsset.ICEMAP1;
         SaveService saveService = game.getSaveService();
         SaveData data = null;
         if(saveService != null && saveService.hasSaveFile()){
@@ -140,7 +140,7 @@ public class GameScreen extends ScreenAdapter {
                 try{
                     startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
                 } catch(IllegalArgumentException e){
-                    startMapAsset = MapAsset.MAIN;
+                    startMapAsset = MapAsset.ICEMAP1;
                 }
             }
         }
@@ -219,7 +219,7 @@ public class GameScreen extends ScreenAdapter {
                         data.playerY = physic.getBody().getPosition().y;
                     }
 
-                    MapAsset currentAsset = MapAsset.MAIN;
+                    MapAsset currentAsset = MapAsset.ICEMAP1;
                     if (tiledService.getCurrentMap() != null) {
                         currentAsset = tiledService.getCurrentMap().getProperties().get("mapAsset", MapAsset.class);
                     }

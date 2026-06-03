@@ -6,8 +6,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 public enum MapAsset implements Asset<TiledMap> {
-    MAIN("mainmap.tmx"),
-    MAP1("map1.tmx");
+    ICEMAP1("ice_map.tmx"),
+    ICEMAP2("ice_map2.tmx"),
+    ICEMAP3("ice_map3.tmx"),
+    DUNGEONMAP1("dungeon_map.tmx"),
+    DUNGEONMAP2("dungeon_map2.tmx"),
+    DUNGEONMAP3("dungeon_map3.tmx");
+
 
     private final AssetDescriptor<TiledMap> descriptor;
 

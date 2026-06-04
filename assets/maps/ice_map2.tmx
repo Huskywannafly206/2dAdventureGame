@@ -75,14 +75,6 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="objects">
-  <object id="4" name="Player" gid="3296" x="416" y="252" width="32" height="32">
-   <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
-   </properties>
-  </object>
- </objectgroup>
  <layer id="4" name="back" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,2685,0,2688,0,0,0,0,0,0,0,0,2874,2874,2874,0,0,0,0,0,0,0,0,0,0,0,
@@ -155,6 +147,14 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="10" name="objects">
+  <object id="4" name="Player" gid="3296" x="416" y="252" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="8" name="for1" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

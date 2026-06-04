@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="1">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="5">
  <tileset firstgid="1" source="fields.tsx"/>
  <tileset firstgid="15" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="115" source="TilesetHouse.tsx"/>
  <tileset firstgid="874" source="TilesetReliefDetail.tsx"/>
  <tileset firstgid="1018" source="Combined3.tsx"/>
+ <tileset firstgid="1130" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
@@ -29,6 +30,18 @@
 93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93
 </data>
  </layer>
+ <objectgroup id="12" name="trigger">
+  <object id="1" name="portal_trigger" x="192.182" y="224.182" width="15.8182" height="8.90909">
+   <properties>
+    <property name="targetMap" value="DUNGEONMAP2"/>
+    <property name="targetX" type="float" value="360.181818182"/>
+    <property name="targetY" type="float" value="152"/>
+   </properties>
+  </object>
+  <object id="3" x="199.818" y="250">
+   <point/>
+  </object>
+ </objectgroup>
  <layer id="7" name="floor2" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -77,6 +90,14 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,57,57,57,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="13" name="player">
+  <object id="4" name="Player" gid="1131" x="198.182" y="266.182" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="10" name="back2" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

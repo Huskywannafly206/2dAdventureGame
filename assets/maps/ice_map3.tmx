@@ -86,15 +86,7 @@
    <properties>
     <property name="targetMap" value="ICEMAP2"/>
     <property name="targetX" type="float" value="277.333666667"/>
-    <property name="targetY" type="float" value="75.0"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup id="8" name="objects">
-  <object id="3" name="Player" gid="2157" x="249.333" y="305.333" width="32" height="32">
-   <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
+    <property name="targetY" type="float" value="75"/>
    </properties>
   </object>
  </objectgroup>
@@ -146,6 +138,14 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="8" name="objects">
+  <object id="3" name="Player" gid="2157" x="249.333" y="305.333" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="6" name="fore1" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

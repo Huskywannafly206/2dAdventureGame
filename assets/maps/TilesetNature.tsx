@@ -3,7 +3,7 @@
  <image source="TilesetNature.png" width="384" height="336"/>
  <tile id="8">
   <objectgroup draworder="index" id="3">
-   <object id="7" x="0" y="11.4545" width="17.5455" height="6.72727"/>
+   <object id="8" x="0.125" y="12.5" width="15.625" height="3.5"/>
   </objectgroup>
  </tile>
  <tile id="9">
@@ -29,7 +29,6 @@
  <tile id="13">
   <objectgroup draworder="index" id="2">
    <object id="1" x="0.181818" y="14.2727" width="15.7273" height="2.09091"/>
-   <object id="2" x="15.9091" y="16.3636"/>
   </objectgroup>
  </tile>
  <tile id="28">

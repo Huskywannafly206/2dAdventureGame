@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="7" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -49,7 +49,7 @@
   </objectgroup>
  </tile>
  <tile id="4" type="Prop">
-  <image source="objects/chest.png" width="16" height="16"/>
+  <image source="objects/chest.png" width="32" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="4" width="16" height="10"/>
   </objectgroup>
@@ -76,7 +76,7 @@
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="bodyType" propertytype="BodyType" value="StaticBody"/>
+   <property name="bodyType" value="StaticBody"/>
    <property name="life" type="int" value="99999"/>
    <property name="lifeReg" type="float" value="9999"/>
   </properties>
@@ -174,6 +174,21 @@
    <property name="bodyType" value="StaticBody"/>
   </properties>
   <image source="objects/monk.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="14" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
+   <property name="npcName" value="Fighter White"/>
+  </properties>
+  <image source="objects/egg_girl.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="11" y="18" width="9" height="5">
     <ellipse/>

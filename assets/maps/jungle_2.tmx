@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="6">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="12">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
+ <tileset firstgid="817" source="objects.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJzjZGRg4ETCGxkYGDZB8UkGVDlq4+NA80/QwZ6hirnppIcQ/kqF+KGGGfQwczDZR07czga6cQ4Qz8XiVmqnDVhZsZkO4UKPsuILAyKc7gLZ94D4Pgn2oYcvvrggFeNKezA7NiFhcu3E597ZaHagY2Q9ALufMBw=
   </data>
  </layer>
+ <objectgroup id="5" name="trigger">
+  <object id="6" name="portal_trigger" x="64.2968" y="0" width="62.8991" height="14.9094">
+   <properties>
+    <property name="targetMap" value="JUNGLEMAP1"/>
+    <property name="targetX" type="float" value="95.513373598"/>
+    <property name="targetY" type="float" value="211.993097498"/>
+   </properties>
+  </object>
+  <object id="7" x="95.9793" y="34.478">
+   <point/>
+  </object>
+  <object id="10" name="portal_trigger" x="1.39776" y="223.641" width="220.846" height="15.3753">
+   <properties>
+    <property name="targetMap" value="JUNGLEMAP3"/>
+    <property name="targetX" type="float" value="167.5"/>
+    <property name="targetY" type="float" value="37"/>
+   </properties>
+  </object>
+  <object id="11" x="160" y="208.732">
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="3" name="Object Layer 1">
   <object id="3" gid="816" x="63.5256" y="211.345" width="32" height="32"/>
   <object id="4" gid="816" x="346.402" y="135.555" width="32" height="32"/>
   <object id="5" gid="816" x="201.761" y="56.0297" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="objects">
+  <object id="9" name="Player" gid="818" x="80.9111" y="47.6825" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="2" name="obstacle" width="27" height="15">
   <data encoding="base64" compression="zlib">

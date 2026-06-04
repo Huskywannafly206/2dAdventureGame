@@ -12,10 +12,10 @@ public enum MapAsset implements Asset<TiledMap> {
     DUNGEONMAP1("dungeon_map.tmx"),
     DUNGEONMAP2("dungeon_map2.tmx"),
     DUNGEONMAP3("dungeon_map3.tmx"),
-    JUNGLEMAP1("jungle_map.tmx"),
-    JUNGLEMAP2("jungle_map2.tmx"),
-    JUNGLEMAP3("jungle_map3.tmx"),
-    VILLAGE("village_map.tmx");
+    JUNGLEMAP1("jungle.tmx"),
+    JUNGLEMAP2("jungle_2.tmx"),
+    JUNGLEMAP3("jungle_3.tmx"),
+    VILLAGE("village.tmx");
 
     private final AssetDescriptor<TiledMap> descriptor;
 

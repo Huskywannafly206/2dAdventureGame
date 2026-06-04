@@ -140,6 +140,13 @@
     <property name="targetY" type="float" value="276"/>
    </properties>
   </object>
+  <object id="6" name="portal_trigger" x="414" y="304.667" width="38.6667" height="14">
+   <properties>
+    <property name="targetMap" value="VILLAGE"/>
+    <property name="targetX" type="float" value="562.667"/>
+    <property name="targetY" type="float" value="140.667"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="objects">
   <object id="1" name="Player" gid="2889" x="17.3333" y="176.667" width="32" height="32">

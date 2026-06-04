@@ -1,35 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="5">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
- <tileset firstgid="813" source="object1.tsx"/>
- <tileset firstgid="820" source="objects.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJy1VDsWgCAMiyP3H9VDKIdAL+SsPh/vdegHsB2yQGlIUkgTkAwUAMeDE/z+9qzvAlbhzCiKwpWduTQ+yQtvvl6eq7Ney3YJyE9CVH4cqF7OrxYPrZoZn38eeVk19f1R3qjc6rxQ3tbcXh0VLd5RDdyc9s665l127stpt/7R0b4R9/2DG5U+R5c=
   </data>
  </layer>
- <objectgroup id="5" name="trigger">
-  <object id="1" name="portal_trigger" x="64" y="0" width="218.5" height="15">
-   <properties>
-    <property name="targetMap" value="JUNGLEMAP2"/>
-    <property name="targetX" type="float" value="160"/>
-    <property name="targetY" type="float" value="208.731665229"/>
-   </properties>
-  </object>
-  <object id="2" x="167.5" y="37">
-   <point/>
-  </object>
- </objectgroup>
- <objectgroup id="4" name="objects">
-  <object id="4" name="Player" gid="821" x="151.5" y="53.5" width="32" height="32">
-   <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
-   </properties>
-  </object>
- </objectgroup>
  <layer id="2" name="obstacle" width="27" height="15">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJytlElOAzEQRS1bDCFwAAYpcBvgDMAZgB0gMSQ7RgkI7AAJBTFcgeEOcAWGNWNgx7PaFoXliLSbLz3ZHXdVpb7tVirTolaFNEr8GIxH8nQYpTrhlbU32IZmgXoTxE7CFNzCHbzDB/RTZwC6oNtk75dNeq1pcs7ALDzCE5TI1+NyPvM8yHwoqLHK72uwntjnCXGncObil3Tmo+3R1nzRP34ewCEcFfD0ktgr2IUd56Pt0e+d9DNFK+SswoL4j7IPK793MT/zqE6+PdgStWQfoX/LBc++1TE55mBe/+4j9M/6W/+Hehvk2BR5Gjrun78XqWpGzluoiqsl70WKyn+ct0ZQ+57nh5y9yZhW563m1s8ZL9z8k/ErZ61YTEXsi9W+G68Zb9y8l3f6THbn25WPsZJnrOa+V600zNqIye58u/IxoXwv334wRds=
   </data>

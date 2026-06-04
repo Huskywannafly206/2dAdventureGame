@@ -5,7 +5,7 @@
   <image source="objects/oak_tree.png" width="41" height="63"/>
  </tile>
  <tile id="1">
-  <image source="../../Ninja Adventure - Asset Pack/Items/Treasure/SilverKey.png" width="12" height="8"/>
+  <image source="objects/SilverKey.png" width="12" height="8"/>
  </tile>
  <tile id="3">
   <image source="objects/training_dummy.png" width="32" height="32"/>

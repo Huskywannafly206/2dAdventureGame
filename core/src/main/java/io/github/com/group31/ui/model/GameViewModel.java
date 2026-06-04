@@ -17,6 +17,7 @@ public class GameViewModel extends ViewModel {
     public static final String XP_CHANGED = "xpChanged";
     public static final String LEVEL_CHANGED = "levelChanged";
     public static final String INVENTORY_CHANGED = "inventoryChanged";
+    public static final String DIALOGUE_CHANGED = "dialogueChanged";
 
     private final AudioService audioService;
     private int lifePoints;
@@ -34,6 +35,8 @@ public class GameViewModel extends ViewModel {
     private int potions;
     private int coins;
     private int keys;
+
+    private String[] activeDialogue = null;
 
     public GameViewModel(GdxGame game) {
         super(game);
@@ -152,5 +155,21 @@ public class GameViewModel extends ViewModel {
         tmpVec2.set(position);
         game.getViewport().project(tmpVec2);
         return tmpVec2;
+    }
+
+    public void showDialogue(String npcName, String line) {
+        String[] prev = this.activeDialogue;
+        this.activeDialogue = new String[]{npcName, line};
+        this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, this.activeDialogue);
+    }
+
+    public void hideDialogue() {
+        String[] prev = this.activeDialogue;
+        this.activeDialogue = null;
+        this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, null);
+    }
+
+    public String[] getActiveDialogue() {
+        return activeDialogue;
     }
 }

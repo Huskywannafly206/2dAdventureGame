@@ -7,5 +7,6 @@ public enum Command {
     UP,
     SELECT,
     CANCEL,
-    USE_ITEM
+    USE_ITEM,
+    INTERACT
 }

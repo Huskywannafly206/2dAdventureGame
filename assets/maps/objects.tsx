@@ -128,4 +128,56 @@
    </object>
   </objectgroup>
  </tile>
+ <tile id="10" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+  </properties>
+  <image source="objects/old_man.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="11" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+  </properties>
+  <image source="objects/villager.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="12" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+  </properties>
+  <image source="objects/woman.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="13" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+  </properties>
+  <image source="objects/monk.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
 </tileset>

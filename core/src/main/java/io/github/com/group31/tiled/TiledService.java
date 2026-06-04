@@ -167,13 +167,14 @@ public class TiledService {
 
         for (MapObject mapObject : triggerLayer.getObjects()) {
             if (mapObject.getName() == null || mapObject.getName().isBlank()) {
-                throw new GdxRuntimeException("Trigger must have a name: " + mapObject);
+                com.badlogic.gdx.Gdx.app.error("TiledService", "Trigger must have a name, skipping: " + mapObject);
+                continue;
             }
 
             if (mapObject instanceof RectangleMapObject rectMapObj) {
                 loadTriggerConsumer.accept(mapObject.getName(), rectMapObj);
             } else {
-                throw new GdxRuntimeException("Unsupported trigger: " + mapObject.getClass().getSimpleName());
+                com.badlogic.gdx.Gdx.app.error("TiledService", "Unsupported trigger type (must be Rectangle), skipping: " + mapObject.getClass().getSimpleName() + " (name=" + mapObject.getName() + ")");
             }
         }
     }

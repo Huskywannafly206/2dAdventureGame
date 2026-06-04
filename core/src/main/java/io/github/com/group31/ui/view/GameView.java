@@ -20,6 +20,7 @@ import com.github.tommyettinger.textra.TypingLabel;
 import io.github.com.group31.asset.AssetService;
 import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
+import io.github.com.group31.ui.view.DialogueBox;
 
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class GameView extends View<GameViewModel> {
     private final HorizontalGroup lifeGroup;
     private ProgressBar xpBar;
     private Label levelLabel;
+    private final DialogueBox dialogueBox;
 
     // Inventory HUD elements (top-right)
     private Image potionImage;
@@ -43,6 +45,7 @@ public class GameView extends View<GameViewModel> {
         super(stage, skin, viewModel);
         this.assetService = assetService;
 
+        this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
         updateLife(viewModel.getLifePoints());
         updateXp(viewModel.getXp());
@@ -60,6 +63,18 @@ public class GameView extends View<GameViewModel> {
         viewModel.onPropertyChange(GameViewModel.INVENTORY_CHANGED, int[].class, counts -> {
             updateInventoryLabels(counts[0], counts[1], counts[2]);
         });
+        viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
+    }
+
+    private void updateDialogue(String[] data) {
+        if (data != null) {
+            if (dialogueBox.getParent() == null) {
+                stage.addActor(dialogueBox);
+            }
+            dialogueBox.show(data[0], data[1]);
+        } else {
+            dialogueBox.remove();
+        }
     }
 
     @Override

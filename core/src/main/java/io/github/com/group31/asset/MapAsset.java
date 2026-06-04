@@ -11,8 +11,11 @@ public enum MapAsset implements Asset<TiledMap> {
     ICEMAP3("ice_map3.tmx"),
     DUNGEONMAP1("dungeon_map.tmx"),
     DUNGEONMAP2("dungeon_map2.tmx"),
-    DUNGEONMAP3("dungeon_map3.tmx");
-
+    DUNGEONMAP3("dungeon_map3.tmx"),
+    JUNGLEMAP1("jungle_map.tmx"),
+    JUNGLEMAP2("jungle_map2.tmx"),
+    JUNGLEMAP3("jungle_map3.tmx"),
+    VILLAGE("village_map.tmx");
 
     private final AssetDescriptor<TiledMap> descriptor;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="2">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="6">
  <tileset firstgid="1" source="floor.tsx"/>
  <tileset firstgid="16" source="TilesetRelief.tsx"/>
  <tileset firstgid="256" source="TilesetHouse.tsx"/>
@@ -132,11 +132,26 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2316,2317,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="10" name="trigger">
+  <object id="2" name="portal_trigger" x="420.667" y="1.33333" width="22" height="11.3333">
+   <properties>
+    <property name="targetMap" value="ICEMAP2"/>
+    <property name="targetX" type="float" value="431.333333333"/>
+    <property name="targetY" type="float" value="277.666666667"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="3" name="objects">
   <object id="1" name="Player" gid="2889" x="17.3333" y="176.667" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="5" gid="2898" x="80" y="176.667" width="32" height="32">
+   <properties>
+    <property name="npcName" value="Elder"/>
+    <property name="dialogue" value="Hello adventurer!|A strange disease has hit our village.|Please search the Cave for the cure ingredients.|But first, you must find the Dungeon Key in the Forest!"/>
    </properties>
   </object>
  </objectgroup>

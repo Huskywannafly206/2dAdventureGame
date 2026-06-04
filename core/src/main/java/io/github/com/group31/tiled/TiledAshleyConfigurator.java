@@ -40,6 +40,7 @@ import io.github.com.group31.component.Fsm;
 import io.github.com.group31.component.Graphic;
 import io.github.com.group31.component.Life;
 import io.github.com.group31.component.Move;
+import io.github.com.group31.component.Npc;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Tiled;
@@ -138,6 +139,30 @@ public class TiledAshleyConfigurator {
             addEntityItem(tile, entity);
             entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
             entity.add(new Tiled(tileMapObject));
+            this.engine.addEntity(entity);
+            return;
+        }
+
+        // ── Rẽ nhánh riêng cho NPC tile ──
+        String npcName = tileMapObject.getProperties().get("npcName", null, String.class);
+        if (npcName == null) {
+            npcName = tile.getProperties().get("npcName", null, String.class);
+        }
+        if (npcName != null && !npcName.isBlank()) {
+            String dialogueStr = tileMapObject.getProperties().get("dialogue", "", String.class);
+            if (dialogueStr.isBlank()) {
+                dialogueStr = tile.getProperties().get("dialogue", "...", String.class);
+            }
+            String[] dialogue = dialogueStr.split("\\|");
+            
+            entity.add(new Npc(npcName, dialogue));
+            entity.add(new Facing(FacingDirection.DOWN));
+            entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+            entity.add(new Tiled(tileMapObject));
+            
+            addEntityPhysic(tile.getObjects(), BodyType.StaticBody, Vector2.Zero, entity);
+            addEntityAnimation(tile, entity);
+            
             this.engine.addEntity(entity);
             return;
         }

@@ -12,6 +12,7 @@ import io.github.com.group31.component.Inventory;
 import io.github.com.group31.component.Item;
 import io.github.com.group31.component.Life;
 import io.github.com.group31.component.Move;
+import io.github.com.group31.component.Npc;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.input.Command;
 import io.github.com.group31.screen.MenuScreen;
@@ -23,6 +24,7 @@ public class ControllerSystem extends IteratingSystem {
     private final GdxGame game;
     private final AudioService audioService;
     private final GameViewModel viewModel;
+    private Entity activeNpcEntity = null;
 
     public ControllerSystem(GdxGame game, AudioService audioService, GameViewModel viewModel) {
         super(Family.all(Controller.class).get());
@@ -41,6 +43,15 @@ public class ControllerSystem extends IteratingSystem {
             return;
         }
 
+        if (activeNpcEntity != null) {
+            if (controller.getPressedCommands().contains(Command.INTERACT)) {
+                interactWithNpc(entity);
+            }
+            controller.getPressedCommands().clear();
+            controller.getReleasedCommands().clear();
+            return;
+        }
+
         for (Command command : controller.getPressedCommands()) {
             switch (command) {
                 case UP -> moveEntity(entity, 0f, 1f);
@@ -50,6 +61,7 @@ public class ControllerSystem extends IteratingSystem {
                 case SELECT -> startEntityAttack(entity);
                 case CANCEL -> game.setScreen(MenuScreen.class);
                 case USE_ITEM -> usePotion(entity);
+                case INTERACT -> interactWithNpc(entity);
             }
         }
         controller.getPressedCommands().clear();
@@ -115,6 +127,48 @@ public class ControllerSystem extends IteratingSystem {
         if (move != null) {
             move.getDirection().x += dx;
             move.getDirection().y += dy;
+        }
+    }
+
+    private void interactWithNpc(Entity player) {
+        if (activeNpcEntity != null) {
+            Npc npc = Npc.MAPPER.get(activeNpcEntity);
+            npc.advanceDialogue();
+            if (npc.hasMoreDialogue()) {
+                viewModel.showDialogue(npc.getName(), npc.getCurrentLine());
+            } else {
+                viewModel.hideDialogue();
+                npc.resetDialogue();
+                activeNpcEntity = null;
+            }
+            return;
+        }
+
+        Transform playerTransform = Transform.MAPPER.get(player);
+        if (playerTransform == null) return;
+
+        Entity closestNpc = null;
+        float minDistance = 1.5f; // khoảng cách 1.5 tiles
+
+        for (Entity npcEntity : getEngine().getEntitiesFor(Family.all(Npc.class, Transform.class).get())) {
+            Transform npcTransform = Transform.MAPPER.get(npcEntity);
+            float dist = playerTransform.getPosition().dst(npcTransform.getPosition());
+            if (dist < minDistance) {
+                minDistance = dist;
+                closestNpc = npcEntity;
+            }
+        }
+
+        if (closestNpc != null) {
+            activeNpcEntity = closestNpc;
+            Move move = Move.MAPPER.get(player);
+            if (move != null) {
+                move.getDirection().setZero();
+            }
+
+            Npc npc = Npc.MAPPER.get(activeNpcEntity);
+            npc.resetDialogue();
+            viewModel.showDialogue(npc.getName(), npc.getCurrentLine());
         }
     }
 }

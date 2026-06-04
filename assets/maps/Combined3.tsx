@@ -71,26 +71,26 @@
    <object id="1" x="3" y="2" width="9" height="14"/>
   </objectgroup>
   <animation>
-   <frame tileid="32" duration="100"/>
-   <frame tileid="33" duration="100"/>
-   <frame tileid="34" duration="100"/>
-   <frame tileid="35" duration="100"/>
+   <frame tileid="26" duration="100"/>
+   <frame tileid="27" duration="100"/>
+   <frame tileid="1" duration="100"/>
+   <frame tileid="0" duration="100"/>
   </animation>
  </tile>
  <tile id="32">
   <animation>
-   <frame tileid="32" duration="100"/>
-   <frame tileid="33" duration="100"/>
-   <frame tileid="34" duration="100"/>
+   <frame tileid="32" duration="400"/>
+   <frame tileid="33" duration="400"/>
+   <frame tileid="34" duration="400"/>
    <frame tileid="35" duration="100"/>
   </animation>
  </tile>
  <tile id="40">
   <animation>
-   <frame tileid="40" duration="100"/>
-   <frame tileid="41" duration="100"/>
-   <frame tileid="42" duration="100"/>
-   <frame tileid="43" duration="100"/>
+   <frame tileid="40" duration="400"/>
+   <frame tileid="41" duration="400"/>
+   <frame tileid="42" duration="400"/>
+   <frame tileid="43" duration="400"/>
   </animation>
  </tile>
  <tile id="48">
@@ -111,33 +111,32 @@
  </tile>
  <tile id="64">
   <animation>
-   <frame tileid="64" duration="100"/>
-   <frame tileid="66" duration="100"/>
-   <frame tileid="65" duration="100"/>
-   <frame tileid="67" duration="100"/>
+   <frame tileid="64" duration="500"/>
+   <frame tileid="66" duration="500"/>
+   <frame tileid="65" duration="1000"/>
+   <frame tileid="67" duration="500"/>
   </animation>
  </tile>
  <tile id="72">
   <animation>
-   <frame tileid="72" duration="100"/>
-   <frame tileid="74" duration="100"/>
-   <frame tileid="73" duration="100"/>
-   <frame tileid="75" duration="100"/>
-   <frame tileid="75" duration="100"/>
+   <frame tileid="72" duration="500"/>
+   <frame tileid="74" duration="500"/>
+   <frame tileid="73" duration="1000"/>
+   <frame tileid="75" duration="500"/>
   </animation>
  </tile>
  <tile id="80">
   <animation>
-   <frame tileid="80" duration="100"/>
-   <frame tileid="82" duration="100"/>
-   <frame tileid="84" duration="100"/>
+   <frame tileid="80" duration="400"/>
+   <frame tileid="82" duration="400"/>
+   <frame tileid="84" duration="400"/>
   </animation>
  </tile>
  <tile id="81">
   <animation>
-   <frame tileid="81" duration="100"/>
-   <frame tileid="83" duration="100"/>
-   <frame tileid="85" duration="100"/>
+   <frame tileid="81" duration="400"/>
+   <frame tileid="83" duration="400"/>
+   <frame tileid="85" duration="400"/>
   </animation>
  </tile>
  <tile id="88">
@@ -152,12 +151,10 @@
  </tile>
  <tile id="96">
   <animation>
-   <frame tileid="96" duration="100"/>
+   <frame tileid="96" duration="500"/>
    <frame tileid="97" duration="100"/>
    <frame tileid="99" duration="100"/>
-   <frame tileid="98" duration="100"/>
-   <frame tileid="98" duration="100"/>
-   <frame tileid="98" duration="100"/>
+   <frame tileid="98" duration="1000"/>
   </animation>
  </tile>
 </tileset>

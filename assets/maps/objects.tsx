@@ -10,7 +10,7 @@
    <property name="damageDelay" type="float" value="0.2"/>
    <property name="life" type="int" value="12"/>
    <property name="lifeReg" type="float" value="0.5"/>
-   <property name="speed" type="float" value="3.5"/>
+   <property name="speed" type="float" value="10"/>
   </properties>
   <image source="objects/player.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">

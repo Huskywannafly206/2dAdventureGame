@@ -346,6 +346,13 @@ public class GameScreen extends ScreenAdapter {
                         if (transform != null) {
                             transform.getPosition().set(worldX, worldY);
                         }
+
+                        // Snap camera to the correct spawn position now that Transform is updated.
+                        // CameraSystem.setMap() was called earlier but the player entity wasn't
+                        // in its family yet (Ashley flushes pending entities on the next update).
+                        // Calling it again here, after the Transform is set, snaps the camera
+                        // immediately instead of leaving it stuck in the corner.
+                        engine.getSystem(CameraSystem.class).setMap(newMap);
                     }
                 }
             }

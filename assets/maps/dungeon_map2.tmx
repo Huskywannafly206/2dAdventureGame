@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="19">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="Combined3.tsx"/>
  <tileset firstgid="213" source="TilesetHole.tsx"/>
  <tileset firstgid="268" source="TilesetElement.tsx"/>
  <tileset firstgid="508" source="TilesetHouse.tsx"/>
  <tileset firstgid="1267" source="TilesetReliefDetail.tsx"/>
+ <tileset firstgid="1411" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
@@ -30,6 +31,22 @@
 79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79
 </data>
  </layer>
+ <objectgroup id="4" name="trigger">
+  <object id="2" name="portal_trigger" x="336" y="144.182" width="16" height="15.8182">
+   <properties>
+    <property name="targetMap" value="DUNGEONMAP1"/>
+    <property name="targetX" type="float" value="200"/>
+    <property name="targetY" type="float" value="260"/>
+   </properties>
+  </object>
+  <object id="10" name="portal_trigger" x="238.75" y="316" width="35.5" height="9">
+   <properties>
+    <property name="targetMap" value="ICEMAP3"/>
+    <property name="targetX" type="float" value="39.915789474"/>
+    <property name="targetY" type="float" value="70.231578947"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="floor2" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -78,4 +95,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="6" name="objects">
+  <object id="6" name="Player" gid="1412" x="348.5" y="166" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

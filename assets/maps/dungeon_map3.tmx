@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="4">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="TilesetHouse.tsx"/>
  <tileset firstgid="860" source="TilesetNature.tsx"/>
  <tileset firstgid="1364" source="TilesetReliefDetail.tsx"/>
  <tileset firstgid="1508" source="TilesetTowers.tsx"/>
  <tileset firstgid="1652" source="Combined3.tsx"/>
+ <tileset firstgid="1764" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,
@@ -30,6 +31,15 @@
 79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79,79
 </data>
  </layer>
+ <objectgroup id="7" name="trigger">
+  <object id="1" name="portal_trigger" x="218.779" y="310.737" width="25.7684" height="8.08421">
+   <properties>
+    <property name="targetMap" value="DUNGEONMAP1"/>
+    <property name="targetX" type="float" value="296"/>
+    <property name="targetY" type="float" value="58.666666667"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="floor1" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -126,4 +136,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="8" name="objects">
+  <object id="2" name="Player" gid="1765" x="216.421" y="305.347" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

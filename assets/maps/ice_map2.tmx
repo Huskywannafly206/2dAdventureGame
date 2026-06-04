@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="11">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="14">
  <tileset firstgid="1" source="TilesetFloorB.tsx"/>
  <tileset firstgid="78" source="TilesetWater.tsx"/>
  <tileset firstgid="554" source="TilesetFloor.tsx"/>
@@ -61,18 +61,18 @@
 </data>
  </layer>
  <objectgroup id="9" name="trigger">
-  <object id="1" name="portal_trigger" x="416.666" y="283.334" width="31.3333" height="10">
+  <object id="1" name="portal_trigger" x="416.666" y="307.334" width="31.3333" height="10">
    <properties>
     <property name="targetMap" value="ICEMAP1"/>
     <property name="targetX" type="float" value="423"/>
     <property name="targetY" type="float" value="32.666666667"/>
    </properties>
   </object>
-  <object id="6" name="portal_trigger" x="256.666" y="32.6667" width="46.6667" height="6">
+  <object id="6" name="portal_trigger" x="257.166" y="5.6667" width="46.6667" height="6">
    <properties>
     <property name="targetMap" value="ICEMAP3"/>
-    <property name="targetX" type="float" value="263.333333333"/>
-    <property name="targetY" type="float" value="297.333333333"/>
+    <property name="targetX" type="float" value="249.6"/>
+    <property name="targetY" type="float" value="302.652631579"/>
    </properties>
   </object>
  </objectgroup>
@@ -149,7 +149,7 @@
 </data>
  </layer>
  <objectgroup id="10" name="objects">
-  <object id="4" name="Player" gid="3296" x="417.516" y="270.189" width="32" height="32">
+  <object id="4" name="Player" gid="3296" x="417.516" y="278.189" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>

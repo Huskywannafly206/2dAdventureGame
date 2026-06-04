@@ -136,8 +136,8 @@
   <object id="2" name="portal_trigger" x="420.667" y="1.33333" width="22" height="11.3333">
    <properties>
     <property name="targetMap" value="ICEMAP2"/>
-    <property name="targetX" type="float" value="431.333333333"/>
-    <property name="targetY" type="float" value="277.666666667"/>
+    <property name="targetX" type="float" value="418.5"/>
+    <property name="targetY" type="float" value="276"/>
    </properties>
   </object>
  </objectgroup>

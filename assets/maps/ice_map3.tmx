@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="7">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="11">
  <tileset firstgid="1" source="TilesetRelief.tsx"/>
  <tileset firstgid="241" source="TilesetNature.tsx"/>
  <tileset firstgid="745" source="TilesetReliefDetail.tsx"/>
@@ -37,8 +37,15 @@
   <object id="4" name="portal_trigger" x="41.4316" y="31.8316" width="28.8" height="10.6105">
    <properties>
     <property name="targetMap" value="DUNGEONMAP2"/>
-    <property name="targetX" type="float" value="262.5"/>
-    <property name="targetY" type="float" value="298"/>
+    <property name="targetX" type="float" value="240.5"/>
+    <property name="targetY" type="float" value="299.5"/>
+   </properties>
+  </object>
+  <object id="8" name="portal_trigger" x="242.091" y="310.779" width="45.3333" height="8">
+   <properties>
+    <property name="targetMap" value="ICEMAP2"/>
+    <property name="targetX" type="float" value="263"/>
+    <property name="targetY" type="float" value="68.5"/>
    </properties>
   </object>
  </objectgroup>
@@ -90,15 +97,6 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="trigger">
-  <object id="1" name="portal_trigger" x="241.333" y="310.667" width="45.3333" height="8">
-   <properties>
-    <property name="targetMap" value="ICEMAP2"/>
-    <property name="targetX" type="float" value="277.333666667"/>
-    <property name="targetY" type="float" value="75"/>
-   </properties>
-  </object>
- </objectgroup>
  <layer id="3" name="back" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,618,619,619,619,619,619,619,619,620,621,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -148,7 +146,7 @@
 </data>
  </layer>
  <objectgroup id="8" name="objects">
-  <object id="3" name="Player" gid="2157" x="249.333" y="305.333" width="32" height="32">
+  <object id="3" name="Player" gid="2157" x="40.1541" y="71.3962" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>

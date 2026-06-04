@@ -1,49 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="19">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="12">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
- <tileset firstgid="817" source="objects.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJzjZGRg4ETCGxkYGDYh4c0MqPKkYmTz8MnR2q7jQLETSPgkDe2iNh61a9SuwWDXcTraBcK47JoNFJsDxHOB+AGV3EJMGUVp+TSY7EKOS0rLQnS7AB0JPv0=
   </data>
  </layer>
  <layer id="2" name="obstacle" width="27" height="15">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJytlEkvBEEUx0eNPXwAy4EPYt/d7LubfXdDxHZGxHYWIYOb9WBwsksknOwS28kuws2vMz2ZUqZHJ7zkl+pX71/vVb3q7gCrxRIIZixJWCzJkCIcfipjGqSL77pn/Bd4hTfYhh1dE8UYDTEQq6yTrYBYIRTpmmLGEiiFSWmdD3v3BT/whzNi53o8gzETsiDbQ606YvXQAG3QCE3QDAuwCEsQQv5QCINwqWfafsqgHCqg0kMt2foVnbNPu7BnModZGydfC7TCmHD16QIuxc87+6v1kqPPTR6tV+qdaeasa4Opfzy7uztz1rVTZ0WpNar4Xfjdv+zngPihgUZ9V1RT66k2TXxG0tzyfAezMAfzyvoJ/Gu4MdHDZUWzir+mzK3jb8AmbEmxDv35g/HTRK19E5ojNMdwAqe63iatC6KPwW566em8cczHQwIkSpp7nh/gEZ70ebsUj6BOpJtaRudtZy4HciEP8oXjLjTzIo8AK3hLOd+Fo4+dBns3Ou8A+iqohhqoFa73tEfKJX/T2j9+kHHIoJbzvFcm7mkYzYj4/u7K3/QXWMlc7A==
   </data>
  </layer>
- <objectgroup id="6" name="trigger">
-  <object id="12" name="portal_trigger" x="80.1381" y="0.465919" width="47.9896" height="15.3753">
-   <properties>
-    <property name="targetMap" value="VILLAGE"/>
-    <property name="targetX" type="float" value="296"/>
-    <property name="targetY" type="float" value="678"/>
-   </properties>
-  </object>
-  <object id="13" x="106.695" y="32.1484">
-   <point/>
-  </object>
-  <object id="17" name="portal_trigger" x="63.8309" y="222.709" width="60.5695" height="16.3072">
-   <properties>
-    <property name="targetMap" value="JUNGLEMAP2"/>
-    <property name="targetX" type="float" value="95.979292494"/>
-    <property name="targetY" type="float" value="34.477998274"/>
-   </properties>
-  </object>
-  <object id="18" x="95.5134" y="211.993">
-   <point/>
-  </object>
- </objectgroup>
- <objectgroup id="4" name="objects">
-  <object id="14" name="Player" gid="818" x="90.2295" y="49.5462" width="32" height="32">
-   <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
-   </properties>
-  </object>
- </objectgroup>
  <objectgroup id="3" name="Object Layer 1">
   <object id="9" gid="814" x="34.5" y="62.5" width="12" height="8"/>
   <object id="10" gid="814" x="250" y="93" width="12" height="8"/>

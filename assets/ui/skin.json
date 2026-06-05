@@ -20,79 +20,70 @@ com.badlogic.gdx.graphics.Color: {
 	}
 }
 com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator: {
-	cherry_cream_soda_16: {
-		font: CherryCreamSoda-Regular.ttf
+	ninja_font_16: {
+		font: NormalFont.ttf
 		size: 16
 		mono: false
-		color: white
-		gamma: 1.8
-		renderCount: 2
-		borderWidth: 1.5
+		color: sand
+		gamma: 1.2
+		renderCount: 1
+		borderWidth: 1
 		borderColor: black
-		borderStraight: false
-		borderGamma: 1.8
-		shadowOffsetX: 1
-		shadowOffsetY: 1
-		shadowColor: black
-		spaceX: 2
-		spaceY: 2
+		borderStraight: true
+		borderGamma: 1.0
+		shadowOffsetX: 0
+		shadowOffsetY: 0
+		spaceX: 1
+		spaceY: 1
 		kerning: true
 		flip: false
 		genMipMaps: false
 		incremental: false
-		hinting: Slight
-		minFilter: Linear
-		magFilter: Linear
+		hinting: AutoFull
+		minFilter: Nearest
+		magFilter: Nearest
 		characters: " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.,'\""
 	}
-	normal_font_12: {
+	ninja_font_12: {
 		font: NormalFont.ttf
 		size: 12
 		mono: false
-		color: white
-		gamma: 1.8
-		renderCount: 2
-		borderWidth: 1
-		borderColor: black
-		borderStraight: false
-		borderGamma: 1.8
-		shadowOffsetX: 1
-		shadowOffsetY: 1
-		shadowColor: black
+		color: sand
+		gamma: 1.0
+		renderCount: 1
+		borderWidth: 0
+		shadowOffsetX: 0
+		shadowOffsetY: 0
 		spaceX: 1
 		spaceY: 1
 		kerning: true
 		flip: false
 		genMipMaps: false
 		incremental: false
-		hinting: Slight
-		minFilter: Linear
-		magFilter: Linear
+		hinting: AutoFull
+		minFilter: Nearest
+		magFilter: Nearest
 		characters: " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.,'\""
 	}
-	normal_font_8: {
+	ninja_font_8: {
 		font: NormalFont.ttf
 		size: 8
 		mono: false
-		color: white
-		gamma: 1.8
-		renderCount: 2
-		borderWidth: 0.8
-		borderColor: black
-		borderStraight: false
-		borderGamma: 1.8
-		shadowOffsetX: 1
-		shadowOffsetY: 1
-		shadowColor: black
+		color: sand
+		gamma: 1.0
+		renderCount: 1
+		borderWidth: 0
+		shadowOffsetX: 0
+		shadowOffsetY: 0
 		spaceX: 1
 		spaceY: 1
 		kerning: true
 		flip: false
 		genMipMaps: false
 		incremental: false
-		hinting: Slight
-		minFilter: Linear
-		magFilter: Linear
+		hinting: AutoFull
+		minFilter: Nearest
+		magFilter: Nearest
 		characters: " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.,'\""
 	}
 }
@@ -125,16 +116,16 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: cherry_cream_soda_16
-		fontColor: white
+		font: ninja_font_16
+		fontColor: sand
 	}
 	small: {
-		font: normal_font_12
-		fontColor: white
+		font: ninja_font_12
+		fontColor: sand
 	}
 	tiny: {
-		font: normal_font_8
-		fontColor: white
+		font: ninja_font_8
+		fontColor: sand
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
@@ -159,7 +150,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
-		font: cherry_cream_soda_16
+		font: ninja_font_16
 		fontColor: sand
 		up: button
 	}

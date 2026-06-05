@@ -1,5 +1,7 @@
 package io.github.com.group31.ui.view;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
@@ -24,11 +27,14 @@ import io.github.com.group31.ui.view.DialogueBox;
 
 import java.util.Map;
 
-public class GameView extends View<GameViewModel> {
+public class GameView extends View<GameViewModel> implements Disposable {
     private final HorizontalGroup lifeGroup;
     private ProgressBar xpBar;
     private Label levelLabel;
     private final DialogueBox dialogueBox;
+
+    // Faceset textures cho từng NPC có avatar
+    private final Texture monkFacesetTexture;
 
     // Inventory HUD elements (top-right)
     private Image potionImage;
@@ -44,6 +50,10 @@ public class GameView extends View<GameViewModel> {
     public GameView(Stage stage, Skin skin, GameViewModel viewModel, AssetService assetService) {
         super(stage, skin, viewModel);
         this.assetService = assetService;
+
+        // Load faceset texture của Monk
+        monkFacesetTexture = new Texture(Gdx.files.internal("ui/monk_faceset.png"));
+        monkFacesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
@@ -71,10 +81,23 @@ public class GameView extends View<GameViewModel> {
             if (dialogueBox.getParent() == null) {
                 stage.addActor(dialogueBox);
             }
-            dialogueBox.show(data[0], data[1]);
+            // Truyền faceset texture tương ứng với NPC
+            Texture faceset = getFacesetForNpc(data[0]);
+            dialogueBox.show(data[0], data[1], faceset);
         } else {
             dialogueBox.remove();
         }
+    }
+
+    /**
+     * Trả về texture faceset cho NPC theo tên.
+     * Thêm NPC mới vào đây khi cần.
+     */
+    private Texture getFacesetForNpc(String npcName) {
+        if ("Monk".equals(npcName)) {
+            return monkFacesetTexture;
+        }
+        return null;
     }
 
     @Override
@@ -241,5 +264,12 @@ public class GameView extends View<GameViewModel> {
                 }))
             )
         );
+    }
+
+    /** Giải phóng texture faceset và nền dialogue khi screen bị hủy. */
+    @Override
+    public void dispose() {
+        monkFacesetTexture.dispose();
+        dialogueBox.dispose();
     }
 }

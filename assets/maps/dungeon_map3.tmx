@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="9">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="11">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="TilesetHouse.tsx"/>
  <tileset firstgid="860" source="TilesetNature.tsx"/>
@@ -147,6 +147,8 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="9" name="GiantBlueSamurai" gid="1780" x="120" y="150" width="96" height="48"/>
+  <object id="10" name="GiantBlueSamurai" gid="1780" x="280" y="150" width="96" height="48"/>
  </objectgroup>
  <layer id="6" name="fore" width="30" height="20" visible="0">
   <data encoding="csv">

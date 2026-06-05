@@ -463,6 +463,7 @@ public class TiledAshleyConfigurator {
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+        entity.add(new Tiled(mobTileId));
 
         this.engine.addEntity(entity);
         return entity;

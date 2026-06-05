@@ -35,6 +35,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
 
     // Faceset textures cho từng NPC có avatar
     private final Texture monkFacesetTexture;
+    private final Texture fighterWhiteFacesetTexture;
 
     // Inventory HUD elements (top-right)
     private Image potionImage;
@@ -54,6 +55,9 @@ public class GameView extends View<GameViewModel> implements Disposable {
         // Load faceset texture của Monk
         monkFacesetTexture = new Texture(Gdx.files.internal("ui/monk_faceset.png"));
         monkFacesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        fighterWhiteFacesetTexture = new Texture(Gdx.files.internal("ui/fighter_white_faceset.png"));
+        fighterWhiteFacesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
@@ -96,6 +100,9 @@ public class GameView extends View<GameViewModel> implements Disposable {
     private Texture getFacesetForNpc(String npcName) {
         if ("Monk".equals(npcName)) {
             return monkFacesetTexture;
+        }
+        if ("fighter_white".equalsIgnoreCase(npcName) || "Fighter White".equalsIgnoreCase(npcName)) {
+            return fighterWhiteFacesetTexture;
         }
         return null;
     }
@@ -270,6 +277,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
     @Override
     public void dispose() {
         monkFacesetTexture.dispose();
+        fighterWhiteFacesetTexture.dispose();
         dialogueBox.dispose();
     }
 }

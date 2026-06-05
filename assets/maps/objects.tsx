@@ -186,9 +186,9 @@
    <property name="animationSpeed" type="float" value="1"/>
    <property name="bodyType" value="StaticBody"/>
    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
-   <property name="npcName" value="Fighter White"/>
+   <property name="npcName" value="fighter_white"/>
   </properties>
-  <image source="objects/egg_girl.png" width="32" height="32"/>
+  <image source="objects/fighter_white.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="11" y="18" width="9" height="5">
     <ellipse/>

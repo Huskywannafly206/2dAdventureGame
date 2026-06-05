@@ -14,6 +14,7 @@ import io.github.com.group31.component.Facing.FacingDirection;
 import io.github.com.group31.component.Move;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Transform;
 
 /**
  * AiSystem drives enemy behaviour using a simple 3-state model:
@@ -45,9 +46,17 @@ public class AiSystem extends IteratingSystem {
         Physic enemyPhysic = Physic.MAPPER.get(entity);
         Physic playerPhysic = Physic.MAPPER.get(playerEntity);
 
+        Transform enemyTransform = Transform.MAPPER.get(entity);
+        Transform playerTransform = Transform.MAPPER.get(playerEntity);
+
         Vector2 enemyPos = enemyPhysic.getBody().getPosition();
         Vector2 playerPos = playerPhysic.getBody().getPosition();
-        float dist = enemyPos.dst(playerPos);
+
+        // Calculate center-to-center positions using the Transform component
+        Vector2 enemyCenter = new Vector2(enemyPos).add(enemyTransform.getSize().x * 0.5f, enemyTransform.getSize().y * 0.5f);
+        Vector2 playerCenter = new Vector2(playerPos).add(playerTransform.getSize().x * 0.5f, playerTransform.getSize().y * 0.5f);
+
+        float dist = enemyCenter.dst(playerCenter);
 
         Ai ai = Ai.MAPPER.get(entity);
         Move move = Move.MAPPER.get(entity);
@@ -60,13 +69,13 @@ public class AiSystem extends IteratingSystem {
                 attack.startAttack();
             }
             // Face the player
-            updateFacing(entity, enemyPos, playerPos);
+            updateFacing(entity, enemyCenter, playerCenter);
 
         } else if (dist <= ai.getSightRange()) {
             // CHASE: move toward player
-            tmpDir.set(playerPos).sub(enemyPos).nor();
+            tmpDir.set(playerCenter).sub(enemyCenter).nor();
             move.getDirection().set(tmpDir);
-            updateFacing(entity, enemyPos, playerPos);
+            updateFacing(entity, enemyCenter, playerCenter);
 
         } else {
             // IDLE: stop moving

@@ -8,6 +8,7 @@ import io.github.com.group31.component.Animation2D;
 import io.github.com.group31.component.Dead;
 import io.github.com.group31.component.Experience;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Tiled;
 import io.github.com.group31.ui.model.GameViewModel;
 
 /**
@@ -55,6 +56,17 @@ public class DeadSystem extends IteratingSystem {
                     viewModel.updateXpInfo(playerXp.getXp(), playerXp.getXpToNextLevel(), playerXp.getLevel(), leveledUp);
                 }
             }
+
+            // If it is a green tower, keep it on the map permanently as a ruined structure.
+            Tiled tiled = Tiled.MAPPER.get(entity);
+            if (tiled != null && tiled.getMapObjectRef() != null) {
+                String name = tiled.getMapObjectRef().getName();
+                if (name != null && name.contains("green_tower")) {
+                    entity.remove(Dead.class);
+                    return;
+                }
+            }
+
             getEngine().removeEntity(entity);
         }
     }

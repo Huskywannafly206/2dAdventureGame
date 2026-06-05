@@ -95,13 +95,18 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         Vector2 position = transform.getPosition();
         Vector2 scaling = transform.getScaling();
         Vector2 size = transform.getSize();
+        
+        TextureRegion region = graphic.getRegion();
+        float width = region.getRegionWidth() * GdxGame.UNIT_SCALE;
+        float height = region.getRegionHeight() * GdxGame.UNIT_SCALE;
+
         batch.setColor(graphic.getColor());
         batch.draw(
-            graphic.getRegion(),
-            position.x - (1f - scaling.x) * size.x * 0.5f,
-            position.y - (1f - scaling.y) * size.y * 0.5f,
-            size.x * 0.5f, size.y * 0.5f,
-            size.x, size.y,
+            region,
+            position.x - (1f - scaling.x) * width * 0.5f,
+            position.y - (1f - scaling.y) * height * 0.5f,
+            width * 0.5f, height * 0.5f,
+            width, height,
             scaling.x, scaling.y,
             transform.getRotationDeg()
         );

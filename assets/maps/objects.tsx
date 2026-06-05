@@ -4,11 +4,11 @@
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
-   <property name="animationSpeed" type="float" value="1"/>
+   <property name="animationSpeed" type="float" value="2"/>
    <property name="attackSound" value="SWING"/>
    <property name="damage" type="float" value="7"/>
    <property name="damageDelay" type="float" value="0.2"/>
-   <property name="life" type="int" value="50"/>
+   <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.5"/>
    <property name="speed" type="float" value="10"/>
   </properties>
@@ -89,7 +89,7 @@
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackRange" type="float" value="1.2"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
    <property name="damage" type="float" value="1"/>
@@ -211,13 +211,13 @@
  <tile id="16" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
-   <property name="animationSpeed" type="float" value="1"/>
+   <property name="animationSpeed" type="float" value="0.67"/>
    <property name="atlasAsset" value="OBJECTS"/>
-   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackRange" type="float" value="2.5"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
    <property name="damage" type="float" value="1"/>
-   <property name="damageDelay" type="float" value="0.3"/>
+   <property name="damageDelay" type="float" value="0.45"/>
    <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.2"/>
    <property name="sightRange" type="float" value="10"/>
@@ -230,7 +230,7 @@
    <object id="1" x="24" y="21" width="48" height="18">
     <ellipse/>
    </object>
-   <object id="2" name="attack_sensor_down" x="12.4" y="25.5" width="71.4" height="16.3">
+   <object id="2" name="attack_sensor_down" x="12.4" y="29.5" width="71.4" height="16.3">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>
@@ -245,7 +245,7 @@
      <property name="sensor" type="bool" value="true"/>
     </properties>
    </object>
-   <object id="5" name="attack_sensor_right" x="51" y="8" width="32.6" height="33.9">
+   <object id="5" name="attack_sensor_right" x="53.5" y="9.25" width="32.6" height="33.9">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>

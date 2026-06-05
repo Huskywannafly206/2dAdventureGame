@@ -25,6 +25,7 @@ import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.DialogueBox;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameView extends View<GameViewModel> implements Disposable {
@@ -33,8 +34,8 @@ public class GameView extends View<GameViewModel> implements Disposable {
     private Label levelLabel;
     private final DialogueBox dialogueBox;
 
-    // Faceset textures cho từng NPC có avatar
-    private final Texture monkFacesetTexture;
+    // Cache faceset textures theo đường dẫn – lazy load khi cần
+    private final HashMap<String, Texture> facesetCache = new HashMap<>();
 
     // Inventory HUD elements (top-right)
     private Image potionImage;
@@ -50,10 +51,6 @@ public class GameView extends View<GameViewModel> implements Disposable {
     public GameView(Stage stage, Skin skin, GameViewModel viewModel, AssetService assetService) {
         super(stage, skin, viewModel);
         this.assetService = assetService;
-
-        // Load faceset texture của Monk
-        monkFacesetTexture = new Texture(Gdx.files.internal("ui/monk_faceset.png"));
-        monkFacesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
@@ -81,8 +78,9 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (dialogueBox.getParent() == null) {
                 stage.addActor(dialogueBox);
             }
-            // Truyền faceset texture tương ứng với NPC
-            Texture faceset = getFacesetForNpc(data[0]);
+            // data[2] = facesetPath từ NPC property trong TMX
+            String facesetPath = data.length > 2 ? data[2] : "";
+            Texture faceset = loadFaceset(facesetPath);
             dialogueBox.show(data[0], data[1], faceset);
         } else {
             dialogueBox.remove();
@@ -90,14 +88,19 @@ public class GameView extends View<GameViewModel> implements Disposable {
     }
 
     /**
-     * Trả về texture faceset cho NPC theo tên.
-     * Thêm NPC mới vào đây khi cần.
+     * Lazy-load faceset texture theo đường dẫn lưu trong NPC property.
+     * Kết quả được cache – mỗi ảnh chỉ load 1 lần.
+     *
+     * @param path Đường dẫn tương đối từ assets/ (vd: "ui/monk_faceset.png"), hoặc rỗng/null.
+     * @return Texture tương ứng, hoặc null nếu không có.
      */
-    private Texture getFacesetForNpc(String npcName) {
-        if ("Monk".equals(npcName)) {
-            return monkFacesetTexture;
-        }
-        return null;
+    private Texture loadFaceset(String path) {
+        if (path == null || path.isBlank()) return null;
+        return facesetCache.computeIfAbsent(path, p -> {
+            Texture tex = new Texture(Gdx.files.internal(p));
+            tex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            return tex;
+        });
     }
 
     @Override
@@ -266,10 +269,11 @@ public class GameView extends View<GameViewModel> implements Disposable {
         );
     }
 
-    /** Giải phóng texture faceset và nền dialogue khi screen bị hủy. */
+    /** Giải phóng tất cả faceset texture đã cache và nền dialogue khi screen bị hủy. */
     @Override
     public void dispose() {
-        monkFacesetTexture.dispose();
+        facesetCache.values().forEach(Texture::dispose);
+        facesetCache.clear();
         dialogueBox.dispose();
     }
 }

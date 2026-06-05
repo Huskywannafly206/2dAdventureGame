@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="54" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="83">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="54" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="84">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetInteriorFloor.tsx"/>
  <tileset firstgid="947" source="TilesetElement.tsx"/>
@@ -42,20 +42,6 @@
    eJzt1UkOAiEQhWFcVd//WA6tXsHZKzg/V3TUhQKGIvm/5C1IIIGi6A4BAAAAAAAAAAAApfUWwlxZKEurvZtydjrLXjkoR6fnSqn9TfPuz7md37vLrf0362ucfVj7UVd2/et5PPftL97uMrF23uT2Qq5+0Bue3j4+8/qtztXCfzZF7ff9D63331j7nihTZWZx3Hr/rbTvtbJRthbHrfffSfs/KxflanH8ABoRS78=
   </data>
  </layer>
- <objectgroup id="9" name="objects">
-  <object id="78" name="Player" gid="2455" x="544" y="152.667" width="32" height="32">
-   <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="82" name="monk" gid="2467" x="761.333" y="120" width="32" height="32">
-   <properties>
-    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
-    <property name="npcName" value="Monk"/>
-   </properties>
-  </object>
- </objectgroup>
  <objectgroup id="10" name="trigger">
   <object id="77" name="portal_trigger" x="540.667" y="95.3333" width="38" height="18.6667">
    <properties>
@@ -73,6 +59,26 @@
   </object>
   <object id="81" x="296" y="678">
    <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="objects">
+  <object id="78" name="Player" gid="2455" x="544" y="152.667" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="82" name="monk" gid="2467" x="761.333" y="120" width="32" height="32">
+   <properties>
+    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
+    <property name="faceset" value="ui/monk_faceset.png"/>
+    <property name="npcName" value="Monk"/>
+   </properties>
+  </object>
+  <object id="83" gid="2466" x="651" y="116.5" width="32" height="32">
+   <properties>
+    <property name="npcName" value="MinhBeo"/>
+   </properties>
   </object>
  </objectgroup>
  <layer id="13" name="fore1" width="54" height="45">

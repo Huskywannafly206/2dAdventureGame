@@ -41,17 +41,22 @@ public class DamagedSystem extends IteratingSystem {
         entity.remove(Damaged.class);
 
         Tiled tiled = Tiled.MAPPER.get(entity);
-        if (tiled != null && tiled.getTileId() == 16 && areTowersAlive()) {
-            // Boss is immune!
-            Transform transform = Transform.MAPPER.get(entity);
-            Entity source = damaged.getSourceEntity();
-            boolean sourceIsPlayer = source != null && Player.MAPPER.has(source);
-            if (transform != null && sourceIsPlayer) {
-                float x = transform.getPosition().x + transform.getSize().x * 0.5f;
-                float y = transform.getPosition().y;
-                viewModel.playerDamage(0, x, y);
+        if (tiled != null && tiled.getTileId() == 16) {
+            if (areTowersAlive()) {
+                // Boss is immune!
+                com.badlogic.gdx.Gdx.app.log("DamagedSystem", "Boss is attacked but IMMUNE because green towers are still alive!");
+                Transform transform = Transform.MAPPER.get(entity);
+                Entity source = damaged.getSourceEntity();
+                boolean sourceIsPlayer = source != null && Player.MAPPER.has(source);
+                if (transform != null && sourceIsPlayer) {
+                    float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+                    float y = transform.getPosition().y;
+                    viewModel.playerDamage(0, x, y);
+                }
+                return;
+            } else {
+                com.badlogic.gdx.Gdx.app.log("DamagedSystem", "Boss is taking damage! Amount: " + damaged.getDamage());
             }
-            return;
         }
 
         Life life = Life.MAPPER.get(entity);

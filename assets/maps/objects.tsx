@@ -214,14 +214,14 @@
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="0.67"/>
    <property name="atlasAsset" value="OBJECTS"/>
-   <property name="attackRange" type="float" value="2.5"/>
+   <property name="attackRange" type="float" value="4"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
-   <property name="damage" type="float" value="0.2"/>
+   <property name="damage" type="float" value="0.3"/>
    <property name="damageDelay" type="float" value="0.45"/>
    <property name="life" type="int" value="800"/>
    <property name="lifeReg" type="float" value="0.2"/>
-   <property name="sightRange" type="float" value="10"/>
+   <property name="sightRange" type="float" value="30"/>
    <property name="speed" type="float" value="1.2"/>
    <property name="type" value="mob"/>
    <property name="xpReward" type="float" value="10"/>
@@ -231,7 +231,7 @@
    <object id="1" x="24" y="21" width="48" height="18">
     <ellipse/>
    </object>
-   <object id="2" name="attack_sensor_down" x="12.4" y="29.5" width="71.4" height="16.3">
+   <object id="2" name="attack_sensor_down" x="12.4" y="29.5" width="71.4" height="22.55">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>
@@ -241,12 +241,12 @@
      <property name="sensor" type="bool" value="true"/>
     </properties>
    </object>
-   <object id="4" name="attack_sensor_left" x="11.6" y="8" width="33.4" height="33.8">
+   <object id="4" name="attack_sensor_left" x="1.1" y="8.25" width="43.4" height="43.05">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>
    </object>
-   <object id="5" name="attack_sensor_right" x="53.5" y="9.25" width="32.6" height="33.9">
+   <object id="5" name="attack_sensor_right" x="52" y="7.75" width="42.35" height="43.9">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>

@@ -6,7 +6,7 @@
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="2"/>
    <property name="attackSound" value="SWING"/>
-   <property name="damage" type="float" value="7"/>
+   <property name="damage" type="float" value="5"/>
    <property name="damageDelay" type="float" value="0.2"/>
    <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.5"/>
@@ -216,9 +216,9 @@
    <property name="attackRange" type="float" value="2.5"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
-   <property name="damage" type="float" value="1"/>
+   <property name="damage" type="float" value="0.2"/>
    <property name="damageDelay" type="float" value="0.45"/>
-   <property name="life" type="int" value="20"/>
+   <property name="life" type="int" value="800"/>
    <property name="lifeReg" type="float" value="0.2"/>
    <property name="sightRange" type="float" value="10"/>
    <property name="speed" type="float" value="1.2"/>

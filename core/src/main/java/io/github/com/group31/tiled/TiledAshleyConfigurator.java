@@ -477,12 +477,19 @@ public class TiledAshleyConfigurator {
         if (tile == null || currentMap == null) return -1;
         int gid = tile.getId();
         TiledMapTileSets tileSets = currentMap.getTileSets();
+        com.badlogic.gdx.maps.tiled.TiledMapTileSet matchingTileset = null;
+        int maxFirstGid = -1;
+
         for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : tileSets) {
-            TiledMapTile t = ts.getTile(gid);
-            if (t != null) {
-                int firstgid = ts.getProperties().get("firstgid", 1, Integer.class);
-                return gid - firstgid;
+            int firstgid = ts.getProperties().get("firstgid", 1, Integer.class);
+            if (gid >= firstgid && firstgid > maxFirstGid) {
+                maxFirstGid = firstgid;
+                matchingTileset = ts;
             }
+        }
+
+        if (matchingTileset != null) {
+            return gid - maxFirstGid;
         }
         return gid;
     }

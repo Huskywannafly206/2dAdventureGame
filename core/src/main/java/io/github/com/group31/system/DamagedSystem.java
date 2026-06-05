@@ -23,16 +23,21 @@ public class DamagedSystem extends IteratingSystem {
         ImmutableArray<Entity> entities = getEngine().getEntitiesFor(
             Family.all(Tiled.class, Life.class).get()
         );
+        System.out.println("[DamagedSystem] Checking towers. Active Tiled+Life entities count: " + entities.size());
+        int count = 0;
         for (Entity e : entities) {
             Tiled tiled = Tiled.MAPPER.get(e);
-            if (tiled != null && tiled.getTileId() == 15) {
+            if (tiled != null) {
                 Life life = Life.MAPPER.get(e);
-                if (life != null && life.getLife() > 0) {
-                    return true;
+                float hp = life != null ? life.getLife() : -1f;
+                System.out.println("[DamagedSystem] Entity tileId=" + tiled.getTileId() + ", HP=" + hp);
+                if (tiled.getTileId() == 15 && hp > 0) {
+                    count++;
                 }
             }
         }
-        return false;
+        System.out.println("[DamagedSystem] Found " + count + " alive towers.");
+        return count > 0;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class DamagedSystem extends IteratingSystem {
         if (tiled != null && tiled.getTileId() == 16) {
             if (areTowersAlive()) {
                 // Boss is immune!
-                com.badlogic.gdx.Gdx.app.log("DamagedSystem", "Boss is attacked but IMMUNE because green towers are still alive!");
+                System.out.println("[DamagedSystem] Boss is attacked but IMMUNE because green towers are still alive!");
                 Transform transform = Transform.MAPPER.get(entity);
                 Entity source = damaged.getSourceEntity();
                 boolean sourceIsPlayer = source != null && Player.MAPPER.has(source);
@@ -55,7 +60,7 @@ public class DamagedSystem extends IteratingSystem {
                 }
                 return;
             } else {
-                com.badlogic.gdx.Gdx.app.log("DamagedSystem", "Boss is taking damage! Amount: " + damaged.getDamage());
+                System.out.println("[DamagedSystem] Boss is taking damage! Amount: " + damaged.getDamage());
             }
         }
 

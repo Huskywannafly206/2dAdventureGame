@@ -67,10 +67,10 @@ public class TiledService {
         }
 
         this.currentMap = tiledMap;
-        loadMapObjects(tiledMap);
         if (this.mapChangeConsumer != null) {
             this.mapChangeConsumer.accept(tiledMap);
         }
+        loadMapObjects(tiledMap);
     }
 
     public void setMapChangeConsumer(Consumer<TiledMap> mapChangeConsumer) {

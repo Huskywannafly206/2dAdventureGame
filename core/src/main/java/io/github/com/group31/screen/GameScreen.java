@@ -62,6 +62,7 @@ public class GameScreen extends ScreenAdapter {
     private final World physicWorld;
     private final KeyboardController keyboardController;
     private final AudioService audioService;
+    private GameView gameView;
 
     public GameScreen(GdxGame game) {
         this.game = game;
@@ -105,7 +106,8 @@ public class GameScreen extends ScreenAdapter {
         this.game.setInputProcessors(stage, keyboardController);
         keyboardController.setActiveState(GameControllerState.class);
 
-        this.stage.addActor(new GameView(stage, skin, this.viewModel, this.game.getAssetService()));
+        gameView = new GameView(stage, skin, this.viewModel, this.game.getAssetService());
+        this.stage.addActor(gameView);
         this.viewModel.onPropertyChange(GameViewModel.PLAYER_DEAD, Boolean.class, isDead -> {
             if (Boolean.TRUE.equals(isDead)) {
                 com.badlogic.gdx.Gdx.app.debug("GameScreen", "PLAYER_DEAD received! Switching to GameOverScreen...");
@@ -270,6 +272,10 @@ public class GameScreen extends ScreenAdapter {
         }
         this.physicWorld.dispose();
         this.stage.dispose();
+        if (gameView != null) {
+            gameView.dispose();
+            gameView = null;
+        }
     }
 
 

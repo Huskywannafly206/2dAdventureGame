@@ -200,6 +200,6 @@ public class ControllerSystem extends IteratingSystem {
             animation2D.setType(animType);
         }
 
-        viewModel.showDialogue(npc.getName(), cleanLine);
+        viewModel.showDialogue(npc.getName(), cleanLine, npc.getFacesetPath());
     }
 }

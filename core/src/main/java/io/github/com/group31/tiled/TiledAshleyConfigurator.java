@@ -154,8 +154,15 @@ public class TiledAshleyConfigurator {
                 dialogueStr = tile.getProperties().get("dialogue", "...", String.class);
             }
             String[] dialogue = dialogueStr.split("\\|");
-            
-            entity.add(new Npc(npcName, dialogue));
+
+            // Đọc property "faceset" – đường dẫn tương đối từ assets/, vd: "ui/monk_faceset.png"
+            String facesetPath = tileMapObject.getProperties().get("faceset", null, String.class);
+            if (facesetPath == null || facesetPath.isBlank()) {
+                facesetPath = tile.getProperties().get("faceset", null, String.class);
+            }
+            if (facesetPath != null && facesetPath.isBlank()) facesetPath = null;
+
+            entity.add(new Npc(npcName, dialogue, facesetPath));
             entity.add(new Facing(FacingDirection.DOWN));
             entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
             entity.add(new Tiled(tileMapObject));

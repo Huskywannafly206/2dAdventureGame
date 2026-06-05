@@ -186,6 +186,7 @@
    <property name="animationSpeed" type="float" value="1"/>
    <property name="bodyType" value="StaticBody"/>
    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
+   <property name="faceset" value="ui/fighter_white_faceset.png"/>
    <property name="npcName" value="fighter_white"/>
   </properties>
   <image source="objects/fighter_white.png" width="32" height="32"/>

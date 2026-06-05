@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="54" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="82">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="54" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="82">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetInteriorFloor.tsx"/>
  <tileset firstgid="947" source="TilesetElement.tsx"/>
@@ -7,86 +7,41 @@
  <tileset firstgid="1946" source="TilesetNature.tsx"/>
  <tileset firstgid="2450" source="Tree.tsx"/>
  <tileset firstgid="2454" source="objects.tsx"/>
- <layer id="1" name="background" width="54" height="45">
+ <tileset firstgid="2469" source="TilesetField.tsx"/>
+ <tileset firstgid="2544" source="Combined3.tsx"/>
+ <layer id="1" name="floor1" width="54" height="45">
   <data encoding="base64" compression="zlib">
-   eJztmV9KAzEQxrNbENQD1AUfvEAV9GDiLbRXUA/hCr6rDyr4XgU9gvrkuwnd4DhMJjPbbRJqAx+U7CadX77Jn6bGpCtjqzqRUhbHtRPQcUCh9zk1qYC6QnHtWh2YMBfVpom8WwJXQ9TBWCdWL3X5XPtInFehXCyNSxq35HlF1OX0i+KCMVJewPwdCepKmF+SHBsTzydMXa75FWNz+4/3AHNV4DluU5u880viG4615P1Ly6WV779ELpdfeC8IqSQuvD5L9ybJWSQnVyyXJPt0iVxDCo8JXCtTlj7ndA0XVMoy5O8vdxa+tbrrdF/P6/w5OmUZd/EMpRn4/LrmWgrXZz2cNkblcA3pF9R/4Mpxnl9z9VMuriHXDaxV9GtV83DNtRwu6Vx5R3G/Rd7/ysil+U0/I/zQtP9OqFohikvTPiWX5j6J4tLc9+CyWf3Vua1rkS6J92JqM3Bx8VwRXH3YtFwfxLrAceF7ES4Wyqs+bMaEuag7s0NDz5kjhunMatoxTZm4YkxO1wIu2A93hzFhnnPyPp1abVW/8uMpzT+vG6unBf1uUe5o2OD/nFPE1TJxxbg4r9zap/F7r9Kz+fvTE+RTjOuhJ5eUqUV+QzYNF2SBonIQznUNF8fj8vaxY/G5gNcdzybxrAG5R30fxQWLZj2MjcN2NRfOBdiP9D+XPlyYD+eu17PVBVAs5zzXNjF/MduiXHjOheT5Yh7C8Qr1RXkG2ZbNhQusC/FIxsh7RrX3cWvOTNpxlYjqj+tT4vUQ+gFAMnkm
+   eJztmcFu00AQQNeu1KjNB4RIPfADaST4sKp/AfkF2o8gSBy40R4AiXuLRC/c2564ICF1V8nIwzAzO7PeOD708FTLu17P2xlP3OQshHA2ELNIOxBDOYHXCwHpGmm+xrznOjW8TiJL5zVc3HguHi/Zlxpe88y6i8htW+7lzVlpHZ4StFxJ8ZR6lUB9Pe65PePGG+bcLr20GGfCtThGLiZcvweGc6Velj2VvEp62YwZXyjn+njRmK1epwa3FuWAejVonF7TMl5SLDkHj5cnbzRWDx4vyWOXXl5gffDKxZ4b89ax5pXqi34WSNT00sYtTrQ/azXk3Z9aXrmcaj1HYjkSr5K5taD3wr2y9Pmy3KtP3vquUdsrVze1/r9K78KfI1dbrtvNOXiPruVlmTPbxlOLG3T8w+CV87XUxBi8pLj61jrn9dDW4/BgPF4184WxeHlqa4xeuffD2j1+H159Pos8fX5XXrcOr9pwfYPG1aeP7NNrDHX47PXsZX1W7kjcPzPzH/foZX2HT9ww+fBc/3tAWgecl+f6T0fdfdMxsAsv617PBS/P9z3YJXHUdH8T7+KcNeEydONW1gN7haB7vWe8Sty8XvdMX9C8luHfZ1nLF5erErcQZC/uO7NXgX9mXitObyOrrdOK8QJyTokPBi+8jrTXKZaFMq4BeXoTOW46ID80Z1L9AR8j3zJelr3BteNxw79zrojXOpR7ablKvc+T75eN3w0+e89JnjSvxJdCL6vTmuQbu3m8sAuG5gk8Q4GX5pPq9uvWBWqB9h1ws+RsjmqPux/tgTRvnn6Y24dps4HWAl4Hv0v29cpBaxf4HrlA5GoOvKbM8wtuQ3p5cgiE8P/zDHA5A7dfk81xqkXtt80Sr2Ohl1jcJBfqNRXi+TPpjv9ObD0kt69a/Ulw62m5suS6Bk/rc8Z2
   </data>
  </layer>
- <layer id="5" name="Obstacles" width="54" height="45">
+ <layer id="5" name="back1" width="54" height="45">
   <properties>
    <property name="collidable" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
- <objectgroup id="8" name="Object Layer 1">
-  <properties>
-   <property name="collidable" type="bool" value="true"/>
-  </properties>
-  <object id="2" gid="2450" x="821.167" y="729.5" width="64" height="48"/>
-  <object id="3" gid="2450" x="825.666" y="694.333" width="64" height="48"/>
-  <object id="5" gid="2450" x="766.833" y="727.667" width="64" height="48"/>
-  <object id="6" gid="2450" x="707.5" y="730.5" width="64" height="48"/>
-  <object id="7" gid="2450" x="646.167" y="730.833" width="64" height="48"/>
-  <object id="8" gid="2450" x="680" y="713.5" width="64" height="48"/>
-  <object id="9" gid="2450" x="586" y="728.5" width="64" height="48"/>
-  <object id="10" gid="2450" x="519" y="723.833" width="64" height="48"/>
-  <object id="11" gid="2450" x="459.333" y="726.167" width="64" height="48"/>
-  <object id="12" gid="2450" x="421.167" y="725" width="64" height="48"/>
-  <object id="13" gid="2450" x="483" y="719" width="64" height="48"/>
-  <object id="14" gid="2450" x="610" y="715" width="64" height="48"/>
-  <object id="15" gid="2450" x="645" y="712.5" width="64" height="48"/>
-  <object id="16" gid="2450" x="742" y="717.5" width="64" height="48"/>
-  <object id="17" gid="2450" x="770.666" y="694.166" width="64" height="48"/>
-  <object id="18" gid="2450" x="799.667" y="678.5" width="64" height="48"/>
-  <object id="19" gid="2450" x="464.5" y="579.5" width="64" height="48"/>
-  <object id="20" gid="2450" x="419.5" y="582" width="64" height="48"/>
-  <object id="21" gid="2450" x="398" y="560.333" width="64" height="48"/>
-  <object id="24" gid="2450" x="800.333" y="719.667" width="64" height="48"/>
-  <object id="25" gid="2450" x="551" y="724.667" width="64" height="48"/>
-  <object id="26" gid="2450" x="364.167" y="730" width="64" height="48"/>
-  <object id="27" gid="2450" x="375.5" y="708.5" width="64" height="48"/>
-  <object id="28" gid="2450" x="304" y="727.5" width="64" height="48"/>
-  <object id="29" gid="2450" x="331" y="711" width="64" height="48"/>
-  <object id="30" gid="2450" x="184.667" y="728.833" width="64" height="48"/>
-  <object id="32" gid="2450" x="128.5" y="724.833" width="64" height="48"/>
-  <object id="35" gid="2450" x="-8.66667" y="730.833" width="64" height="48"/>
-  <object id="36" gid="2450" x="-22.3333" y="705.5" width="64" height="48"/>
-  <object id="37" gid="2450" x="98.3333" y="721.5" width="64" height="48"/>
-  <object id="38" gid="2450" x="57.6667" y="705.833" width="64" height="48"/>
-  <object id="39" gid="2450" x="162" y="711" width="64" height="48"/>
-  <object id="40" gid="2450" x="133.5" y="684.667" width="64" height="48"/>
-  <object id="41" gid="2450" x="102.167" y="687.167" width="64" height="48"/>
-  <object id="42" gid="2450" x="72" y="668" width="64" height="48"/>
-  <object id="44" gid="2450" x="-4.6667" y="646.666" width="64" height="48"/>
-  <object id="45" gid="2450" x="33.5" y="663.667" width="64" height="48"/>
-  <object id="47" gid="2450" x="-10.3333" y="681.5" width="64" height="48"/>
-  <object id="48" gid="2450" x="25.8333" y="621.333" width="64" height="48"/>
-  <object id="49" gid="2450" x="-19.3333" y="583.667" width="64" height="48"/>
-  <object id="50" gid="2450" x="17.3333" y="589" width="64" height="48"/>
-  <object id="51" gid="2450" x="334" y="548.667" width="64" height="48"/>
-  <object id="52" gid="2450" x="374.167" y="516" width="64" height="48"/>
-  <object id="53" gid="2450" x="370.5" y="546" width="64" height="48"/>
-  <object id="54" gid="2450" x="296.333" y="517.5" width="64" height="48"/>
-  <object id="55" gid="2450" x="267.167" y="516.833" width="64" height="48"/>
-  <object id="56" gid="2450" x="229" y="506" width="64" height="48"/>
-  <object id="57" gid="2450" x="333.667" y="510.5" width="64" height="48"/>
-  <object id="58" gid="2450" x="167.5" y="506" width="64" height="48"/>
-  <object id="59" gid="2450" x="105.5" y="505.5" width="64" height="48"/>
-  <object id="60" gid="2450" x="44" y="505.5" width="64" height="48"/>
-  <object id="61" gid="2450" x="-8.66667" y="504.833" width="64" height="48"/>
-  <object id="62" gid="2450" x="61" y="539.5" width="64" height="48"/>
-  <object id="63" gid="2450" x="11.8333" y="557.5" width="64" height="48"/>
-  <object id="65" gid="2450" x="-11.6667" y="537.167" width="64" height="48"/>
-  <object id="66" gid="2450" x="35.5" y="527" width="64" height="48"/>
-  <object id="67" gid="2450" x="-11.6667" y="617.834" width="64" height="48"/>
-  <object id="68" gid="2450" x="424.5" y="700.5" width="64" height="48"/>
-  <object id="69" gid="2450" x="458.5" y="604.5" width="64" height="48"/>
-  <object id="70" gid="2450" x="296.833" y="545.833" width="64" height="48"/>
-  <object id="71" gid="2450" x="48" y="728.167" width="64" height="48"/>
-  <object id="72" gid="2450" x="4.5" y="707.833" width="64" height="48"/>
- </objectgroup>
+ <layer id="9" name="back2" width="54" height="45">
+  <data encoding="base64" compression="zlib">
+   eJztWFlOwzAQNVLb9GgsJ2E5BFdBLIegLfywSCwFvmkLArpwBWgSXiWQjDOJl3ESU/Gk95E2ceZ5xs8TC/Ebk0iIKTgD3yORQR+/3YH34EOUvfaN44YQHbDb4I2TILZ0EV9biJV29n9Vd9m6HqFnAA6ZunRQdevyy8UcemIwKVmXCl1+KfQQ4wl4WnGsOnBrbwQ9T+BzhbpMYubWXrrQ00R+m6xQrWASs0vtVQ01PyHG7FL3vvysTL93idE1P6oOm3fvY10dgIfgkcEa81FDpvOu6rB59xm0nIMX4GVF3mE675w5HEPLBJyCM0KXvL/JfZSup+pgrC7YI8aswjdWW0KsgevgRiv7v7y/yX2UrqcaQM8QHDFrwNUrNqFlC9wGdwhd8v4m91G6nirG/QmYMnWV3RvWhRD3umVEkW/8ZZj6hs4XfPQYu4RvuKLIN9RYi3zBh2/sedRVBDXWlPjWz+SJ8I2yzwdsQXmcqpU64+D0i3VB1UqdcXD6xbKQVzOmtZR86wit9vJqxraWQqu9vJqxraUQam/ZYXou7bp26lpzOg/Puy8Pofi9zsPz7stDiH7vA8uiI1SEtJfqvp9svq98r2tqnkznTvf9ZHMu43s9UPNkOne6cxfbcxmftUjNk/xbv8Y9bFnw781h4wq5uQZvLP0qNMg6bsEX8BV8I/zKl0bTcTjvk3WMwQ/wE5wT+fLlIabj6O5Tc6Je/+iIiWflsSkPcZlTdZy853WepeZEvbaJoUi3Sw45z8u1FUfZaw64+0Ad+8gXbq3GBQ==
+  </data>
+ </layer>
+ <layer id="10" name="back3" width="54" height="45">
+  <data encoding="base64" compression="zlib">
+   eJztl1kOwjAQQwd+WnH/U7FzBXauwG6kfoCFMgE1JFR+ktWPVlE9nkQTMyGEEEIIIbpJf/D6FEIID50bQgghRHeYVmYzaA4tqtx/0x5beNlBe+hQuC8vg+f3V+j2+KY269Xfr/kLvAxiMmIfJeTqZRCTEfuIzbV0uuKjbbz7k+5X+c+rVOQ+r1KhfS5yMETfjaAxNPnjPcU+ltAKWkObxlcJc9ynsI8jdILO0KXxwPNPyGeqGnjrcj7s410f8vwTmldTzbJebTmfmD5kQnNeqhnQqy3n4/XhHZFpkqI=
+  </data>
+ </layer>
+ <layer id="11" name="back4" width="54" height="45">
+  <data encoding="base64" compression="zlib">
+   eJzt1UkKAjEQheFy1X3/Yzl7BWev4PzEFmIw0CRIEv0/eIssiq4i1cQMAAAAAAAAAADUZNqYzZS5smhyd/Mupa+tanbKXjkUNldMX697uiq3R11rNmi/1mIUt6++e+XfU6gu55663+27V/49hepy7qn73di9CtXl3NNS/w/8n5Lf1xQlv68pSn5f8XuG2rWRMlYmzfNcI3+OpbJS1sqmO9fIn+OonJSzcunONfLn+OQOm7Na+w==
+  </data>
+ </layer>
+ <layer id="12" name="back5" width="54" height="45">
+  <data encoding="base64" compression="zlib">
+   eJzt1UkOAiEQhWFcVd//WA6tXsHZKzg/V3TUhQKGIvm/5C1IIIGi6A4BAAAAAAAAAAAApfUWwlxZKEurvZtydjrLXjkoR6fnSqn9TfPuz7md37vLrf0362ucfVj7UVd2/et5PPftL97uMrF23uT2Qq5+0Bue3j4+8/qtztXCfzZF7ff9D63331j7nihTZWZx3Hr/rbTvtbJRthbHrfffSfs/KxflanH8ABoRS78=
+  </data>
+ </layer>
  <objectgroup id="9" name="objects">
   <object id="78" name="Player" gid="2455" x="544" y="152.667" width="32" height="32">
    <properties>
@@ -114,4 +69,9 @@
    <point/>
   </object>
  </objectgroup>
+ <layer id="13" name="fore1" width="54" height="45">
+  <data encoding="base64" compression="zlib">
+   eJzt18sJgDAQhOGBmKLVTtSbj858lOFagOQS2UT+D+a+y0LISAAecyMtltWyNd7TfG8P0hG8p0DKaTe6uBMq1Uaps/TRe5K8BttntEw/2wsoAe9Gmfg3Au/4rwMAAC+p/lRrv0r1p9r7FQAAAJDbDUyHF2M=
+  </data>
+ </layer>
 </map>

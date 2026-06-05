@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -174,6 +174,21 @@
    <property name="bodyType" value="StaticBody"/>
   </properties>
   <image source="objects/monk.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="14" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
+   <property name="npcName" value="Fighter White"/>
+  </properties>
+  <image source="objects/egg_girl.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="11" y="18" width="9" height="5">
     <ellipse/>

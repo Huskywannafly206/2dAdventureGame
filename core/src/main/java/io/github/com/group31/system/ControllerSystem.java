@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import io.github.com.group31.GdxGame;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.audio.AudioService;
+import io.github.com.group31.component.Animation2D;
 import io.github.com.group31.component.Attack;
 import io.github.com.group31.component.Controller;
 import io.github.com.group31.component.Inventory;
@@ -135,9 +136,13 @@ public class ControllerSystem extends IteratingSystem {
             Npc npc = Npc.MAPPER.get(activeNpcEntity);
             npc.advanceDialogue();
             if (npc.hasMoreDialogue()) {
-                viewModel.showDialogue(npc.getName(), npc.getCurrentLine());
+                displayNpcDialogue(activeNpcEntity, npc);
             } else {
                 viewModel.hideDialogue();
+                Animation2D animation2D = Animation2D.MAPPER.get(activeNpcEntity);
+                if (animation2D != null) {
+                    animation2D.setType(Animation2D.AnimationType.IDLE);
+                }
                 npc.resetDialogue();
                 activeNpcEntity = null;
             }
@@ -168,7 +173,33 @@ public class ControllerSystem extends IteratingSystem {
 
             Npc npc = Npc.MAPPER.get(activeNpcEntity);
             npc.resetDialogue();
-            viewModel.showDialogue(npc.getName(), npc.getCurrentLine());
+            displayNpcDialogue(activeNpcEntity, npc);
         }
+    }
+
+    private void displayNpcDialogue(Entity npcEntity, Npc npc) {
+        String rawLine = npc.getCurrentLine();
+        String cleanLine = rawLine;
+        Animation2D.AnimationType animType = Animation2D.AnimationType.IDLE;
+
+        if (rawLine.startsWith("[")) {
+            int closeBracket = rawLine.indexOf("]");
+            if (closeBracket > 0) {
+                String tag = rawLine.substring(1, closeBracket).toUpperCase();
+                try {
+                    animType = Animation2D.AnimationType.valueOf(tag);
+                    cleanLine = rawLine.substring(closeBracket + 1);
+                } catch (IllegalArgumentException ignored) {
+                    // Tag is not a valid AnimationType, keep the line as is
+                }
+            }
+        }
+
+        Animation2D animation2D = Animation2D.MAPPER.get(npcEntity);
+        if (animation2D != null) {
+            animation2D.setType(animType);
+        }
+
+        viewModel.showDialogue(npc.getName(), cleanLine);
     }
 }

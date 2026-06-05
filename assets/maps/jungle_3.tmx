@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="5">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="5">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="object1.tsx"/>
@@ -7,6 +7,11 @@
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJy1VDsWgCAMiyP3H9VDKIdAL+SsPh/vdegHsB2yQGlIUkgTkAwUAMeDE/z+9qzvAlbhzCiKwpWduTQ+yQtvvl6eq7Ney3YJyE9CVH4cqF7OrxYPrZoZn38eeVk19f1R3qjc6rxQ3tbcXh0VLd5RDdyc9s665l127stpt/7R0b4R9/2DG5U+R5c=
+  </data>
+ </layer>
+ <layer id="2" name="obstacle" width="27" height="15">
+  <data encoding="base64" compression="zlib">
+   eJytlFtOAkEQRTvTASPoAnwk6G7ANahrUDfggz8VPxT0T00MBvaAugfdg35P4uOX06E7lOVMBoe+yQk9TNct6jI9xsRRMzGmBVvJ33sVa0zVTtaf3L+En4x9s2qb2h3YhVd4gy/4hhX6rMKCne6v23yvIu3huQ8H8A4fsIhfzXumXK+xXlc9Tvn+DM5LzvlI3QCGvv5Q+KRi7fK8hTu4nyPTEbVP0IUrn2OYsaryLKNjPE/U70vVdfjvsvL8j3r4XmdkEebQ+R3NkVvQg/CQc8i+Ti7fXoR+HTwuhE8/iZeflDunOi+thu8lz0UZ1Quet36E3KTy8mpH7iPVUHPd+F7PfL749RJ7lu3vM1+kUOMkn7G2f1/laYN7m3Zy5mdVqNEKs4wB8Owtrg==
   </data>
  </layer>
  <objectgroup id="5" name="trigger">
@@ -29,9 +34,9 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="2" name="obstacle" width="27" height="15">
+ <layer id="6" name="fore1" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJytlElOAzEQRS1bDCFwAAYpcBvgDMAZgB0gMSQ7RgkI7AAJBTFcgeEOcAWGNWNgx7PaFoXliLSbLz3ZHXdVpb7tVirTolaFNEr8GIxH8nQYpTrhlbU32IZmgXoTxE7CFNzCHbzDB/RTZwC6oNtk75dNeq1pcs7ALDzCE5TI1+NyPvM8yHwoqLHK72uwntjnCXGncObil3Tmo+3R1nzRP34ewCEcFfD0ktgr2IUd56Pt0e+d9DNFK+SswoL4j7IPK793MT/zqE6+PdgStWQfoX/LBc++1TE55mBe/+4j9M/6W/+Hehvk2BR5Gjrun78XqWpGzluoiqsl70WKyn+ct0ZQ+57nh5y9yZhW563m1s8ZL9z8k/ErZ61YTEXsi9W+G68Zb9y8l3f6THbn25WPsZJnrOa+V600zNqIye58u/IxoXwv334wRds=
+   eJxjYICAOiYGmoMzdLBjIO2jNdjGhPATMpvWdsIANeyrRjMDZP52GvmjH8ncbVjs3UVleyuB5lVhsQcGqG0fMYBa/qRlPCGDkySktydA+ackuokUPauA6lZD1f4A0j9JtAufnpMDkBboBQDydRvr
   </data>
  </layer>
 </map>

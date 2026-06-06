@@ -57,6 +57,7 @@ public class MapHazardSystem extends IteratingSystem {
                     TiledMapTile tile = cell.getTile();
                     if (tile instanceof AnimatedTiledMapTile) {
                         AnimatedTiledMapTile animatedTile = (AnimatedTiledMapTile) tile;
+                        AnimatedTiledMapTile.updateAnimationBaseTime();
                         TiledMapTile currentFrame = animatedTile.getCurrentFrame();
                         if (currentFrame.getProperties().containsKey("damage")) {
                             float damage = currentFrame.getProperties().get("damage", 1f, Float.class);

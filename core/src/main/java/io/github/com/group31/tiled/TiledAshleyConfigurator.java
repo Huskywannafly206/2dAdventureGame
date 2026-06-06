@@ -97,6 +97,7 @@ public class TiledAshleyConfigurator {
 
             Entity entity = this.engine.createEntity();
             Rectangle rect = rectMapObj.getRectangle();
+            rectMapObj.getProperties().put("sensor", true);
             addEntityTransform(
                 rect.getX(), rect.getY(), 0,
                 rect.getWidth(), rect.getHeight(),
@@ -127,6 +128,7 @@ public class TiledAshleyConfigurator {
         float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
         sortOffsetY *= GdxGame.UNIT_SCALE;
         int z = tile.getProperties().get("z", 1, Integer.class);
+        boolean hiddenBarrier = tile.getProperties().get("hiddenBarrier", false, Boolean.class);
 
         addEntityTransform(
             tileMapObject.getX(), tileMapObject.getY(), z,
@@ -184,7 +186,8 @@ public class TiledAshleyConfigurator {
             tile.getObjects(),
             bodyType,
             Vector2.Zero,
-            entity);
+            entity,
+            hiddenBarrier);
         addEntityAnimation(tile, entity);
         addEntityMove(tile, entity);
         addEntityController(tileMapObject, entity);
@@ -196,7 +199,11 @@ public class TiledAshleyConfigurator {
         addEntityExperience(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
-        entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
+        Color graphicColor = Color.WHITE.cpy();
+        if (hiddenBarrier) {
+            graphicColor.a = 0f;
+        }
+        entity.add(new Graphic(textureRegion, graphicColor));
         int localTileId = getLocalTileId(tileMapObject.getTile());
         if (localTileId == 15 || localTileId == 16) {
             com.badlogic.gdx.Gdx.app.log("TiledAshleyConfigurator", "onLoadObject: loaded tile " + localTileId + " (GID=" + tileMapObject.getTile().getId() + ")");
@@ -470,13 +477,21 @@ public class TiledAshleyConfigurator {
     }
 
     private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyType bodyType, Vector2 relativeTo, Entity entity) {
+        addEntityPhysic(mapObject, bodyType, relativeTo, entity, false);
+    }
+
+    private void addEntityPhysic(MapObject mapObject, @SuppressWarnings("SameParameterValue") BodyType bodyType, Vector2 relativeTo, Entity entity, boolean isSensor) {
         if (tmpMapObjects.getCount() > 0) tmpMapObjects.remove(0);
 
         tmpMapObjects.add(mapObject);
-        addEntityPhysic(tmpMapObjects, bodyType, relativeTo, entity);
+        addEntityPhysic(tmpMapObjects, bodyType, relativeTo, entity, isSensor);
     }
 
     private void addEntityPhysic(MapObjects mapObjects, BodyType bodyType, Vector2 relativeTo, Entity entity) {
+        addEntityPhysic(mapObjects, bodyType, relativeTo, entity, false);
+    }
+
+    private void addEntityPhysic(MapObjects mapObjects, BodyType bodyType, Vector2 relativeTo, Entity entity, boolean isSensor) {
         if (mapObjects.getCount() == 0) return;
 
         Transform transform = Transform.MAPPER.get(entity);
@@ -485,7 +500,8 @@ public class TiledAshleyConfigurator {
             transform.getScaling(),
             bodyType,
             relativeTo,
-            entity);
+            entity,
+            isSensor);
 
         entity.add(new Physic(body, new Vector2(body.getPosition())));
     }
@@ -496,6 +512,16 @@ public class TiledAshleyConfigurator {
                             BodyType bodyType,
                             Vector2 relativeTo,
                             Object userData) {
+        return createBody(mapObjects, position, scaling, bodyType, relativeTo, userData, false);
+    }
+
+    private Body createBody(MapObjects mapObjects,
+                            Vector2 position,
+                            Vector2 scaling,
+                            BodyType bodyType,
+                            Vector2 relativeTo,
+                            Object userData,
+                            boolean isSensor) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(position);
@@ -505,6 +531,9 @@ public class TiledAshleyConfigurator {
         body.setUserData(userData);
         for (MapObject object : mapObjects) {
             FixtureDef fixtureDef = TiledPhysics.fixtureDefOf(object, scaling, relativeTo);
+            if (isSensor) {
+                fixtureDef.isSensor = true;
+            }
             Fixture fixture = body.createFixture(fixtureDef);
             fixture.setUserData(object.getName());
             fixtureDef.shape.dispose();

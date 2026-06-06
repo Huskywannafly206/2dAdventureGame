@@ -40,6 +40,7 @@ import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
 import io.github.com.group31.system.ItemSystem;
 import io.github.com.group31.system.LifeSystem;
+import io.github.com.group31.system.MapHazardSystem;
 import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
 import io.github.com.group31.system.PhysicSystem;
@@ -93,6 +94,7 @@ public class GameScreen extends ScreenAdapter {
         // detect when a damaged animation should be played.
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
+        this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
@@ -102,8 +104,9 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new SlashFxLifetimeSystem());
         this.engine.addSystem(new SlashFxSystem(this.engine, game.getAssetService()));
-        this.engine.addSystem(new WeaponHandSystem(game.getBatch(), game.getAssetService()));
-        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
+        WeaponHandSystem weaponHandSystem = new WeaponHandSystem(game.getBatch(), game.getAssetService());
+        this.engine.addSystem(weaponHandSystem);
+        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), weaponHandSystem));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
         this.engine.addSystem(new ProjectileSystem());
         this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,
@@ -171,6 +174,7 @@ public class GameScreen extends ScreenAdapter {
 
                 Life life = Life.MAPPER.get(player);
                 if(life != null){
+                    if (data.playerMaxHp > 0) life.setMaxLife(data.playerMaxHp);
                     life.setLife(data.playerHp);
                     viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
                 }
@@ -248,6 +252,7 @@ public class GameScreen extends ScreenAdapter {
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
                     data.playerHp = currentHp;
+                    data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
 
                     Experience xp = Experience.MAPPER.get(player);
@@ -345,6 +350,7 @@ public class GameScreen extends ScreenAdapter {
         // Lưu lại các thông số cốt lõi của player
         Life life = Life.MAPPER.get(player);
         float hp = life != null ? life.getLife() : 100f;
+        float maxHp = life != null ? life.getMaxLife() : 100f;
 
         Experience xp = Experience.MAPPER.get(player);
         float playerXp = xp != null ? xp.getXp() : 0f;
@@ -393,6 +399,7 @@ public class GameScreen extends ScreenAdapter {
 
                 Life newLife = Life.MAPPER.get(newPlayer);
                 if (newLife != null) {
+                    newLife.setMaxLife(maxHp);
                     newLife.setLife(hp);
                     viewModel.updateLifeInfo(newLife.getMaxLife(), newLife.getLife());
                 }

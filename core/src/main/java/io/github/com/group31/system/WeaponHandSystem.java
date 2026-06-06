@@ -40,16 +40,30 @@ public class WeaponHandSystem extends IteratingSystem {
     }
 
     @Override
+    public void update(float deltaTime) {
+        // Do nothing - rendering is orchestrated by RenderSystem to ensure correct Z-ordering and batch state
+    }
+
+    @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        // Handled in drawWeapon
+    }
+
+    public void drawWeapon(Entity entity, float deltaTime) {
         CombatState cs = CombatState.MAPPER.get(entity);
+        if (cs == null) return;
         Weapon weapon = cs.getCurrentWeapon();
 
         // FIST không có sprite → bỏ qua
         if (weapon.inHandAtlasKey == null) return;
 
         Transform transform = Transform.MAPPER.get(entity);
-        FacingDirection dir = Facing.MAPPER.get(entity).getDirection();
+        Facing facing = Facing.MAPPER.get(entity);
+        if (facing == null) return;
+        FacingDirection dir = facing.getDirection();
+
         Animation2D anim2d = Animation2D.MAPPER.get(entity);
+        if (anim2d == null) return;
 
         // Lấy animation frame tương ứng hướng + trạng thái đánh
         boolean isAttacking = anim2d.getType() == AnimationType.ATTACK;

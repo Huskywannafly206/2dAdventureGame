@@ -1,5 +1,7 @@
 package io.github.com.group31.ui.view;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
@@ -22,13 +25,17 @@ import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.DialogueBox;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public class GameView extends View<GameViewModel> {
+public class GameView extends View<GameViewModel> implements Disposable {
     private final HorizontalGroup lifeGroup;
     private ProgressBar xpBar;
     private Label levelLabel;
     private final DialogueBox dialogueBox;
+
+    // Cache faceset textures theo đường dẫn – lazy load khi cần
+    private final HashMap<String, Texture> facesetCache = new HashMap<>();
 
     // Inventory HUD elements (top-right)
     private Image potionImage;
@@ -44,6 +51,7 @@ public class GameView extends View<GameViewModel> {
     public GameView(Stage stage, Skin skin, GameViewModel viewModel, AssetService assetService) {
         super(stage, skin, viewModel);
         this.assetService = assetService;
+
 
         this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
@@ -71,10 +79,29 @@ public class GameView extends View<GameViewModel> {
             if (dialogueBox.getParent() == null) {
                 stage.addActor(dialogueBox);
             }
-            dialogueBox.show(data[0], data[1]);
+            // data[2] = facesetPath từ NPC property trong TMX
+            String facesetPath = data.length > 2 ? data[2] : "";
+            Texture faceset = loadFaceset(facesetPath);
+            dialogueBox.show(data[0], data[1], faceset);
         } else {
             dialogueBox.remove();
         }
+    }
+
+    /**
+     * Lazy-load faceset texture theo đường dẫn lưu trong NPC property.
+     * Kết quả được cache – mỗi ảnh chỉ load 1 lần.
+     *
+     * @param path Đường dẫn tương đối từ assets/ (vd: "ui/monk_faceset.png"), hoặc rỗng/null.
+     * @return Texture tương ứng, hoặc null nếu không có.
+     */
+    private Texture loadFaceset(String path) {
+        if (path == null || path.isBlank()) return null;
+        return facesetCache.computeIfAbsent(path, p -> {
+            Texture tex = new Texture(Gdx.files.internal(p));
+            tex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            return tex;
+        });
     }
 
     @Override
@@ -241,5 +268,13 @@ public class GameView extends View<GameViewModel> {
                 }))
             )
         );
+    }
+
+    /** Giải phóng tất cả faceset texture đã cache và nền dialogue khi screen bị hủy. */
+    @Override
+    public void dispose() {
+        facesetCache.values().forEach(Texture::dispose);
+        facesetCache.clear();
+        dialogueBox.dispose();
     }
 }

@@ -95,6 +95,9 @@ public class Animation2D implements Component {
         ATTACK,
         DAMAGED,
         DEAD,
+        ITEM,
+        SPECIAL1,
+        SPECIAL2,
         ;
 
         private final String atlasKey;

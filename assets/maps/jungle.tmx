@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="19">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="19">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
@@ -11,7 +11,7 @@
  </layer>
  <layer id="2" name="obstacle" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJytlEkvBEEUx0eNPXwAy4EPYt/d7LubfXdDxHZGxHYWIYOb9WBwsksknOwS28kuws2vMz2ZUqZHJ7zkl+pX71/vVb3q7gCrxRIIZixJWCzJkCIcfipjGqSL77pn/Bd4hTfYhh1dE8UYDTEQq6yTrYBYIRTpmmLGEiiFSWmdD3v3BT/whzNi53o8gzETsiDbQ606YvXQAG3QCE3QDAuwCEsQQv5QCINwqWfafsqgHCqg0kMt2foVnbNPu7BnModZGydfC7TCmHD16QIuxc87+6v1kqPPTR6tV+qdaeasa4Opfzy7uztz1rVTZ0WpNar4Xfjdv+zngPihgUZ9V1RT66k2TXxG0tzyfAezMAfzyvoJ/Gu4MdHDZUWzir+mzK3jb8AmbEmxDv35g/HTRK19E5ojNMdwAqe63iatC6KPwW566em8cczHQwIkSpp7nh/gEZ70ebsUj6BOpJtaRudtZy4HciEP8oXjLjTzIo8AK3hLOd+Fo4+dBns3Ou8A+iqohhqoFa73tEfKJX/T2j9+kHHIoJbzvFcm7mkYzYj4/u7K3/QXWMlc7A==
+   eJytlLlOAzEQhoODQEHwABwFeRBqam4KoONIuOkRVw0S4qoRAoUeKgLpoUjNjYQEFZfEA/BZ8mpHZp2sWUb65LU8M789Y28mnUo1gI91qsrrX2L923xfmrGjSqzLhogbhhE4snLUsf96c4Z71h7MehdjN/RAbwXdadZmYNb4zDHOwwKcirhmNFqgFdpEzfR+RmEMxmHij2fUput0lSDeZQci574K6/QITyq6Z0lsnRwbEXmC3smeSd0CHP/j+aN6FugW0Tm3tPas+Qrz1QT7se+KbbZeNXvB/1XEnFjxhx75zizfC+almPFLnvsux/C/xucGbuHO+BdEXCN1bPL8V7nsjbzv8AGfRqMotNrRyXpoLRLbB/0wAIMq7EUNeRSkodbKqeu47KiN67yb+OcgD5MwpcJ7uiZyyTet//FbzLcdWsF5n2P0aQefXfX77gZv+geTGDvH
   </data>
  </layer>
  <objectgroup id="6" name="trigger">
@@ -49,4 +49,9 @@
   <object id="10" gid="814" x="250" y="93" width="12" height="8"/>
   <object id="11" gid="814" x="282.5" y="197" width="12" height="8"/>
  </objectgroup>
+ <layer id="7" name="fore1" width="27" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAeuDIxMLgBsTsThO8BpD2B2IsJU+02oNh2qPhJJHlbINsOiO2B2AGLPhiIBMpFAXE0HjXoZp8hoJYYUE3AL9QE/WhmUtsv6KASaGYVHnNp5U90gM2f9LAXGdDbPnLBKqA7V5Po1idA9U/p5L8fQHt+DnBY4vOvI1DcCYidgdiFCu6kpn/pkQYHIk8DAPZuHhQ=
+  </data>
+ </layer>
 </map>

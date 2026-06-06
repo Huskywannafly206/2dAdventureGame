@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="14" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="16" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
-   <property name="animationSpeed" type="float" value="1"/>
+   <property name="animationSpeed" type="float" value="2"/>
    <property name="attackSound" value="SWING"/>
-   <property name="damage" type="float" value="7"/>
+   <property name="damage" type="float" value="5"/>
    <property name="damageDelay" type="float" value="0.2"/>
-   <property name="life" type="int" value="12"/>
+   <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.5"/>
    <property name="speed" type="float" value="10"/>
   </properties>
@@ -89,7 +89,7 @@
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackRange" type="float" value="1.2"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
    <property name="damage" type="float" value="1"/>
@@ -180,22 +180,84 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="15" type="Object">
+ <tile id="14" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="attackRange" type="float" value="0.5"/>
-   <property name="attackSound" value="SWING"/>
-   <property name="bodyType" value="DynamicBody"/>
-   <property name="speed" type="float" value="1.2"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
+   <property name="faceset" value="ui/fighter_white_faceset.png"/>
+   <property name="npcName" value="fighter_white"/>
   </properties>
-  <image source="objects/shaman.png" width="16" height="16"/>
+  <image source="objects/fighter_white.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="18" width="9" height="5">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="15" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="0.625"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="life" type="int" value="200"/>
+   <property name="maxLife" type="int" value="200"/>
+  </properties>
+  <image source="objects/green_tower.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="16" width="24" height="16"/>
+  </objectgroup>
  </tile>
  <tile id="16" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="0.67"/>
+   <property name="atlasAsset" value="OBJECTS"/>
+   <property name="attackRange" type="float" value="3"/>
+   <property name="attackSound" value="SWING"/>
+   <property name="bodyType" value="DynamicBody"/>
+   <property name="damage" type="float" value="0.3"/>
+   <property name="damageDelay" type="float" value="0.45"/>
+   <property name="life" type="int" value="800"/>
+   <property name="lifeReg" type="float" value="0.2"/>
+   <property name="sightRange" type="float" value="30"/>
+   <property name="speed" type="float" value="1.2"/>
+   <property name="type" value="mob"/>
+   <property name="xpReward" type="float" value="10"/>
+  </properties>
+  <image source="objects/GiantBlueSamurai_Idle_00.png" width="96" height="48"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="24" y="21" width="48" height="18">
+    <ellipse/>
+   </object>
+   <object id="2" name="attack_sensor_down" x="4.65" y="28.75" width="89.9" height="32.55">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="3" name="attack_sensor_up" x="11.4" y="-12.8" width="72.2" height="35.3">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="4" name="attack_sensor_left" x="-3.4" y="-4.5" width="47.9" height="55.8">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="5" name="attack_sensor_right" x="52" y="-3.25" width="45.1" height="54.9">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="17" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackRange" type="float" value="1.2"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
    <property name="damage" type="float" value="1"/>
@@ -234,11 +296,11 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="17" type="Object">
+ <tile id="18" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
-   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackRange" type="float" value="1.2"/>
    <property name="attackSound" value="SWING"/>
    <property name="bodyType" value="DynamicBody"/>
    <property name="damage" type="float" value="1"/>

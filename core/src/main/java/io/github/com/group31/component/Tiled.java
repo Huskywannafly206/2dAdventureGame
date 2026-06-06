@@ -9,10 +9,22 @@ public class Tiled implements Component {
 
     private final int id;
     private final MapObject mapObjectRef;
+    private int tileId = -1;
 
     public Tiled(MapObject mapObjectRef) {
+        this(mapObjectRef, -1);
+    }
+
+    public Tiled(MapObject mapObjectRef, int tileId) {
         this.id = mapObjectRef.getProperties().get("id", -1, Integer.class);
         this.mapObjectRef = mapObjectRef;
+        this.tileId = tileId;
+    }
+
+    public Tiled(int tileId) {
+        this.id = -1;
+        this.mapObjectRef = null;
+        this.tileId = tileId;
     }
 
     public int getId() {
@@ -21,5 +33,9 @@ public class Tiled implements Component {
 
     public MapObject getMapObjectRef() {
         return mapObjectRef;
+    }
+
+    public int getTileId() {
+        return tileId;
     }
 }

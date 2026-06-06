@@ -32,9 +32,14 @@ public class GameView extends View<GameViewModel> implements Disposable {
     private final HorizontalGroup lifeGroup;
     private ProgressBar xpBar;
     private Label levelLabel;
+    private Label weaponLabel;
     private final DialogueBox dialogueBox;
 
-    // Cache faceset textures theo đường dẫn – lazy load khi cần
+    /**
+     * Cache texture faceset theo đường dẫn — lazy-load khi NPC xuất hiện lần đầu.
+     * Key = đường dẫn tương đối assets/ (vd: "ui/monk_faceset.png").
+     * Tất cả texture được dispose() trong dispose().
+     */
     private final HashMap<String, Texture> facesetCache = new HashMap<>();
 
     // Inventory HUD elements (top-right)
@@ -59,6 +64,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
         updateXp(viewModel.getXp());
         updateLevel(viewModel.getLevel());
         updateInventoryLabels(viewModel.getPotions(), viewModel.getCoins(), viewModel.getKeys());
+        updateWeaponLabel(viewModel.getCurrentWeaponName());
     }
 
     @Override
@@ -72,6 +78,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
             updateInventoryLabels(counts[0], counts[1], counts[2]);
         });
         viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
+        viewModel.onPropertyChange(GameViewModel.WEAPON_CHANGED, String.class, this::updateWeaponLabel);
     }
 
     private void updateDialogue(String[] data) {
@@ -79,8 +86,8 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (dialogueBox.getParent() == null) {
                 stage.addActor(dialogueBox);
             }
-            // data[2] = facesetPath từ NPC property trong TMX
-            String facesetPath = data.length > 2 ? data[2] : "";
+            // data[2] là facesetPath từ TMX property (rỗng = không có avatar)
+            String facesetPath = (data.length > 2 && !data[2].isBlank()) ? data[2] : null;
             Texture faceset = loadFaceset(facesetPath);
             dialogueBox.show(data[0], data[1], faceset);
         } else {
@@ -89,15 +96,18 @@ public class GameView extends View<GameViewModel> implements Disposable {
     }
 
     /**
-     * Lazy-load faceset texture theo đường dẫn lưu trong NPC property.
-     * Kết quả được cache – mỗi ảnh chỉ load 1 lần.
+     * Lazy-load và cache texture faceset theo đường dẫn assets/.
      *
-     * @param path Đường dẫn tương đối từ assets/ (vd: "ui/monk_faceset.png"), hoặc rỗng/null.
-     * @return Texture tương ứng, hoặc null nếu không có.
+     * @param path Đường dẫn tương đối, ví dụ "ui/monk_faceset.png". Null → trả về null.
+     * @return Texture đã load và lọc Nearest, hoặc null nếu path null/không tìm thấy.
      */
     private Texture loadFaceset(String path) {
         if (path == null || path.isBlank()) return null;
         return facesetCache.computeIfAbsent(path, p -> {
+            if (!Gdx.files.internal(p).exists()) {
+                Gdx.app.error("GameView", "Faceset không tìm thấy: " + p);
+                return null;
+            }
             Texture tex = new Texture(Gdx.files.internal(p));
             tex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
             return tex;
@@ -128,7 +138,15 @@ public class GameView extends View<GameViewModel> implements Disposable {
         xpBar = new ProgressBar(0f, 100f, 0.5f, false, skin);
         xpBar.setName("xpBar");
         xpRow.add(xpBar).width(80f).padLeft(4f).padBottom(3f);
-        bottomLeft.add(xpRow).left();
+        bottomLeft.add(xpRow).left().row();
+
+        // ── Weapon row ──
+        Table weaponRow = new Table();
+        Label weaponTitle = new Label("Vũ khí: ", skin, "tiny");
+        weaponLabel = new Label("Đấm", skin, "tiny");
+        weaponRow.add(weaponTitle).padLeft(5f).padBottom(3f);
+        weaponRow.add(weaponLabel).padBottom(3f);
+        bottomLeft.add(weaponRow).left();
 
         add(bottomLeft).expand().align(Align.bottomLeft);
 
@@ -223,6 +241,12 @@ public class GameView extends View<GameViewModel> implements Disposable {
         if (keyLabel    != null) keyLabel.setText("x" + keys);
     }
 
+    private void updateWeaponLabel(String weaponName) {
+        if (weaponLabel != null) {
+            weaponLabel.setText(weaponName);
+        }
+    }
+
     // ── Coordinate helper ─────────────────────────────────────────────────────
 
     private Vector2 toStageCoords(Vector2 gamePosition) {
@@ -270,10 +294,12 @@ public class GameView extends View<GameViewModel> implements Disposable {
         );
     }
 
-    /** Giải phóng tất cả faceset texture đã cache và nền dialogue khi screen bị hủy. */
+    /** Giải phóng tất cả texture faceset đã cache và nền dialogue khi screen bị hủy. */
     @Override
     public void dispose() {
-        facesetCache.values().forEach(Texture::dispose);
+        for (Texture tex : facesetCache.values()) {
+            if (tex != null) tex.dispose();
+        }
         facesetCache.clear();
         dialogueBox.dispose();
     }

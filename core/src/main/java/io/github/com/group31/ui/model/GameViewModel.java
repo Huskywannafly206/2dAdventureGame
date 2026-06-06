@@ -17,7 +17,9 @@ public class GameViewModel extends ViewModel {
     public static final String XP_CHANGED = "xpChanged";
     public static final String LEVEL_CHANGED = "levelChanged";
     public static final String INVENTORY_CHANGED = "inventoryChanged";
-    public static final String DIALOGUE_CHANGED = "dialogueChanged";
+    public static final String DIALOGUE_CHANGED    = "dialogueChanged";
+    public static final String WEAPON_CHANGED      = "weaponChanged";
+
 
     private final AudioService audioService;
     private int lifePoints;
@@ -37,6 +39,8 @@ public class GameViewModel extends ViewModel {
     private int keys;
 
     private String[] activeDialogue = null;
+    private String   currentWeaponName = "Đấm";
+
 
     public GameViewModel(GdxGame game) {
         super(game);
@@ -156,12 +160,16 @@ public class GameViewModel extends ViewModel {
         game.getViewport().project(tmpVec2);
         return tmpVec2;
     }
-
     public void showDialogue(String npcName, String line, String facesetPath) {
         String[] prev = this.activeDialogue;
-        // data[0]=npcName, data[1]=line, data[2]=facesetPath ("" if none)
+        // activeDialogue[0] = npcName, [1] = line, [2] = facesetPath (có thể rỗng)
         this.activeDialogue = new String[]{npcName, line, facesetPath != null ? facesetPath : ""};
         this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, this.activeDialogue);
+    }
+
+    /** Overload backward-compat — không có faceset. */
+    public void showDialogue(String npcName, String line) {
+        showDialogue(npcName, line, null);
     }
 
     public void hideDialogue() {
@@ -172,5 +180,15 @@ public class GameViewModel extends ViewModel {
 
     public String[] getActiveDialogue() {
         return activeDialogue;
+    }
+
+    public void updateWeaponName(String name) {
+        String oldName = this.currentWeaponName;
+        this.currentWeaponName = name;
+        this.propertyChangeSupport.firePropertyChange(WEAPON_CHANGED, oldName, name);
+    }
+
+    public String getCurrentWeaponName() {
+        return currentWeaponName;
     }
 }

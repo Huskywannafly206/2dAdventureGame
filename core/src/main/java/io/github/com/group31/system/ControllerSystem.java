@@ -1,19 +1,41 @@
 package io.github.com.group31.system;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import io.github.com.group31.GdxGame;
+import io.github.com.group31.asset.AssetService;
+import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.audio.AudioService;
+import io.github.com.group31.combat.Weapon;
+import io.github.com.group31.combat.Weapon.ProjectileType;
 import io.github.com.group31.component.Animation2D;
+import io.github.com.group31.component.Animation2D.AnimationType;
 import io.github.com.group31.component.Attack;
+import io.github.com.group31.component.CombatState;
 import io.github.com.group31.component.Controller;
+import io.github.com.group31.component.Facing;
+import io.github.com.group31.component.Facing.FacingDirection;
+import io.github.com.group31.component.Graphic;
 import io.github.com.group31.component.Inventory;
 import io.github.com.group31.component.Item;
 import io.github.com.group31.component.Life;
 import io.github.com.group31.component.Move;
 import io.github.com.group31.component.Npc;
+import io.github.com.group31.component.Physic;
+import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Projectile;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.input.Command;
 import io.github.com.group31.screen.MenuScreen;
@@ -22,16 +44,35 @@ import io.github.com.group31.ui.model.GameViewModel;
 public class ControllerSystem extends IteratingSystem {
     private static final float POTION_HEAL_AMOUNT = 4f;
 
+    /** Thời gian Dash: thời lượng, tốc độ, cooldown */
+    private static final float DASH_DURATION   = 0.25f;
+    private static final float DASH_SPEED      = 10f;
+    private static final float DASH_COOLDOWN   = 1.0f;
+
+    /** Tầm auto-aim của phép (tính bằng game units = tiles). */
+    private static final float AUTO_AIM_RANGE  = 6f;
+
     private final GdxGame game;
     private final AudioService audioService;
     private final GameViewModel viewModel;
+    private final World physicWorld;
+    private final AssetService assetService;
     private Entity activeNpcEntity = null;
 
-    public ControllerSystem(GdxGame game, AudioService audioService, GameViewModel viewModel) {
+    // --- Dash state (per-player, gắn trên system vì chỉ có 1 player) ---
+    private float dashTimer    = 0f; // thời gian đang dash còn lại
+    private float dashCooldown = 0f; // thời gian hồi chiêu còn lại
+    private final Vector2 dashDir = new Vector2();
+
+    public ControllerSystem(GdxGame game, AudioService audioService,
+                            GameViewModel viewModel, World physicWorld,
+                            AssetService assetService) {
         super(Family.all(Controller.class).get());
-        this.game = game;
+        this.game         = game;
         this.audioService = audioService;
-        this.viewModel = viewModel;
+        this.viewModel    = viewModel;
+        this.physicWorld  = physicWorld;
+        this.assetService = assetService;
     }
 
     /**
@@ -39,6 +80,16 @@ public class ControllerSystem extends IteratingSystem {
      */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        // --- Đếm timer Dash ---
+        if (dashTimer > 0f) {
+            dashTimer -= deltaTime;
+            if (dashTimer < 0f) dashTimer = 0f;
+        }
+        if (dashCooldown > 0f) {
+            dashCooldown -= deltaTime;
+            if (dashCooldown < 0f) dashCooldown = 0f;
+        }
+
         Controller controller = Controller.MAPPER.get(entity);
         if (controller.getPressedCommands().isEmpty() && controller.getReleasedCommands().isEmpty()) {
             return;
@@ -55,65 +106,67 @@ public class ControllerSystem extends IteratingSystem {
 
         for (Command command : controller.getPressedCommands()) {
             switch (command) {
-                case UP -> moveEntity(entity, 0f, 1f);
-                case DOWN -> moveEntity(entity, 0f, -1f);
-                case LEFT -> moveEntity(entity, -1f, 0f);
+                case UP    -> moveEntity(entity, 0f, 1f);
+                case DOWN  -> moveEntity(entity, 0f, -1f);
+                case LEFT  -> moveEntity(entity, -1f, 0f);
                 case RIGHT -> moveEntity(entity, 1f, 0f);
-                case SELECT -> startEntityAttack(entity);
-                case CANCEL -> game.setScreen(MenuScreen.class);
-                case USE_ITEM -> usePotion(entity);
-                case INTERACT -> interactWithNpc(entity);
+                case SELECT        -> handleAttack(entity);
+                case CANCEL        -> game.setScreen(MenuScreen.class);
+                case USE_ITEM      -> usePotion(entity);
+                case INTERACT      -> interactWithNpc(entity);
+                case DASH          -> startDash(entity);
+                case SWITCH_WEAPON -> switchWeapon(entity);
             }
         }
         controller.getPressedCommands().clear();
 
         for (Command command : controller.getReleasedCommands()) {
             switch (command) {
-                case UP -> moveEntity(entity, 0f, -1f);
-                case DOWN -> moveEntity(entity, 0f, 1f);
-                case LEFT -> moveEntity(entity, 1f, 0f);
+                case UP    -> moveEntity(entity, 0f, -1f);
+                case DOWN  -> moveEntity(entity, 0f, 1f);
+                case LEFT  -> moveEntity(entity, 1f, 0f);
                 case RIGHT -> moveEntity(entity, -1f, 0f);
             }
         }
         controller.getReleasedCommands().clear();
     }
 
-    /**
-     * Uống bình máu: hồi 4 HP nếu Player có bình và HP chưa đầy.
-     */
-    private void usePotion(Entity entity) {
-        Inventory inventory = Inventory.MAPPER.get(entity);
-        Life life = Life.MAPPER.get(entity);
-        if (inventory == null || life == null) return;
+    // =========================================================================
+    // Weapon switching
+    // =========================================================================
 
-        // Không dùng nếu hết bình hoặc HP đã đầy
-        if (inventory.getItemCount(Item.Type.POTION_HEALTH) <= 0) return;
-        if (life.getLife() >= life.getMaxLife()) return;
+    private void switchWeapon(Entity entity) {
+        CombatState cs = CombatState.MAPPER.get(entity);
+        if (cs == null || cs.getUnlockedWeapons().size() <= 1) return;
 
-        // Hồi HP
-        life.addLife(POTION_HEAL_AMOUNT);
-        inventory.removeItem(Item.Type.POTION_HEALTH, 1);
+        cs.nextWeapon();
+        Weapon w = cs.getCurrentWeapon();
 
-        // Phát âm thanh
-        audioService.playSound(SoundAsset.HEAL);
-
-        // Cập nhật HUD life
-        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
-
-        // Hiện chữ nổi màu xanh lá cây
-        Transform transform = Transform.MAPPER.get(entity);
-        if (transform != null) {
-            float x = transform.getPosition().x + transform.getSize().x * 0.5f;
-            float y = transform.getPosition().y + transform.getSize().y;
-            viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+        // Floating text thông báo tên vũ khí
+        Transform t = Transform.MAPPER.get(entity);
+        if (t != null) {
+            float x = t.getPosition().x + t.getSize().x * 0.5f;
+            float y = t.getPosition().y + t.getSize().y;
+            viewModel.showFloatingText("[CYAN]" + w.displayName + "[]", x, y);
         }
+        viewModel.updateWeaponName(w.displayName);
+    }
 
-        // Cập nhật HUD inventory
-        viewModel.updateInventory(
-            inventory.getItemCount(Item.Type.POTION_HEALTH),
-            inventory.getItemCount(Item.Type.COIN),
-            inventory.getItemCount(Item.Type.KEY)
-        );
+    // =========================================================================
+    // Attack: cận chiến hoặc bắn đạn tuỳ vũ khí hiện tại
+    // =========================================================================
+
+    private void handleAttack(Entity entity) {
+        CombatState cs = CombatState.MAPPER.get(entity);
+        Weapon weapon = (cs != null) ? cs.getCurrentWeapon() : null;
+
+        if (weapon == null || weapon.isMelee()) {
+            // Cận chiến — dùng Attack component gốc
+            startEntityAttack(entity);
+        } else {
+            // Bắn đạn
+            fireProjectile(entity, weapon);
+        }
     }
 
     private void startEntityAttack(Entity entity) {
@@ -123,6 +176,188 @@ public class ControllerSystem extends IteratingSystem {
         }
     }
 
+    // =========================================================================
+    // Projectile spawn
+    // =========================================================================
+
+    private void fireProjectile(Entity shooter, Weapon weapon) {
+        ProjectileType projType = weapon.projectileType;
+        if (projType == null) return;
+
+        // Cooldown đơn giản: dùng Attack component của player
+        Attack attack = Attack.MAPPER.get(shooter);
+        if (attack != null && !attack.canAttack()) return;
+        if (attack != null) attack.startAttack();
+
+        // Xác định hướng bắn
+        FacingDirection facing = Facing.MAPPER.get(shooter).getDirection();
+        Vector2 dir = directionVector(facing);
+
+        // Auto-aim cho Fireball
+        if (projType.autoAim) {
+            Vector2 aimTarget = findNearestEnemy(shooter);
+            if (aimTarget != null) {
+                Transform playerT = Transform.MAPPER.get(shooter);
+                Vector2 origin = playerT.getPosition();
+                dir = aimTarget.sub(origin).nor();
+            }
+        }
+
+        // Vị trí xuất phát = tâm nhân vật
+        Transform playerT = Transform.MAPPER.get(shooter);
+        float spawnX = playerT.getPosition().x + playerT.getSize().x * 0.5f;
+        float spawnY = playerT.getPosition().y + playerT.getSize().y * 0.5f;
+
+        spawnProjectileEntity(shooter, projType, spawnX, spawnY, dir, weapon.damage);
+    }
+
+    private void spawnProjectileEntity(Entity owner, ProjectileType type,
+                                       float x, float y,
+                                       Vector2 dir, float damage) {
+        Engine engine = getEngine();
+        Entity entity = engine.createEntity();
+
+        // --- Transform ---
+        float size = 0.25f; // ~8px tại 32px/unit
+        Transform transform = new Transform(
+            new Vector2(x - size * 0.5f, y - size * 0.5f),
+            1,                          // z-layer (trên mặt đất)
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,                         // rotationDeg
+            0f                          // sortOffsetY
+        );
+        entity.add(transform);
+
+        // --- Graphic: lấy region từ atlas ---
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureAtlas.AtlasRegion region = atlas.findRegion(type.atlasKey);
+        if (region == null) region = atlas.findRegions(type.atlasKey).first();
+        entity.add(new Graphic(region, Color.WHITE));
+
+        // --- Attack (chứa damage) ---
+        entity.add(new Attack(damage, 0f, null));
+
+        // --- Projectile ---
+        Projectile proj = new Projectile(owner, type);
+        Vector2 vel = dir.nor().scl(type.speed);
+        proj.getVelocity().set(vel);
+        entity.add(proj);
+
+        // --- Box2D body (sensor circle) ---
+        BodyDef bDef = new BodyDef();
+        bDef.type            = BodyDef.BodyType.DynamicBody;
+        bDef.position.set(x, y);
+        bDef.fixedRotation   = true;
+        bDef.linearDamping   = 0f;
+        Body body = physicWorld.createBody(bDef);
+        body.setUserData(entity);
+
+        CircleShape circle = new CircleShape();
+        circle.setRadius(size * 0.5f);
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape    = circle;
+        fDef.isSensor = true;   // sensor: không đẩy vật lý, chỉ detect va chạm
+        body.createFixture(fDef);
+        circle.dispose();
+
+        body.setLinearVelocity(vel.x, vel.y);
+        entity.add(new Physic(body, new Vector2(body.getPosition())));
+
+        engine.addEntity(entity);
+    }
+
+    // =========================================================================
+    // Auto-aim: tìm kẻ địch gần nhất trong tầm AUTO_AIM_RANGE
+    // =========================================================================
+
+    private Vector2 findNearestEnemy(Entity shooter) {
+        Transform shooterT = Transform.MAPPER.get(shooter);
+        if (shooterT == null) return null;
+
+        Vector2 origin = shooterT.getPosition();
+        float minDist = AUTO_AIM_RANGE;
+        Vector2 best  = null;
+
+        for (Entity e : getEngine().getEntitiesFor(Family.all(Life.class, Transform.class).get())) {
+            if (e == shooter) continue;
+            if (Player.MAPPER.has(e)) continue; // không tự aim mình
+
+            Transform t = Transform.MAPPER.get(e);
+            float dist  = origin.dst(t.getPosition());
+            if (dist < minDist) {
+                minDist = dist;
+                best    = new Vector2(t.getPosition().x + t.getSize().x * 0.5f,
+                                      t.getPosition().y + t.getSize().y * 0.5f);
+            }
+        }
+        return best;
+    }
+
+    // =========================================================================
+    // Dash
+    // =========================================================================
+
+    private void startDash(Entity entity) {
+        if (dashCooldown > 0f) return; // còn hồi chiêu
+
+        Move move = Move.MAPPER.get(entity);
+        if (move == null) return;
+
+        // Hướng dash = hướng đang chạy hoặc hướng nhìn nếu đứng yên
+        if (!move.getDirection().isZero()) {
+            dashDir.set(move.getDirection()).nor();
+        } else {
+            FacingDirection f = Facing.MAPPER.get(entity).getDirection();
+            dashDir.set(directionVector(f));
+        }
+
+        dashTimer    = DASH_DURATION;
+        dashCooldown = DASH_COOLDOWN;
+
+        // Chuyển animation sang ROLL
+        Animation2D anim = Animation2D.MAPPER.get(entity);
+        if (anim != null) anim.setType(AnimationType.ROLL);
+
+        // Áp lực vận tốc trực tiếp lên Body
+        Physic physic = Physic.MAPPER.get(entity);
+        if (physic != null) {
+            Body body = physic.getBody();
+            body.setLinearVelocity(dashDir.x * DASH_SPEED, dashDir.y * DASH_SPEED);
+        }
+    }
+
+    // =========================================================================
+    // Helper: uống thuốc
+    // =========================================================================
+
+    private void usePotion(Entity entity) {
+        Inventory inventory = Inventory.MAPPER.get(entity);
+        Life life = Life.MAPPER.get(entity);
+        if (inventory == null || life == null) return;
+
+        if (inventory.getItemCount(Item.Type.POTION_HEALTH) <= 0) return;
+        if (life.getLife() >= life.getMaxLife()) return;
+
+        life.addLife(POTION_HEAL_AMOUNT);
+        inventory.removeItem(Item.Type.POTION_HEALTH, 1);
+        audioService.playSound(SoundAsset.HEAL);
+        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+
+        Transform transform = Transform.MAPPER.get(entity);
+        if (transform != null) {
+            float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+            float y = transform.getPosition().y + transform.getSize().y;
+            viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+        }
+
+        viewModel.updateInventory(
+            inventory.getItemCount(Item.Type.POTION_HEALTH),
+            inventory.getItemCount(Item.Type.COIN),
+            inventory.getItemCount(Item.Type.KEY)
+        );
+    }
+
     private void moveEntity(Entity entity, float dx, float dy) {
         Move move = Move.MAPPER.get(entity);
         if (move != null) {
@@ -130,6 +365,10 @@ public class ControllerSystem extends IteratingSystem {
             move.getDirection().y += dy;
         }
     }
+
+    // =========================================================================
+    // NPC Interaction (unchanged)
+    // =========================================================================
 
     private void interactWithNpc(Entity player) {
         if (activeNpcEntity != null) {
@@ -153,7 +392,7 @@ public class ControllerSystem extends IteratingSystem {
         if (playerTransform == null) return;
 
         Entity closestNpc = null;
-        float minDistance = 1.5f; // khoảng cách 1.5 tiles
+        float minDistance = 1.5f;
 
         for (Entity npcEntity : getEngine().getEntitiesFor(Family.all(Npc.class, Transform.class).get())) {
             Transform npcTransform = Transform.MAPPER.get(npcEntity);
@@ -190,7 +429,6 @@ public class ControllerSystem extends IteratingSystem {
                     animType = Animation2D.AnimationType.valueOf(tag);
                     cleanLine = rawLine.substring(closeBracket + 1);
                 } catch (IllegalArgumentException ignored) {
-                    // Tag is not a valid AnimationType, keep the line as is
                 }
             }
         }
@@ -201,5 +439,19 @@ public class ControllerSystem extends IteratingSystem {
         }
 
         viewModel.showDialogue(npc.getName(), cleanLine, npc.getFacesetPath());
+    }
+
+    // =========================================================================
+    // Utility
+    // =========================================================================
+
+    /** Chuyển FacingDirection thành Vector2 đơn vị. */
+    private static Vector2 directionVector(FacingDirection dir) {
+        return switch (dir) {
+            case UP    -> new Vector2(0f,  1f);
+            case DOWN  -> new Vector2(0f, -1f);
+            case LEFT  -> new Vector2(-1f, 0f);
+            case RIGHT -> new Vector2(1f,  0f);
+        };
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="15" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="16" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -261,6 +261,16 @@
    <property name="hiddenBarrier" type="bool" value="true"/>
   </properties>
   <image source="objects/stone_block.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="18" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="Heart Container"/>
+  </properties>
+  <image source="objects/heart_container.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>

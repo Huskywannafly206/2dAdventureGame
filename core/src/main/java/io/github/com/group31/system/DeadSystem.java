@@ -65,9 +65,27 @@ public class DeadSystem extends IteratingSystem {
                     entity.remove(Dead.class);
                     return;
                 }
+                if ("GiantBlueSamurai".equals(name)) {
+                    removeStoneBlockGates();
+                }
             }
 
             getEngine().removeEntity(entity);
         }
+    }
+
+    private void removeStoneBlockGates() {
+        ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(Tiled.class).get());
+        java.util.List<Entity> toRemove = new java.util.ArrayList<>();
+        for (Entity entity : entities) {
+            Tiled tiled = Tiled.MAPPER.get(entity);
+            if (tiled.getMapObjectRef() != null && "stone_block_gate".equals(tiled.getMapObjectRef().getName())) {
+                toRemove.add(entity);
+            }
+        }
+        for (Entity entity : toRemove) {
+            getEngine().removeEntity(entity);
+        }
+        com.badlogic.gdx.Gdx.app.log("DeadSystem", "GiantBlueSamurai defeated! Removed " + toRemove.size() + " stone block gates.");
     }
 }

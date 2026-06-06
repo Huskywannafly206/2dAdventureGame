@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="14" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="15" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="2"/>
    <property name="attackSound" value="SWING"/>
-   <property name="damage" type="float" value="5"/>
+   <property name="damage" type="float" value="30"/>
    <property name="damageDelay" type="float" value="0.2"/>
    <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.5"/>
@@ -251,6 +251,18 @@
      <property name="sensor" type="bool" value="true"/>
     </properties>
    </object>
+  </objectgroup>
+ </tile>
+ <tile id="17" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="hiddenBarrier" type="bool" value="true"/>
+  </properties>
+  <image source="objects/stone_block.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
 </tileset>

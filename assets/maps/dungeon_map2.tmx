@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="30">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="36">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="Combined3.tsx"/>
  <tileset firstgid="213" source="TilesetHole.tsx"/>
@@ -108,5 +108,9 @@
   <object id="26" gid="1420" x="390.667" y="164.333" width="32" height="32"/>
   <object id="27" gid="1420" x="247.667" y="70" width="32" height="32"/>
   <object id="28" gid="1420" x="160.333" y="93.3333" width="32" height="32"/>
+  <object id="32" gid="1430" x="209.333" y="83.3333" width="16" height="16"/>
+  <object id="33" gid="1430" x="319" y="53" width="16" height="16"/>
+  <object id="34" gid="1431" x="366" y="58.3333" width="16" height="16"/>
+  <object id="35" gid="1431" x="378" y="128" width="16" height="16"/>
  </objectgroup>
 </map>

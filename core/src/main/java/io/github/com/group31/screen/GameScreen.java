@@ -174,6 +174,7 @@ public class GameScreen extends ScreenAdapter {
 
                 Life life = Life.MAPPER.get(player);
                 if(life != null){
+                    if (data.playerMaxHp > 0) life.setMaxLife(data.playerMaxHp);
                     life.setLife(data.playerHp);
                     viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
                 }
@@ -251,6 +252,7 @@ public class GameScreen extends ScreenAdapter {
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
                     data.playerHp = currentHp;
+                    data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
 
                     Experience xp = Experience.MAPPER.get(player);
@@ -348,6 +350,7 @@ public class GameScreen extends ScreenAdapter {
         // Lưu lại các thông số cốt lõi của player
         Life life = Life.MAPPER.get(player);
         float hp = life != null ? life.getLife() : 100f;
+        float maxHp = life != null ? life.getMaxLife() : 100f;
 
         Experience xp = Experience.MAPPER.get(player);
         float playerXp = xp != null ? xp.getXp() : 0f;
@@ -396,6 +399,7 @@ public class GameScreen extends ScreenAdapter {
 
                 Life newLife = Life.MAPPER.get(newPlayer);
                 if (newLife != null) {
+                    newLife.setMaxLife(maxHp);
                     newLife.setLife(hp);
                     viewModel.updateLifeInfo(newLife.getMaxLife(), newLife.getLife());
                 }

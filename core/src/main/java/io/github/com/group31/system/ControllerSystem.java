@@ -431,10 +431,7 @@ public class ControllerSystem extends IteratingSystem {
                 viewModel.showFloatingText("[RED]+4 Max HP![]", 
                     playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
 
-                Physic physic = Physic.MAPPER.get(closestNpc);
-                if (physic != null && physic.getBody() != null) {
-                    physicWorld.destroyBody(physic.getBody());
-                }
+
                 getEngine().removeEntity(closestNpc);
                 return;
             }

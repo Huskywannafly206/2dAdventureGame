@@ -4,6 +4,7 @@ public class SaveData {
     public float playerX;
     public float playerY;
     public float playerHp;
+    public float playerMaxHp;
     public float playerXp;
     public int playerLevel;
     public String mapName;

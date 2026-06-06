@@ -80,6 +80,11 @@ public class CameraSystem extends IteratingSystem {
             return;
         }
         Entity camEntity = getEntities().first();
-        processEntity(camEntity, 0f);
+        Transform transform = Transform.MAPPER.get(camEntity);
+        if (transform != null) {
+            calcTargetPosition(transform.getPosition());
+            camera.position.set(targetPosition.x, targetPosition.y, camera.position.z);
+            camera.update();
+        }
     }
 }

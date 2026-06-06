@@ -222,7 +222,7 @@
    <property name="life" type="int" value="800"/>
    <property name="lifeReg" type="float" value="0.2"/>
    <property name="sightRange" type="float" value="30"/>
-   <property name="speed" type="float" value="1.2"/>
+   <property name="speed" type="float" value="1.5"/>
    <property name="type" value="mob"/>
    <property name="xpReward" type="float" value="10"/>
   </properties>

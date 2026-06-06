@@ -40,6 +40,8 @@ public class GameViewModel extends ViewModel {
     private int potions;
     private int coins;
     private int keys;
+    private int goldKeys;
+    private int silverKeys;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -62,6 +64,8 @@ public class GameViewModel extends ViewModel {
         this.potions = 0;
         this.coins = 0;
         this.keys = 0;
+        this.goldKeys = 0;
+        this.silverKeys = 0;
     }
 
     public void setMaxLife(int maxLife) {
@@ -117,16 +121,24 @@ public class GameViewModel extends ViewModel {
     public int getPotions() { return potions; }
     public int getCoins()   { return coins; }
     public int getKeys()    { return keys; }
+    public int getGoldKeys() { return goldKeys; }
+    public int getSilverKeys() { return silverKeys; }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
     public void updateInventory(int potions, int coins, int keys) {
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
-        // Gửi ba số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys});
+        this.goldKeys = goldKeys;
+        this.silverKeys = silverKeys;
+        // Gửi các số dưới dạng mảng int[] để View tự parse
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys});
     }
 
     /** Called by LifeSystem when player life reaches 0. */

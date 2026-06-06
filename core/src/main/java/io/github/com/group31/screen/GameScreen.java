@@ -102,8 +102,9 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new SlashFxLifetimeSystem());
         this.engine.addSystem(new SlashFxSystem(this.engine, game.getAssetService()));
-        this.engine.addSystem(new WeaponHandSystem(game.getBatch(), game.getAssetService()));
-        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
+        WeaponHandSystem weaponHandSystem = new WeaponHandSystem(game.getBatch(), game.getAssetService());
+        this.engine.addSystem(weaponHandSystem);
+        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), weaponHandSystem));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
         this.engine.addSystem(new ProjectileSystem());
         this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,

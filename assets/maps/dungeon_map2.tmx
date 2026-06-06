@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="36">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="38">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="Combined3.tsx"/>
  <tileset firstgid="213" source="TilesetHole.tsx"/>
@@ -32,11 +32,11 @@
 </data>
  </layer>
  <objectgroup id="4" name="trigger" offsetx="1" offsety="-0.666667">
-  <object id="2" name="portal_trigger" x="136" y="16.5153" width="48.6667" height="15.8182">
+  <object id="2" name="portal_trigger" x="136" y="16.5153" width="48.6667" height="30.0">
    <properties>
-    <property name="targetMap" value="DUNGEONMAP1"/>
-    <property name="targetX" type="float" value="245.159514208"/>
-    <property name="targetY" type="float" value="305.229689647"/>
+    <property name="targetMap" value="DUNGEONMAP4"/>
+    <property name="targetX" type="float" value="863"/>
+    <property name="targetY" type="float" value="1891"/>
    </properties>
   </object>
   <object id="10" name="portal_trigger" x="230.417" y="311.333" width="47.8333" height="9">
@@ -96,7 +96,7 @@
 </data>
  </layer>
  <objectgroup id="6" name="objects">
-  <object id="6" name="Player" gid="1412" x="241.378" y="222.697" width="32" height="32">
+  <object id="6" name="Player" gid="1412" x="143.711" y="69.0303" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
@@ -107,8 +107,8 @@
   <object id="25" gid="1420" x="390.667" y="164.333" width="32" height="32"/>
   <object id="26" gid="1420" x="390.667" y="164.333" width="32" height="32"/>
   <object id="27" gid="1420" x="247.667" y="70" width="32" height="32"/>
-  <object id="28" gid="1420" x="160.333" y="93.3333" width="32" height="32"/>
-  <object id="32" gid="1430" x="209.333" y="83.3333" width="16" height="16"/>
+  <object id="28" gid="1420" x="260" y="95.6666" width="32" height="32"/>
+  <object id="32" gid="1430" x="288.666" y="61" width="16" height="16"/>
   <object id="33" gid="1430" x="319" y="53" width="16" height="16"/>
   <object id="34" gid="1431" x="366" y="58.3333" width="16" height="16"/>
   <object id="35" gid="1431" x="378" y="128" width="16" height="16"/>

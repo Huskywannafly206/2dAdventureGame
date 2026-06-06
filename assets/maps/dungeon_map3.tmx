@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="12">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="22">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="TilesetHouse.tsx"/>
  <tileset firstgid="860" source="TilesetNature.tsx"/>
@@ -135,6 +135,7 @@
     <property name="targetY" type="float" value="58.666666667"/>
    </properties>
   </object>
+  <object id="21" name="barrier_trigger" x="208" y="192" width="48" height="16"/>
  </objectgroup>
  <objectgroup id="8" name="objects">
   <object id="4" name="green_tower" gid="1779" x="80" y="64" width="32" height="32"/>
@@ -148,6 +149,12 @@
    </properties>
   </object>
   <object id="9" name="GiantBlueSamurai" gid="1780" x="185.333" y="150" width="96" height="48"/>
+  <object id="15" name="stone_block_gate" gid="1781" x="208" y="224" width="16" height="16"/>
+  <object id="16" name="stone_block_gate" gid="1781" x="224" y="224" width="16" height="16"/>
+  <object id="17" name="stone_block_gate" gid="1781" x="240" y="224" width="16" height="16"/>
+  <object id="18" name="stone_block_gate" gid="1781" x="208" y="240" width="16" height="16"/>
+  <object id="19" name="stone_block_gate" gid="1781" x="224" y="240" width="16" height="16"/>
+  <object id="20" name="stone_block_gate" gid="1781" x="240" y="240" width="16" height="16"/>
  </objectgroup>
  <layer id="6" name="fore" width="30" height="20" visible="0">
   <data encoding="csv">

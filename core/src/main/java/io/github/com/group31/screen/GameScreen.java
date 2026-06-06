@@ -28,6 +28,9 @@ import io.github.com.group31.save.SaveData;
 import io.github.com.group31.save.SaveService;
 import io.github.com.group31.system.AiSystem;
 import io.github.com.group31.system.AnimationSystem;
+import io.github.com.group31.system.SlashFxLifetimeSystem;
+import io.github.com.group31.system.SlashFxSystem;
+import io.github.com.group31.system.WeaponHandSystem;
 import io.github.com.group31.system.AttackSystem;
 import io.github.com.group31.system.CameraSystem;
 import io.github.com.group31.system.ControllerSystem;
@@ -37,9 +40,11 @@ import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
 import io.github.com.group31.system.ItemSystem;
 import io.github.com.group31.system.LifeSystem;
+import io.github.com.group31.system.MapHazardSystem;
 import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
 import io.github.com.group31.system.PhysicSystem;
+import io.github.com.group31.system.ProjectileSystem;
 import io.github.com.group31.system.RenderSystem;
 import io.github.com.group31.system.SpawnSystem;
 import io.github.com.group31.system.TriggerSystem;
@@ -89,6 +94,7 @@ public class GameScreen extends ScreenAdapter {
         // detect when a damaged animation should be played.
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
+        this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
@@ -96,9 +102,15 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new DeadSystem(this.viewModel));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
-        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
+        this.engine.addSystem(new SlashFxLifetimeSystem());
+        this.engine.addSystem(new SlashFxSystem(this.engine, game.getAssetService()));
+        WeaponHandSystem weaponHandSystem = new WeaponHandSystem(game.getBatch(), game.getAssetService());
+        this.engine.addSystem(weaponHandSystem);
+        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), weaponHandSystem));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
-        this.engine.addSystem(new ControllerSystem(game, audioService, viewModel));
+        this.engine.addSystem(new ProjectileSystem());
+        this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,
+            physicWorld, game.getAssetService()));
     }
 
     @Override
@@ -156,8 +168,13 @@ public class GameScreen extends ScreenAdapter {
             if(players.size() > 0){
                 com.badlogic.ashley.core.Entity player = players.first();
 
+                // Setup QuestManager with loaded quest stage
+                io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setStage(data.questStage);
+
                 Life life = Life.MAPPER.get(player);
                 if(life != null){
+                    if (data.playerMaxHp > 0) life.setMaxLife(data.playerMaxHp);
                     life.setLife(data.playerHp);
                     viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
                 }
@@ -184,7 +201,37 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.KEY,           data.playerKeys);
                     viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys);
                 }
+
+                // Khôi phục CombatState từ file lưu
+                CombatState cs = CombatState.MAPPER.get(player);
+                if (cs != null) {
+                    if (data.unlockedWeapons != null) {
+                        cs.getUnlockedWeapons().clear();
+                        for (String wName : data.unlockedWeapons) {
+                            try {
+                                cs.unlockWeapon(io.github.com.group31.combat.Weapon.valueOf(wName));
+                            } catch (IllegalArgumentException e) {
+                                // Ignored
+                            }
+                        }
+                        cs.setCurrentIndex(data.currentWeaponIndex);
+                    }
+                    // Sync to viewModel
+                    java.util.List<String> wNames = new java.util.ArrayList<>();
+                    for (io.github.com.group31.combat.Weapon w : cs.getUnlockedWeapons()) {
+                        wNames.add(w.name());
+                    }
+                    viewModel.updateUnlockedWeapons(wNames);
+                }
+
+                // Check map transition for quest progress
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkMapEnter(startMapAsset.name(), player);
             }
+        } else {
+            // New game: setup viewModel on QuestManager and start at stage 0
+            io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
+            io.github.com.group31.quest.QuestManager.INSTANCE.setStage(0);
+            viewModel.updateUnlockedWeapons(java.util.List.of("FIST"));
         }
     }
 
@@ -205,6 +252,8 @@ public class GameScreen extends ScreenAdapter {
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
                     data.playerHp = currentHp;
+                    data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
+                    data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
 
                     Experience xp = Experience.MAPPER.get(player);
                     if (xp != null) {
@@ -233,6 +282,16 @@ public class GameScreen extends ScreenAdapter {
                         data.playerPotions = inventory.getItemCount(Item.Type.POTION_HEALTH);
                         data.playerCoins   = inventory.getItemCount(Item.Type.COIN);
                         data.playerKeys    = inventory.getItemCount(Item.Type.KEY);
+                    }
+
+                    // Lưu trạng thái CombatState (vũ khí)
+                    CombatState cs = CombatState.MAPPER.get(player);
+                    if (cs != null) {
+                        data.unlockedWeapons = new java.util.ArrayList<>();
+                        for (io.github.com.group31.combat.Weapon w : cs.getUnlockedWeapons()) {
+                            data.unlockedWeapons.add(w.name());
+                        }
+                        data.currentWeaponIndex = cs.getCurrentIndex();
                     }
 
                     saveService.save(data);
@@ -291,10 +350,28 @@ public class GameScreen extends ScreenAdapter {
         // Lưu lại các thông số cốt lõi của player
         Life life = Life.MAPPER.get(player);
         float hp = life != null ? life.getLife() : 100f;
+        float maxHp = life != null ? life.getMaxLife() : 100f;
 
         Experience xp = Experience.MAPPER.get(player);
         float playerXp = xp != null ? xp.getXp() : 0f;
         int level = xp != null ? xp.getLevel() : 1;
+
+        // Lưu lại trạng thái Inventory trước khi chuyển map
+        Inventory inventory = Inventory.MAPPER.get(player);
+        int potions = inventory != null ? inventory.getItemCount(Item.Type.POTION_HEALTH) : 0;
+        int coins = inventory != null ? inventory.getItemCount(Item.Type.COIN) : 0;
+        int keys = inventory != null ? inventory.getItemCount(Item.Type.KEY) : 0;
+
+        // Lưu lại trạng thái CombatState trước khi chuyển map
+        CombatState cs = CombatState.MAPPER.get(player);
+        final java.util.List<io.github.com.group31.combat.Weapon> unlockedWeapons = new java.util.ArrayList<>();
+        final int currentWeaponIndex;
+        if (cs != null) {
+            unlockedWeapons.addAll(cs.getUnlockedWeapons());
+            currentWeaponIndex = cs.getCurrentIndex();
+        } else {
+            currentWeaponIndex = 0;
+        }
 
         // Thực hiện chuyển map không đồng bộ bằng postRunnable để tránh lỗi đa luồng trong Ashley
         com.badlogic.gdx.Gdx.app.postRunnable(() -> {
@@ -317,8 +394,12 @@ public class GameScreen extends ScreenAdapter {
             if (players.size() > 0) {
                 Entity newPlayer = players.first();
 
+                // Check map transition for quest progress
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkMapEnter(targetMapAsset.name(), newPlayer);
+
                 Life newLife = Life.MAPPER.get(newPlayer);
                 if (newLife != null) {
+                    newLife.setMaxLife(maxHp);
                     newLife.setLife(hp);
                     viewModel.updateLifeInfo(newLife.getMaxLife(), newLife.getLife());
                 }
@@ -329,6 +410,31 @@ public class GameScreen extends ScreenAdapter {
                     newXp.setLevel(level);
                     newXp.setXpToNextLevel(level * 100f);
                     viewModel.updateXpInfo(playerXp, level * 100f, level, false);
+                }
+
+                // Khôi phục Inventory
+                Inventory newInventory = Inventory.MAPPER.get(newPlayer);
+                if (newInventory != null) {
+                    newInventory.setItemCount(Item.Type.POTION_HEALTH, potions);
+                    newInventory.setItemCount(Item.Type.COIN, coins);
+                    newInventory.setItemCount(Item.Type.KEY, keys);
+                    viewModel.updateInventory(potions, coins, keys);
+                }
+
+                // Khôi phục CombatState
+                CombatState newCs = CombatState.MAPPER.get(newPlayer);
+                if (newCs != null) {
+                    newCs.getUnlockedWeapons().clear();
+                    for (io.github.com.group31.combat.Weapon w : unlockedWeapons) {
+                        newCs.unlockWeapon(w);
+                    }
+                    newCs.setCurrentIndex(currentWeaponIndex);
+
+                    java.util.List<String> wNames = new java.util.ArrayList<>();
+                    for (io.github.com.group31.combat.Weapon w : newCs.getUnlockedWeapons()) {
+                        wNames.add(w.name());
+                    }
+                    viewModel.updateUnlockedWeapons(wNames);
                 }
 
                 // 5. Nếu có cấu hình vị trí spawn đích, dịch chuyển Player tới tọa độ đó.

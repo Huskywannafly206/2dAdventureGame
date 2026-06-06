@@ -18,6 +18,11 @@ import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Item;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
+import io.github.com.group31.component.Projectile;
+import io.github.com.group31.component.Attack;
+import io.github.com.group31.component.Damaged;
+import io.github.com.group31.component.Life;
+
 
 public class PhysicSystem extends IteratingSystem implements EntityListener, ContactListener {
 
@@ -120,6 +125,8 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
 
         playerTriggerContact(entityA, fixtureA, entityB, fixtureB);
         playerItemContact(entityA, fixtureA, entityB, fixtureB);
+        projectileContact(entityA, entityB);
+        projectileContact(entityB, entityA);
     }
 
     private static void playerTriggerContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
@@ -167,9 +174,35 @@ public class PhysicSystem extends IteratingSystem implements EntityListener, Con
     }
 
     /**
-     * Khi Player chạm vào Item (sensor), đánh dấu item để ItemSystem xử lý nhặt đồ.
-     * Item entity có body dạng sensor (isSensor=true) nên không chặn chuyển động của Player.
+     * Khi đạn (Projectile) va chạm với một thực thể khác:
+     * - Nếu va chạm với thực thể có Life (và không phải owner bắn ra) → gây Damaged.
+     * - Đánh dấu đạn hitTarget để ProjectileSystem hủy nó.
+     * Tường/địa hình (body.getUserData() không phải Entity) cũng khiến đạn bị hủy.
      */
+    private static void projectileContact(Entity candidate, Entity other) {
+        Projectile proj = Projectile.MAPPER.get(candidate);
+        if (proj == null || proj.isHitTarget()) return;
+
+        // Bỏ qua nếu va chạm với chính owner
+        if (other != null && other.equals(proj.getOwner())) return;
+
+        // Nếu entity kia có Life → gây sát thương
+        if (other != null && Life.MAPPER.has(other)) {
+            Attack attack = Attack.MAPPER.get(candidate);
+            float damage = attack != null ? attack.getDamage() : 1f;
+
+            Damaged damaged = Damaged.MAPPER.get(other);
+            if (damaged == null) {
+                other.add(new Damaged(damage, proj.getOwner()));
+            } else {
+                damaged.addDamage(damage);
+            }
+        }
+
+        // Dù trúng hay trượt đều hủy đạn khi chạm vật thể solid
+        proj.setHitTarget(true);
+    }
+
     private static void playerItemContact(Entity entityA, Fixture fixtureA, Entity entityB, Fixture fixtureB) {
         // Kiểm tra cặp (itemEntity + playerEntity)
         Item item = Item.MAPPER.get(entityA);

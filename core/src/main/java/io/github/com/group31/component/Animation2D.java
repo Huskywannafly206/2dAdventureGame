@@ -98,6 +98,7 @@ public class Animation2D implements Component {
         ITEM,
         SPECIAL1,
         SPECIAL2,
+        ROLL,
         ;
 
         private final String atlasKey;

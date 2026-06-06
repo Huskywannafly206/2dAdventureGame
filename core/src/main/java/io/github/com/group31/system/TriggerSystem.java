@@ -9,7 +9,9 @@ import com.badlogic.gdx.utils.Timer;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.audio.AudioService;
 import io.github.com.group31.component.Animation2D;
+import io.github.com.group31.component.Graphic;
 import io.github.com.group31.component.Life;
+import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.component.Trigger;
 
@@ -29,6 +31,7 @@ public class TriggerSystem extends IteratingSystem {
 
         // Register built-in triggers
         triggerHandlers.put("trap_trigger", this::trapTrigger);
+        triggerHandlers.put("barrier_trigger", this::barrierTrigger);
     }
 
     /**
@@ -115,6 +118,32 @@ public class TriggerSystem extends IteratingSystem {
         if (life != null && life.getLife() > 0f) {
             life.addLife(-damage);
             com.badlogic.gdx.Gdx.app.debug("TriggerSystem", "Trap damage! HP now: " + life.getLife());
+        }
+    }
+
+    private void barrierTrigger(Trigger trigger, Entity triggeringEntity) {
+        boolean activated = false;
+        ImmutableArray<Entity> matchingEntities = getEngine().getEntitiesFor(Family.all(Tiled.class, Graphic.class, Physic.class).get());
+        for (Entity entity : matchingEntities) {
+            Tiled tiled = Tiled.MAPPER.get(entity);
+            if (tiled.getMapObjectRef() != null && "stone_block_gate".equals(tiled.getMapObjectRef().getName())) {
+                Graphic graphic = Graphic.MAPPER.get(entity);
+                if (graphic.getColor().a < 1f) {
+                    graphic.getColor().a = 1f;
+
+                    Physic physic = Physic.MAPPER.get(entity);
+                    if (physic != null && physic.getBody() != null) {
+                        for (com.badlogic.gdx.physics.box2d.Fixture fixture : physic.getBody().getFixtureList()) {
+                            fixture.setSensor(false);
+                        }
+                    }
+                    activated = true;
+                }
+            }
+        }
+        if (activated) {
+            audioService.playSound(SoundAsset.TRAP);
+            com.badlogic.gdx.Gdx.app.log("TriggerSystem", "barrier_trigger activated! Stone blocks are now visible and solid.");
         }
     }
 }

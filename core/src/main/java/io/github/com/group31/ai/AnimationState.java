@@ -171,5 +171,45 @@ public enum AnimationState implements State<Entity> {
         public boolean onMessage(Entity entity, Telegram telegram) {
             return false;
         }
+    },
+
+    ROLL {
+        @Override
+        public void enter(Entity entity) {
+            Animation2D anim = Animation2D.MAPPER.get(entity);
+            if (anim != null) {
+                anim.setType(AnimationType.ROLL);
+                anim.setPlayMode(Animation.PlayMode.NORMAL);
+            }
+            // Khoá di chuyển bình thường trong khi đang lướt
+            Move move = Move.MAPPER.get(entity);
+            if (move != null) move.setRooted(true);
+        }
+
+        @Override
+        public void update(Entity entity) {
+            if (Dead.MAPPER.has(entity)) {
+                Fsm.MAPPER.get(entity).getAnimationFsm().changeState(DEAD);
+                return;
+            }
+            Animation2D anim = Animation2D.MAPPER.get(entity);
+            if (anim != null && anim.isFinished()) {
+                Fsm.MAPPER.get(entity).getAnimationFsm().changeState(IDLE);
+            }
+        }
+
+        @Override
+        public void exit(Entity entity) {
+            Move move = Move.MAPPER.get(entity);
+            if (move != null) move.setRooted(false);
+            // Khôi phục play mode về LOOP cho các animation sau
+            Animation2D anim = Animation2D.MAPPER.get(entity);
+            if (anim != null) anim.setPlayMode(Animation.PlayMode.LOOP);
+        }
+
+        @Override
+        public boolean onMessage(Entity entity, Telegram telegram) {
+            return false;
+        }
     }
 }

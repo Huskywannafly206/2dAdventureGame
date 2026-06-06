@@ -21,6 +21,10 @@ public class Life implements Component {
         return maxLife;
     }
 
+    public void setMaxLife(float maxLife) {
+        this.maxLife = maxLife;
+    }
+
     public float getLife() {
         return life;
     }

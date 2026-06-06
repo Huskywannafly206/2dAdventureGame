@@ -59,8 +59,11 @@ public class MapHazardSystem extends IteratingSystem {
                         AnimatedTiledMapTile animatedTile = (AnimatedTiledMapTile) tile;
                         AnimatedTiledMapTile.updateAnimationBaseTime();
                         TiledMapTile currentFrame = animatedTile.getCurrentFrame();
-                        if (currentFrame.getProperties().containsKey("damage")) {
+                        boolean hasDamage = currentFrame.getProperties().containsKey("damage");
+                        int id = currentFrame.getId();
+                        if (hasDamage || id == 96 || id == 97 || id == 99) {
                             float damage = currentFrame.getProperties().get("damage", 1f, Float.class);
+                            if (!hasDamage) damage = 1f; // fallback if property is missing
                             if (damage > 0f) {
                                 player.add(new Damaged(damage, null));
                                 audioService.playSound(SoundAsset.TRAP);

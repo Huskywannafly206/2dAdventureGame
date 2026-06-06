@@ -166,3 +166,7 @@ Thumbs.db
 
 ## Tiled
 *.tiled-session
+
+## Game saves
+save.json
+assets/save.json

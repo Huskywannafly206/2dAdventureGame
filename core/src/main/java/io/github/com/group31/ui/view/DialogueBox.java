@@ -61,38 +61,42 @@ public class DialogueBox extends Table implements Disposable {
         );
         setBackground(new NinePatchDrawable(patch));
 
-        // Padding bên trong box (top, left, bottom, right)
-        pad(5f, 5f, 5f, 6f);
+        // Do not use outer pad because we want the faceset Container to touch the edges exactly
+        pad(0);
 
         // ── Cột trái: ảnh faceset ──────────────────────────────────────────
         facesetImage = new Image();
-        // Không dùng Scaling.fit để tránh bị scale nhỏ lại – dùng kích thước cố định
         facesetImage.setScaling(com.badlogic.gdx.utils.Scaling.stretch);
+
+        // facesetContainer centered horizontally and vertically to fit exactly inside the printed 50px slot
+        Table facesetContainer = new Table();
+        facesetContainer.add(facesetImage).size(FACESET_W, FACESET_H).center();
 
         // ── Cột phải: table chứa tên + text ───────────────────────────────
         Table rightCol = new Table();
         rightCol.align(Align.topLeft);
+        rightCol.pad(6f, 6f, 6f, 6f); // inner padding to prevent text touching borders
 
         // Tên NPC
         nameLabel = new Label("", skin, "small");
         nameLabel.setColor(skin.getColor("sand") != null ? skin.getColor("sand") : Color.YELLOW);
-        rightCol.add(nameLabel).left().padLeft(6f).padTop(4f).padBottom(1f).row();
+        rightCol.add(nameLabel).left().padTop(2f).padBottom(1f).row();
 
         // Placeholder cho TypingLabel – sẽ được thêm vào trong show()
         // (dùng Label rỗng để giữ row)
         dialogueLabel = new TypingLabel("", skin, "tiny");
         dialogueLabel.setWrap(true);
         dialogueLabel.setAlignment(Align.topLeft);
-        dialogueLabelCell = rightCol.add(dialogueLabel).growX().left().top().padLeft(6f);
+        dialogueLabelCell = rightCol.add(dialogueLabel).growX().left().top();
 
         // ── Ghép layout chính ─────────────────────────────────────────────
-        add(facesetImage).size(FACESET_W, FACESET_H).padRight(5f).left().top();
-        add(rightCol).growX().fillY().left().top();
+        add(facesetContainer).width(50f).fillY().left().top();
+        add(rightCol).grow().left().top();
 
         // ── Kích thước tổng của hộp thoại (UI world 320×180) ──────────────
         // width: hầu hết màn hình, để lại lề 2 bên
-        // height: đủ chứa faceset + tên + 2 dòng text
-        setSize(300f, 52f);
+        // height: 58px để khớp tỉ lệ gốc 300x58 của DialogBoxFaceset.png
+        setSize(300f, 58f);
         setPosition(10f, 4f);
     }
 

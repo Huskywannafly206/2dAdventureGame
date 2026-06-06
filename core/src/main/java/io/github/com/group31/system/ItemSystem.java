@@ -5,16 +5,18 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
 import io.github.com.group31.audio.AudioService;
+import io.github.com.group31.combat.Weapon;
+import io.github.com.group31.component.CombatState;
 import io.github.com.group31.component.Inventory;
 import io.github.com.group31.component.Item;
+import io.github.com.group31.component.Transform;
 import io.github.com.group31.ui.model.GameViewModel;
 
 /**
  * Xử lý logic nhặt vật phẩm trên bản đồ:
  *  - Phát hiện item đã được Player "chạm" (collectedBy != null, được set bởi PhysicSystem).
- *  - Thêm vật phẩm vào Inventory của Player.
- *  - Phát âm thanh pickup tương ứng.
- *  - Cập nhật HUD thông qua GameViewModel.
+ *  - Nếu là vũ khí: mở khóa trong CombatState, hiển thị floating text vàng.
+ *  - Nếu là vật phẩm thường: thêm vào Inventory, phát âm thanh, cập nhật HUD.
  *  - Xóa thực thể item khỏi engine.
  */
 public class ItemSystem extends IteratingSystem {
@@ -45,10 +47,42 @@ public class ItemSystem extends IteratingSystem {
         Entity collector = item.getCollectedBy();
         if (collector == null) return;
 
-        // Thêm vào Inventory của Player
+        Item.Type type = item.getType();
+
+        // --- Xử lý nhặt vũ khí ---
+        Weapon unlocked = weaponFor(type);
+        if (unlocked != null) {
+            CombatState combatState = CombatState.MAPPER.get(collector);
+            if (combatState != null && combatState.unlockWeapon(unlocked)) {
+                // Thông báo vũ khí mới bằng floating text màu vàng
+                Transform t = Transform.MAPPER.get(collector);
+                if (t != null) {
+                    float x = t.getPosition().x + t.getSize().x * 0.5f;
+                    float y = t.getPosition().y + t.getSize().y;
+                    viewModel.showFloatingText(
+                        "[YELLOW]Nhận: " + unlocked.displayName + "![]", x, y);
+                }
+                audioService.playSound(item.getPickupSound());
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(collector);
+
+                // Sync to viewModel
+                java.util.List<String> wNames = new java.util.ArrayList<>();
+                for (Weapon w : combatState.getUnlockedWeapons()) {
+                    wNames.add(w.name());
+                }
+                viewModel.updateUnlockedWeapons(wNames);
+            }
+            toRemove.add(entity);
+            return;
+        }
+
+        // --- Xử lý vật phẩm thường ---
         Inventory inventory = Inventory.MAPPER.get(collector);
         if (inventory != null) {
-            inventory.addItem(item.getType(), 1);
+            inventory.addItem(type, 1);
+            if (type == Item.Type.POTION_HEALTH) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
+            }
         }
 
         // Phát âm thanh
@@ -64,5 +98,15 @@ public class ItemSystem extends IteratingSystem {
         }
 
         toRemove.add(entity);
+    }
+
+    /** Trả về Weapon tương ứng với Item.Type vũ khí, hoặc null nếu không phải vũ khí. */
+    private static Weapon weaponFor(Item.Type type) {
+        return switch (type) {
+            case WEAPON_SWORD      -> Weapon.SWORD;
+            case WEAPON_BOW        -> Weapon.BOW;
+            case WEAPON_MAGIC_WAND -> Weapon.MAGIC_WAND;
+            default                -> null;
+        };
     }
 }

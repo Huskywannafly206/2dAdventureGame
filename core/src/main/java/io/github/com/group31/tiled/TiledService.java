@@ -169,16 +169,14 @@ public class TiledService {
         if (loadTriggerConsumer == null) return;
 
         for (MapObject mapObject : triggerLayer.getObjects()) {
-            if (mapObject.getName() == null || mapObject.getName().isBlank()) {
-                com.badlogic.gdx.Gdx.app.error("TiledService", "Trigger must have a name, skipping: " + mapObject);
-                continue;
-            }
-
             if (mapObject instanceof RectangleMapObject rectMapObj) {
-                loadTriggerConsumer.accept(mapObject.getName(), rectMapObj);
-            } else {
-                com.badlogic.gdx.Gdx.app.error("TiledService", "Unsupported trigger type (must be Rectangle), skipping: " + mapObject.getClass().getSimpleName() + " (name=" + mapObject.getName() + ")");
+                if (rectMapObj.getName() == null || rectMapObj.getName().isBlank()) {
+                    com.badlogic.gdx.Gdx.app.error("TiledService", "Trigger must have a name, skipping: " + rectMapObj);
+                    continue;
+                }
+                loadTriggerConsumer.accept(rectMapObj.getName(), rectMapObj);
             }
+            // PointMapObject and other object types are silently ignored as they are position markers, not trigger zones.
         }
     }
 

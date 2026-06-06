@@ -157,9 +157,10 @@ public class GameViewModel extends ViewModel {
         return tmpVec2;
     }
 
-    public void showDialogue(String npcName, String line) {
+    public void showDialogue(String npcName, String line, String facesetPath) {
         String[] prev = this.activeDialogue;
-        this.activeDialogue = new String[]{npcName, line};
+        // data[0]=npcName, data[1]=line, data[2]=facesetPath ("" if none)
+        this.activeDialogue = new String[]{npcName, line, facesetPath != null ? facesetPath : ""};
         this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, this.activeDialogue);
     }
 

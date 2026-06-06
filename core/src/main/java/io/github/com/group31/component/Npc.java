@@ -8,12 +8,20 @@ public class Npc implements Component {
 
     private final String name;
     private final String[] dialogue;
+    /** Đường dẫn tương đối đến ảnh faceset (trong assets/), null nếu không có. */
+    private final String facesetPath;
     private int currentLineIndex;
 
-    public Npc(String name, String[] dialogue) {
+    public Npc(String name, String[] dialogue, String facesetPath) {
         this.name = name;
         this.dialogue = dialogue != null ? dialogue : new String[0];
+        this.facesetPath = facesetPath;
         this.currentLineIndex = 0;
+    }
+
+    /** Backward-compat: không có faceset. */
+    public Npc(String name, String[] dialogue) {
+        this(name, dialogue, null);
     }
 
     public String getName() {
@@ -22,6 +30,11 @@ public class Npc implements Component {
 
     public String[] getDialogue() {
         return dialogue;
+    }
+
+    /** Trả về đường dẫn ảnh faceset (tương đối từ assets/), hoặc null nếu không có. */
+    public String getFacesetPath() {
+        return facesetPath;
     }
 
     public int getCurrentLineIndex() {

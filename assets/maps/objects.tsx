@@ -267,8 +267,6 @@
  </tile>
  <tile id="18" type="Object">
   <properties>
-   <property name="animation" value="IDLE"/>
-   <property name="animationSpeed" type="float" value="1"/>
    <property name="bodyType" value="StaticBody"/>
    <property name="npcName" value="Heart Container"/>
   </properties>

@@ -8,5 +8,8 @@ public enum Command {
     SELECT,
     CANCEL,
     USE_ITEM,
-    INTERACT
+    INTERACT,
+    DASH,
+    SWITCH_WEAPON,
+    TOGGLE_MENU
 }

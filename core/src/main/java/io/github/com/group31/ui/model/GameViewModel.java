@@ -17,7 +17,12 @@ public class GameViewModel extends ViewModel {
     public static final String XP_CHANGED = "xpChanged";
     public static final String LEVEL_CHANGED = "levelChanged";
     public static final String INVENTORY_CHANGED = "inventoryChanged";
-    public static final String DIALOGUE_CHANGED = "dialogueChanged";
+    public static final String DIALOGUE_CHANGED    = "dialogueChanged";
+    public static final String WEAPON_CHANGED      = "weaponChanged";
+    public static final String QUEST_CHANGED       = "questChanged";
+    public static final String MENU_TOGGLED        = "menuToggled";
+    public static final String UNLOCKED_WEAPONS_CHANGED = "unlockedWeaponsChanged";
+
 
     private final AudioService audioService;
     private int lifePoints;
@@ -37,6 +42,11 @@ public class GameViewModel extends ViewModel {
     private int keys;
 
     private String[] activeDialogue = null;
+    private String   currentWeaponName = "Đấm";
+    private String[] activeQuest = new String[]{"", ""};
+    private boolean menuOpen = false;
+    private java.util.List<String> unlockedWeapons = new java.util.ArrayList<>(java.util.List.of("FIST"));
+
 
     public GameViewModel(GdxGame game) {
         super(game);
@@ -156,12 +166,16 @@ public class GameViewModel extends ViewModel {
         game.getViewport().project(tmpVec2);
         return tmpVec2;
     }
-
     public void showDialogue(String npcName, String line, String facesetPath) {
         String[] prev = this.activeDialogue;
-        // data[0]=npcName, data[1]=line, data[2]=facesetPath ("" if none)
+        // activeDialogue[0] = npcName, [1] = line, [2] = facesetPath (có thể rỗng)
         this.activeDialogue = new String[]{npcName, line, facesetPath != null ? facesetPath : ""};
         this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, this.activeDialogue);
+    }
+
+    /** Overload backward-compat — không có faceset. */
+    public void showDialogue(String npcName, String line) {
+        showDialogue(npcName, line, null);
     }
 
     public void hideDialogue() {
@@ -172,5 +186,72 @@ public class GameViewModel extends ViewModel {
 
     public String[] getActiveDialogue() {
         return activeDialogue;
+    }
+
+    public void updateWeaponName(String name) {
+        String oldName = this.currentWeaponName;
+        this.currentWeaponName = name;
+        this.propertyChangeSupport.firePropertyChange(WEAPON_CHANGED, oldName, name);
+    }
+
+    public String getCurrentWeaponName() {
+        return currentWeaponName;
+    }
+
+    public void updateQuestInfo(String title, String objective) {
+        String[] prev = this.activeQuest;
+        this.activeQuest = new String[]{title, objective};
+        this.propertyChangeSupport.firePropertyChange(QUEST_CHANGED, prev, this.activeQuest);
+    }
+
+    public String[] getActiveQuest() {
+        return activeQuest;
+    }
+
+    public void toggleMenu() {
+        boolean prev = this.menuOpen;
+        this.menuOpen = !this.menuOpen;
+        this.propertyChangeSupport.firePropertyChange(MENU_TOGGLED, prev, this.menuOpen);
+        if (this.menuOpen) {
+            audioService.playSound(SoundAsset.PICKUP);
+        }
+    }
+
+    public boolean isMenuOpen() {
+        return menuOpen;
+    }
+
+    public static final String TAB_CHANGED = "tabChanged";
+    private int currentTab = 0; // 0 = INVENTORY, 1 = QUEST, 2 = MAP
+
+    public int getCurrentTab() {
+        return currentTab;
+    }
+
+    public void setCurrentTab(int tab) {
+        int prev = this.currentTab;
+        this.currentTab = (tab + 3) % 3;
+        if (prev != this.currentTab) {
+            this.propertyChangeSupport.firePropertyChange(TAB_CHANGED, prev, this.currentTab);
+            audioService.playSound(SoundAsset.PICKUP);
+        }
+    }
+
+    public void nextTab() {
+        setCurrentTab(currentTab + 1);
+    }
+
+    public void prevTab() {
+        setCurrentTab(currentTab - 1);
+    }
+
+    public void updateUnlockedWeapons(java.util.List<String> weapons) {
+        java.util.List<String> prev = this.unlockedWeapons;
+        this.unlockedWeapons = weapons;
+        this.propertyChangeSupport.firePropertyChange(UNLOCKED_WEAPONS_CHANGED, prev, weapons);
+    }
+
+    public java.util.List<String> getUnlockedWeapons() {
+        return unlockedWeapons;
     }
 }

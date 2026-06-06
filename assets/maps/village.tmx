@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="54" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="84">
- <tileset firstgid="1" source="TilesetFloor.tsx"/>
- <tileset firstgid="573" source="TilesetInteriorFloor.tsx"/>
- <tileset firstgid="947" source="TilesetElement.tsx"/>
- <tileset firstgid="1187" source="TilesetHouse.tsx"/>
- <tileset firstgid="1946" source="TilesetNature.tsx"/>
- <tileset firstgid="2450" source="Tree.tsx"/>
- <tileset firstgid="2454" source="objects.tsx"/>
- <tileset firstgid="2469" source="TilesetField.tsx"/>
- <tileset firstgid="2544" source="Combined3.tsx"/>
+ <tileset firstgid="1" source="TilesetFloor.tsx" />
+ <tileset firstgid="573" source="TilesetInteriorFloor.tsx" />
+ <tileset firstgid="947" source="TilesetElement.tsx" />
+ <tileset firstgid="1187" source="TilesetHouse.tsx" />
+ <tileset firstgid="1946" source="TilesetNature.tsx" />
+ <tileset firstgid="2450" source="Tree.tsx" />
+ <tileset firstgid="2454" source="objects.tsx" />
+ <tileset firstgid="2471" source="TilesetField.tsx" />
+ <tileset firstgid="2546" source="Combined3.tsx" />
  <layer id="1" name="floor1" width="54" height="45">
   <data encoding="base64" compression="zlib">
-   eJztmcFu00AQQNeu1KjNB4RIPfADaST4sKp/AfkF2o8gSBy40R4AiXuLRC/c2564ICF1V8nIwzAzO7PeOD708FTLu17P2xlP3OQshHA2ELNIOxBDOYHXCwHpGmm+xrznOjW8TiJL5zVc3HguHi/Zlxpe88y6i8htW+7lzVlpHZ4StFxJ8ZR6lUB9Pe65PePGG+bcLr20GGfCtThGLiZcvweGc6Velj2VvEp62YwZXyjn+njRmK1epwa3FuWAejVonF7TMl5SLDkHj5cnbzRWDx4vyWOXXl5gffDKxZ4b89ax5pXqi34WSNT00sYtTrQ/azXk3Z9aXrmcaj1HYjkSr5K5taD3wr2y9Pmy3KtP3vquUdsrVze1/r9K78KfI1dbrtvNOXiPruVlmTPbxlOLG3T8w+CV87XUxBi8pLj61jrn9dDW4/BgPF4184WxeHlqa4xeuffD2j1+H159Pos8fX5XXrcOr9pwfYPG1aeP7NNrDHX47PXsZX1W7kjcPzPzH/foZX2HT9ww+fBc/3tAWgecl+f6T0fdfdMxsAsv617PBS/P9z3YJXHUdH8T7+KcNeEydONW1gN7haB7vWe8Sty8XvdMX9C8luHfZ1nLF5erErcQZC/uO7NXgX9mXitObyOrrdOK8QJyTokPBi+8jrTXKZaFMq4BeXoTOW46ID80Z1L9AR8j3zJelr3BteNxw79zrojXOpR7ablKvc+T75eN3w0+e89JnjSvxJdCL6vTmuQbu3m8sAuG5gk8Q4GX5pPq9uvWBWqB9h1ws+RsjmqPux/tgTRvnn6Y24dps4HWAl4Hv0v29cpBaxf4HrlA5GoOvKbM8wtuQ3p5cgiE8P/zDHA5A7dfk81xqkXtt80Sr2Ohl1jcJBfqNRXi+TPpjv9ObD0kt69a/Ulw62m5suS6Bk/rc8Z2
+   eJztmcFu00AQQNeu1KjNB4RIPfADaST4sKp/AfkF2o8gSJy40B4AiXuLRC/c2564ICF1V8nIwzAzO7PeOD708FTLu17P2xlP3OQshHA2ELNIOxBDOYHXCwHpGmm+xrznOjW8TiJL5zVc3HguHi/Zlxpe88y6i8htW+7lzVlpHZ4StFxJ8ZR6lUB9Pe65PePGG+bcLr20GGfCtThGLiZcvweGc6Velj2VvEp62YwZXyjn+njRmK1epwa3FuWAejVonF7TMl5SLDkHj5cnbzRWDx4vyWOXXl5gffDKxZ4b89ax5pXqi34WSNT00sYtTrQ/azXk3Z9aXrmcaj1HYjkSr5K5taD3wr2y9Pmy3KtP3vquUdsrVze1/r9K78KfI1dbrtvNOXiPruVlmTPbxlOLG3T8w+CV87XUxBi8pLj61jrn9dDW4/BgPF4184WxeHlqa4xeuffD2j1+H159Pos8fX5XXrcOr9pwfYPG1aeP7NNrDHX47PXsZX1W7kjcPzPzH/foZX2HT9ww+fBc/3tAWgecl+f6T0fdfdMxsAsv617PBS/P9z3YJXHUdH8T7+KcNeEydONW1gN7haB7vWe8Sty8XvdMX9C8luHfZ1nLF5erErcQZC/uO7NXgX9mXitObyOrrdOK8QJyTokPBi+8jrTXKZaFMq4BeXoTOW46ID80Z1L9AR8j3zJelr3BteNxw79zrojXOpR7ablKvc+T75eN3w0+e89JnjSvxJdCL6vTmuQbu3m8sAuG5gk8Q4GX5pPq9uvWBWqB9h1ws+RsjmqPux/tgTRvnn6Y24dps4HWAl4Hv0v29cpBaxf4HrlA5GoOvKbM8wtuQ3p5cgiE8P/zDHA5A7dfk81xqkXtt80Sr2Ohl1jcJBfqNRXi+TPpjv9ObD0kt69a/Ulw62m5suS6Bk96R8ci
   </data>
  </layer>
  <layer id="5" name="back1" width="54" height="45">
   <properties>
-   <property name="collidable" type="bool" value="true"/>
+   <property name="collidable" type="bool" value="true" />
   </properties>
   <data encoding="base64" compression="zlib">
    eJzFWktzVFUQvjF3MsOf0IUPkrDQfyALtRRc6B6o0ipgoeyk/AdgWVaqdCkgpoiKxZuQ8FKBEEJViBOjCzUqj0BCWFgQRAQSEr9Tue10Ot3nnHtnTLrqq7m3T885/Z1Hd987kyTz8nk5STrLySKpQjcM/ACMALPAnLOrJElTpdYu9Z/iekfWn2ybwPVNYBK4BRwFutk4dN/TbKOq2DuhvklO4Pqkwkv64ETrh7dLG5JPKjpPrZ910K+vLPbH8kv2/Rmwu6yvjeUDF2v9qA/qX+ql37Kf94CtWfvZNEnOAX3A+dT260PWXy/ajgfmPsTdN4/Uv9Rzv0NyDVzGgOvAjZT5juvjwAngZFrb+8SP/LbWJsTdd5ZIfOveD58uAAPAxczvDczmiVKSNAMpUCrV9D/D9hfgV2A0Xbz3ud8k5KuMJ5p/1B9fV7ruUPYmly60j8OnCvy9ic9Jth5/Iz7cB54uzbc/CzzHeD2A7cPsu9PpQr/lmB3CVx5POox9Q9z5/PjWeA/86AK+AL4s6X0WFfLbOlNc+DqQ8L3HucfEnn5wuQAMABcVXv9gjR402753ec6llXekXyNsHayc4YTW0jdPPZmv4+Ay4fYdMNng9ZL5S+rJL+6b5XMobhBn4tXSkiRloAKsaGksr//Gt/SZX9w3K6ZpOZiExx3itRJcWoE2oL3BvEi088Djg4yHfG1IZDzh55GfvR7PmWmkuHFCcUPWV7Q22nxocVGOl0d4Dns/MofTONbe4uuixXdtPmgOrNyxlOvFxYp3eetGaw/46vMi0PjItg7l+cHnp7aGpLM4LwcvzZ9Q3aito5bDiTON9xJy1svAK0AbbNuBVUY8LSI0jhbjnFjnn3zX1pG+QzGE86TxNoLPJmAzsAZta4HXgUOo8Q4DR1wNmy4c8xTuTwPfpLW6McTLF+M0zuS774xRDOFzQ+NtA5/twAfAO2h7F9jixoXPI8CPwE8Zr+dh8wLwG+5/B/4QfH28SELPxr66PFS38/G+gp97ga+BTpaXp+DzXeAv4F7m/xuweROYwf1jYBY4ljOuhp6NQ7ku9GwWG+ffAte3/6c6RIqvjiLffc9mTohXqF5vlMhaKWZPcfHVh1yI1z7spf3AAeCgcV6+hf474EyaX0fj0BnnsSumdreeM8nGtdOc8Tg/BB++B6rAsMHrMvRXgKtpLSeFdE5uKfmLx648tTtfb+c/t9Hq3j+zZ/fb+Lyj8JrC2Zpzetg0uXcb5flYwXWanZOHRs524sut2v603j1KceOthF1rzhz8TE574iV9lfk4tD997+FkXn4V16/l9DOvEC/rLGnPHXJ/ynmQfXGOS13PW2cp9t02r0dkX9xuOZ5TtHMjdXQtfec2nLO0q6dWJ3/zfl/bi1JH15Iv6Z1wvbZeS81rVvFXzjddS77ye6QP1WUx+yhGrwn3KeYdKc2B7/csU98gXtfwOabYDGKMS8BQ4DzEyMdK3cjXjutJV2UcfXW/pZ/C513FZgx9XQduCC55akIuvhjopOi6hWQn+trF+nuE62lgRsS9esfX1s5JaB8MRJ6bPmF3zMWizM9epQ/iU/ScL4c8idrwKfGM5mpI/sxp5ak8e7GofFRw/l4Ep9Uttd9z6R3qOHhNGHUUv66HWyg+NELo99xJcOluXvhOx8pT2l4MxZbY2KPZaXtLyqByjqznb1+tKscv8o5D4yHtnJ72FuUgTUZz5GZfnJbj5/3fQ2w/pOc5aLzOvevLzaHfM6Vov4NWlX6tGprnoMd18grVRfxetsn/xMTUzzE2RWuEPDz5vWyT/y2JycsxNvXWCP8CnZSVTw==
@@ -29,7 +29,7 @@
  </layer>
  <layer id="10" name="back3" width="54" height="45">
   <data encoding="base64" compression="zlib">
-   eJztl1kOwjAQQwd+WnH/U7FzBXauwG6kfoCFMgE1JFR+ktWPVlE9nkQTMyGEEEIIIbpJf/D6FEIID50bQgghRHeYVmYzaA4tqtx/0x5beNlBe+hQuC8vg+f3V+j2+KY269Xfr/kLvAxiMmIfJeTqZRCTEfuIzbV0uuKjbbz7k+5X+c+rVOQ+r1KhfS5yMETfjaAxNPnjPcU+ltAKWkObxlcJc9ynsI8jdILO0KXxwPNPyGeqGnjrcj7s410f8vwTmldTzbJebTmfmD5kQnNeqhnQqy3n4/XhHZFpkqI=
+   eJztl2sKwjAQhFcQWrz/qXx7Bd9ewfcI/aGDZKM0Jpb5YOiPltDZ2YSNmRBCCCGEEN2kP3h9CiGEh84NIYQQojtMK7MZNIcWVe6/aY8tvOygPXQo3JeXwfP7K3R7fFOb9erv1/wFXgYxGbGPEnL1MojJiH3E5lo6XfHRNt79Sfer/OdVKnKfV6nQPhc5GKLvRtAYmvzxnmIfS2gFraFN46uEOe5T2McROkFn6NJ44Pkn5DNVDbx1OR/28a4Pef4JzaupZlmvtpxPTB8yoTkv1Qzo1Zbz8frwDqTYkrI=
   </data>
  </layer>
  <layer id="11" name="back4" width="54" height="45">
@@ -42,42 +42,43 @@
    eJzt1UkOAiEQhWFcVd//WA6tXsHZKzg/V3TUhQKGIvm/5C1IIIGi6A4BAAAAAAAAAAAApfUWwlxZKEurvZtydjrLXjkoR6fnSqn9TfPuz7md37vLrf0362ucfVj7UVd2/et5PPftL97uMrF23uT2Qq5+0Bue3j4+8/qtztXCfzZF7ff9D63331j7nihTZWZx3Hr/rbTvtbJRthbHrfffSfs/KxflanH8ABoRS78=
   </data>
  </layer>
+
  <objectgroup id="10" name="trigger">
   <object id="77" name="portal_trigger" x="540.667" y="95.3333" width="38" height="18.6667">
    <properties>
-    <property name="targetMap" value="ICEMAP1"/>
-    <property name="targetX" type="float" value="430"/>
-    <property name="targetY" type="float" value="282.666666667"/>
+    <property name="targetMap" value="ICEMAP1" />
+    <property name="targetX" type="float" value="430" />
+    <property name="targetY" type="float" value="282.666666667" />
    </properties>
   </object>
   <object id="80" name="portal_trigger" x="272.667" y="698.667" width="48" height="20.6667">
    <properties>
-    <property name="targetMap" value="JUNGLEMAP1"/>
-    <property name="targetX" type="float" value="106.695427092"/>
-    <property name="targetY" type="float" value="32.148403796"/>
+    <property name="targetMap" value="JUNGLEMAP1" />
+    <property name="targetX" type="float" value="106.695427092" />
+    <property name="targetY" type="float" value="32.148403796" />
    </properties>
   </object>
   <object id="81" x="296" y="678">
-   <point/>
+   <point />
   </object>
- </objectgroup>
+ <object id="90" name="portal_trigger" x="464" y="144" width="32" height="16"><properties><property name="targetMap" value="VILLAGE_HOUSE" /><property name="targetX" type="float" value="96" /><property name="targetY" type="float" value="112" /></properties></object></objectgroup>
  <objectgroup id="9" name="objects">
   <object id="78" name="Player" gid="2455" x="544" y="152.667" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
+    <property name="camFollow" type="bool" value="true" />
+    <property name="controller" type="bool" value="true" />
    </properties>
   </object>
   <object id="82" name="monk" gid="2467" x="761.333" y="120" width="32" height="32">
    <properties>
-    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
-    <property name="faceset" value="ui/monk_faceset.png"/>
-    <property name="npcName" value="Monk"/>
+    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!" />
+    <property name="faceset" value="ui/npc_faceset/Monk_faceset.png" />
+    <property name="npcName" value="Monk" />
    </properties>
   </object>
   <object id="83" gid="2466" x="651" y="116.5" width="32" height="32">
    <properties>
-    <property name="npcName" value="MinhBeo"/>
+    <property name="npcName" value="MinhBeo" />
    </properties>
   </object>
  </objectgroup>

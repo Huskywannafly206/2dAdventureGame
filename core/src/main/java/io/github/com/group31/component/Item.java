@@ -16,7 +16,11 @@ public class Item implements Component {
     public enum Type {
         POTION_HEALTH,
         COIN,
-        KEY
+        KEY,
+        // Vũ khí nhặt được — mở khóa vũ khí tương ứng trong CombatState
+        WEAPON_SWORD,
+        WEAPON_BOW,
+        WEAPON_MAGIC_WAND
     }
 
     private final Type type;

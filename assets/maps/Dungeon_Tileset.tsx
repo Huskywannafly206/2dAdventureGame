@@ -9,16 +9,19 @@
  <tile id="1">
   <objectgroup draworder="index" id="2">
    <object id="2" x="0.375" y="8.875" width="15.75" height="7.25"/>
+   <object id="3" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
  <tile id="2">
   <objectgroup draworder="index" id="2">
    <object id="2" x="0.125" y="9" width="16.125" height="7.125"/>
+   <object id="3" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
  <tile id="3">
   <objectgroup draworder="index" id="2">
    <object id="2" x="0.125" y="9.625" width="15.875" height="6.75"/>
+   <object id="3" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
  <tile id="4">

@@ -10,6 +10,9 @@ public class SaveData {
     public int playerPotions;
     public int playerCoins;
     public int playerKeys;
+    public int questStage;
+    public java.util.List<String> unlockedWeapons;
+    public int currentWeaponIndex;
 
     public SaveData() {
         // Default constructor for libGDX JSON

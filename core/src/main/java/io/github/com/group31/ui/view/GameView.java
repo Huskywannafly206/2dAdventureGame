@@ -1,6 +1,7 @@
 package io.github.com.group31.ui.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,11 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.com.group31.asset.AssetService;
 import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
@@ -32,18 +37,25 @@ public class GameView extends View<GameViewModel> implements Disposable {
     private final HorizontalGroup lifeGroup;
     private ProgressBar xpBar;
     private Label levelLabel;
+    private Label weaponLabel;
     private final DialogueBox dialogueBox;
+    
+    // Quest Panel Background
+    private Texture questBgTexture;
 
-    // Cache faceset textures theo đường dẫn – lazy load khi cần
+    // Dynamically drawn inventory slot background
+    private Texture slotTexture;
+    private TextureRegionDrawable slotDrawable;
+
+    /**
+     * Cache texture faceset theo đường dẫn — lazy-load khi NPC xuất hiện lần đầu.
+     * Key = đường dẫn tương đối assets/ (vd: "ui/monk_faceset.png").
+     * Tất cả texture được dispose() trong dispose().
+     */
     private final HashMap<String, Texture> facesetCache = new HashMap<>();
 
-    // Inventory HUD elements (top-right)
-    private Image potionImage;
-    private Image coinImage;
-    private Image keyImage;
-    private Label potionLabel;
-    private Label coinLabel;
-    private Label keyLabel;
+    // Tabbed Menu Overlay
+    private Table menuContainer;
 
     // Atlas để lấy icon item
     private final AssetService assetService;
@@ -52,13 +64,14 @@ public class GameView extends View<GameViewModel> implements Disposable {
         super(stage, skin, viewModel);
         this.assetService = assetService;
 
-
         this.dialogueBox = new DialogueBox(skin);
         this.lifeGroup = findActor("lifeGroup");
         updateLife(viewModel.getLifePoints());
         updateXp(viewModel.getXp());
         updateLevel(viewModel.getLevel());
-        updateInventoryLabels(viewModel.getPotions(), viewModel.getCoins(), viewModel.getKeys());
+        updateWeaponLabel(viewModel.getCurrentWeaponName());
+
+        setupMenuContainer();
     }
 
     @Override
@@ -69,9 +82,28 @@ public class GameView extends View<GameViewModel> implements Disposable {
         viewModel.onPropertyChange(GameViewModel.XP_CHANGED, Float.class, this::updateXp);
         viewModel.onPropertyChange(GameViewModel.LEVEL_CHANGED, Integer.class, this::updateLevel);
         viewModel.onPropertyChange(GameViewModel.INVENTORY_CHANGED, int[].class, counts -> {
-            updateInventoryLabels(counts[0], counts[1], counts[2]);
+            if (menuContainer != null && menuContainer.isVisible()) {
+                rebuildMenu();
+            }
         });
         viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
+        viewModel.onPropertyChange(GameViewModel.WEAPON_CHANGED, String.class, this::updateWeaponLabel);
+        viewModel.onPropertyChange(GameViewModel.QUEST_CHANGED, String[].class, questInfo -> {
+            if (menuContainer != null && menuContainer.isVisible()) {
+                rebuildMenu();
+            }
+        });
+        viewModel.onPropertyChange(GameViewModel.MENU_TOGGLED, Boolean.class, this::setMenuVisible);
+        viewModel.onPropertyChange(GameViewModel.TAB_CHANGED, Integer.class, tab -> {
+            if (menuContainer != null && menuContainer.isVisible()) {
+                rebuildMenu();
+            }
+        });
+        viewModel.onPropertyChange(GameViewModel.UNLOCKED_WEAPONS_CHANGED, java.util.List.class, weapons -> {
+            if (menuContainer != null && menuContainer.isVisible()) {
+                rebuildMenu();
+            }
+        });
     }
 
     private void updateDialogue(String[] data) {
@@ -79,8 +111,8 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (dialogueBox.getParent() == null) {
                 stage.addActor(dialogueBox);
             }
-            // data[2] = facesetPath từ NPC property trong TMX
-            String facesetPath = data.length > 2 ? data[2] : "";
+            // data[2] là facesetPath từ TMX property (rỗng = không có avatar)
+            String facesetPath = (data.length > 2 && !data[2].isBlank()) ? data[2] : null;
             Texture faceset = loadFaceset(facesetPath);
             dialogueBox.show(data[0], data[1], faceset);
         } else {
@@ -89,15 +121,18 @@ public class GameView extends View<GameViewModel> implements Disposable {
     }
 
     /**
-     * Lazy-load faceset texture theo đường dẫn lưu trong NPC property.
-     * Kết quả được cache – mỗi ảnh chỉ load 1 lần.
+     * Lazy-load và cache texture faceset theo đường dẫn assets/.
      *
-     * @param path Đường dẫn tương đối từ assets/ (vd: "ui/monk_faceset.png"), hoặc rỗng/null.
-     * @return Texture tương ứng, hoặc null nếu không có.
+     * @param path Đường dẫn tương đối, ví dụ "ui/monk_faceset.png". Null → trả về null.
+     * @return Texture đã load và lọc Nearest, hoặc null nếu path null/không tìm thấy.
      */
     private Texture loadFaceset(String path) {
         if (path == null || path.isBlank()) return null;
         return facesetCache.computeIfAbsent(path, p -> {
+            if (!Gdx.files.internal(p).exists()) {
+                Gdx.app.error("GameView", "Faceset không tìm thấy: " + p);
+                return null;
+            }
             Texture tex = new Texture(Gdx.files.internal(p));
             tex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
             return tex;
@@ -107,6 +142,10 @@ public class GameView extends View<GameViewModel> implements Disposable {
     @Override
     protected void setupUI() {
         setFillParent(true);
+
+        // Load background texture for dialog boxes/quest panels
+        questBgTexture = new Texture(Gdx.files.internal("ui/DialogueBoxSimple.png"));
+        questBgTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         // ── Bottom-left: life hearts ──
         Table bottomLeft = new Table();
@@ -128,57 +167,71 @@ public class GameView extends View<GameViewModel> implements Disposable {
         xpBar = new ProgressBar(0f, 100f, 0.5f, false, skin);
         xpBar.setName("xpBar");
         xpRow.add(xpBar).width(80f).padLeft(4f).padBottom(3f);
-        bottomLeft.add(xpRow).left();
+        bottomLeft.add(xpRow).left().row();
+
+        // ── Weapon row ──
+        Table weaponRow = new Table();
+        Label weaponTitle = new Label("Vũ khí: ", skin, "tiny");
+        weaponLabel = new Label("Đấm", skin, "tiny");
+        weaponRow.add(weaponTitle).padLeft(5f).padBottom(3f);
+        weaponRow.add(weaponLabel).padBottom(3f);
+        bottomLeft.add(weaponRow).left();
 
         add(bottomLeft).expand().align(Align.bottomLeft);
-
-        // ── Top-right: inventory HUD (icon + "x N") ──
-        // Atlas chưa load xong khi setupUI() gọi lần đầu → dùng placeholder,
-        // icon thực sẽ được gắn sau trong constructor khi atlas đã sẵn sàng.
-        Table topRight = new Table();
-        topRight.setName("inventoryPanel");
-        topRight.pad(4f).padRight(6f);
-
-        potionImage = new Image();
-        potionLabel = new Label("x0", skin, "tiny");
-
-        coinImage = new Image();
-        coinLabel = new Label("x0", skin, "tiny");
-
-        keyImage = new Image();
-        keyLabel = new Label("x0", skin, "tiny");
-
-        // Add to table with explicit sizes to prevent the layouts from expanding the icons
-        topRight.add(potionImage).size(10f, 10f);
-        topRight.add(potionLabel).padLeft(2f);
-        topRight.add(coinImage).size(10f, 10f).padLeft(6f);
-        topRight.add(coinLabel).padLeft(2f);
-        topRight.add(keyImage).size(10f, 10f).padLeft(6f);
-        topRight.add(keyLabel).padLeft(2f);
-
-        add(topRight).expand().align(Align.topRight);
     }
 
     /**
-     * Được gọi từ constructor sau khi atlas sẵn sàng — thay thế Image placeholder bằng icon thực.
+     * Set up the menu container centered on the stage viewport.
      */
-    private void buildInventoryIcons() {
-        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
-        if (atlas == null) return;
+    private void setupMenuContainer() {
+        menuContainer = new Table();
+        menuContainer.setSize(260f, 140f);
+        menuContainer.setPosition(
+            (stage.getViewport().getWorldWidth() - menuContainer.getWidth()) / 2f,
+            (stage.getViewport().getWorldHeight() - menuContainer.getHeight()) / 2f
+        );
+        menuContainer.setVisible(false);
+        stage.addActor(menuContainer);
 
-        TextureRegion potionRegion = atlas.findRegion("potion_health/potion_health");
-        TextureRegion coinRegion   = atlas.findRegion("coin/coin");
-        TextureRegion keyRegion    = atlas.findRegion("key/key");
+        // Initialize dynamically drawn slot background
+        slotDrawable = createSlotDrawable(24);
+    }
 
-        if (potionRegion != null && potionImage != null) {
-            potionImage.setDrawable(new TextureRegionDrawable(potionRegion));
-        }
-        if (coinRegion != null && coinImage != null) {
-            coinImage.setDrawable(new TextureRegionDrawable(coinRegion));
-        }
-        if (keyRegion != null && keyImage != null) {
-            keyImage.setDrawable(new TextureRegionDrawable(keyRegion));
-        }
+    /**
+     * Dynamically creates a pixel-perfect 24x24 slot background using Pixmap.
+     */
+    private TextureRegionDrawable createSlotDrawable(int size) {
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        
+        // Fill base dark background
+        pixmap.setColor(0.145f, 0.122f, 0.110f, 1.0f);
+        pixmap.fill();
+
+        // Sunken outer border
+        // Dark top and left borders
+        pixmap.setColor(0.082f, 0.067f, 0.055f, 1.0f);
+        pixmap.drawLine(0, 0, 0, size - 1);
+        pixmap.drawLine(0, 0, size - 1, 0);
+
+        // Light bottom and right borders
+        pixmap.setColor(0.388f, 0.318f, 0.278f, 1.0f);
+        pixmap.drawLine(0, size - 1, size - 1, size - 1);
+        pixmap.drawLine(size - 1, 0, size - 1, size - 1);
+
+        // Inner shadow/bevel for extra depth
+        pixmap.setColor(0.05f, 0.04f, 0.03f, 1.0f);
+        pixmap.drawLine(1, 1, 1, size - 2);
+        pixmap.drawLine(1, 1, size - 2, 1);
+
+        pixmap.setColor(0.25f, 0.20f, 0.17f, 1.0f);
+        pixmap.drawLine(1, size - 2, size - 2, size - 2);
+        pixmap.drawLine(size - 2, 1, size - 2, size - 2);
+
+        slotTexture = new Texture(pixmap);
+        slotTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        pixmap.dispose();
+
+        return new TextureRegionDrawable(new TextureRegion(slotTexture));
     }
 
     // ── Life ──────────────────────────────────────────────────────────────────
@@ -212,15 +265,206 @@ public class GameView extends View<GameViewModel> implements Disposable {
         levelLabel.setText("Lv." + level);
     }
 
-    // ── Inventory ─────────────────────────────────────────────────────────────
+    private void setMenuVisible(boolean visible) {
+        if (menuContainer != null) {
+            menuContainer.setVisible(visible);
+            if (visible) {
+                rebuildMenu();
+            }
+        }
+    }
 
-    private void updateInventoryLabels(int potions, int coins, int keys) {
-        // Lần đầu cập nhật: thử gắn icon từ atlas (atlas đã load sau khi game bắt đầu)
-        buildInventoryIcons();
+    private Table createTabButton(String text, boolean active) {
+        Table tab = new Table();
+        Label label = new Label(text, skin, "tiny");
+        tab.add(label).pad(3f, 6f, 3f, 6f);
 
-        if (potionLabel != null) potionLabel.setText("x" + potions);
-        if (coinLabel   != null) coinLabel.setText("x" + coins);
-        if (keyLabel    != null) keyLabel.setText("x" + keys);
+        NinePatch patch = new NinePatch(skin.getPatch("button"));
+        if (active) {
+            patch.setColor(Color.WHITE);
+        } else {
+            patch.setColor(new Color(0.5f, 0.45f, 0.4f, 1f));
+        }
+        tab.setBackground(new NinePatchDrawable(patch));
+        return tab;
+    }
+
+    private void rebuildMenu() {
+        if (menuContainer == null) return;
+        menuContainer.clear();
+
+        Table tabRow = new Table();
+        tabRow.align(Align.left);
+
+        Table invTab = createTabButton("INVENTORY", viewModel.getCurrentTab() == 0);
+        invTab.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                viewModel.setCurrentTab(0);
+            }
+        });
+        tabRow.add(invTab).padRight(2f);
+
+        Table questTab = createTabButton("QUEST", viewModel.getCurrentTab() == 1);
+        questTab.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                viewModel.setCurrentTab(1);
+            }
+        });
+        tabRow.add(questTab).padRight(2f);
+
+        Table mapTab = createTabButton("MAP", viewModel.getCurrentTab() == 2);
+        mapTab.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                viewModel.setCurrentTab(2);
+            }
+        });
+        tabRow.add(mapTab);
+
+        menuContainer.add(tabRow).left().padLeft(10f).row();
+
+        Table contentArea = new Table();
+        NinePatch patch = new NinePatch(
+            new TextureRegion(questBgTexture),
+            6, 6, 6, 6
+        );
+        contentArea.setBackground(new NinePatchDrawable(patch));
+        contentArea.pad(6f);
+
+        Table tabContent = switch (viewModel.getCurrentTab()) {
+            case 0 -> buildInventoryContent();
+            case 1 -> buildQuestContent();
+            case 2 -> buildMapContent();
+            default -> new Table();
+        };
+        contentArea.add(tabContent).expand().fill();
+
+        menuContainer.add(contentArea).width(260f).height(118f).padTop(-1f);
+    }
+
+    private Table buildInventoryContent() {
+        Table content = new Table();
+        content.align(Align.center);
+
+        Table grid = new Table();
+        grid.align(Align.center);
+
+        class InvItem {
+            TextureRegion region;
+            int count;
+            InvItem(TextureRegion region, int count) {
+                this.region = region;
+                this.count = count;
+            }
+        }
+        java.util.List<InvItem> items = new java.util.ArrayList<>();
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        if (atlas != null) {
+            if (viewModel.getPotions() > 0) {
+                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getPotions()));
+            }
+            if (viewModel.getCoins() > 0) {
+                items.add(new InvItem(atlas.findRegion("coin/coin"), viewModel.getCoins()));
+            }
+            if (viewModel.getKeys() > 0) {
+                items.add(new InvItem(atlas.findRegion("key/key"), viewModel.getKeys()));
+            }
+            for (String wName : viewModel.getUnlockedWeapons()) {
+                if ("SWORD".equalsIgnoreCase(wName)) {
+                    items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));
+                } else if ("BOW".equalsIgnoreCase(wName)) {
+                    items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1));
+                } else if ("MAGIC_WAND".equalsIgnoreCase(wName)) {
+                    items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1));
+                }
+            }
+        }
+
+        int totalSlots = 24;
+        for (int i = 0; i < totalSlots; i++) {
+            Table slot = new Table();
+            slot.setBackground(slotDrawable);
+
+            if (i < items.size()) {
+                InvItem item = items.get(i);
+                if (item.region != null) {
+                    Image img = new Image(item.region);
+                    img.setScaling(Scaling.fit);
+
+                    com.badlogic.gdx.scenes.scene2d.ui.Stack stack = new com.badlogic.gdx.scenes.scene2d.ui.Stack();
+                    stack.add(img);
+
+                    if (item.count > 1) {
+                        Label countLabel = new Label("" + item.count, skin, "tiny");
+                        countLabel.setAlignment(Align.bottomRight);
+                        Table countWrapper = new Table();
+                        countWrapper.align(Align.bottomRight);
+                        countWrapper.add(countLabel).padRight(1f).padBottom(1f);
+                        stack.add(countWrapper);
+                    }
+                    slot.add(stack).size(16f, 16f).center();
+                }
+            } else {
+                slot.add().size(16f, 16f);
+            }
+
+            grid.add(slot).size(24f, 24f).pad(2f);
+            if ((i + 1) % 8 == 0) {
+                grid.row();
+            }
+        }
+
+        content.add(grid).center();
+        return content;
+    }
+
+    private Table buildQuestContent() {
+        Table content = new Table();
+        content.align(Align.top);
+
+        Label titleLabel = new Label("Quest Log", skin, "small");
+        titleLabel.setColor(Color.WHITE);
+        content.add(titleLabel).padBottom(5f).row();
+
+        Table questBox = new Table();
+        NinePatch questPatch = new NinePatch(
+            new TextureRegion(questBgTexture),
+            6, 6, 6, 6
+        );
+        questBox.setBackground(new NinePatchDrawable(questPatch));
+        questBox.pad(6f);
+
+        String[] questInfo = viewModel.getActiveQuest();
+        String questTitle = (questInfo != null && !questInfo[0].isEmpty()) ? questInfo[0] : "Khong co nhiem vu";
+        String questObjective = (questInfo != null && !questInfo[1].isEmpty()) ? questInfo[1] : "Chua nhan nhiem vu nao.";
+
+        Label qTitle = new Label(questTitle, skin, "small");
+        qTitle.setColor(Color.ORANGE);
+        Label qObjective = new Label(questObjective, skin, "tiny");
+        qObjective.setWrap(true);
+
+        questBox.add(qTitle).left().row();
+        questBox.add(qObjective).width(210f).left().padTop(2f);
+
+        content.add(questBox).width(230f).row();
+        return content;
+    }
+
+    private Table buildMapContent() {
+        Table content = new Table();
+        content.align(Align.center);
+        Label label = new Label("Map (Chua mo khoa)", skin, "small");
+        content.add(label);
+        return content;
+    }
+
+    private void updateWeaponLabel(String weaponName) {
+        if (weaponLabel != null) {
+            weaponLabel.setText(weaponName);
+        }
     }
 
     // ── Coordinate helper ─────────────────────────────────────────────────────
@@ -270,11 +514,19 @@ public class GameView extends View<GameViewModel> implements Disposable {
         );
     }
 
-    /** Giải phóng tất cả faceset texture đã cache và nền dialogue khi screen bị hủy. */
+    /** Giải phóng tất cả texture faceset đã cache và nền dialogue khi screen bị hủy. */
     @Override
     public void dispose() {
-        facesetCache.values().forEach(Texture::dispose);
+        for (Texture tex : facesetCache.values()) {
+            if (tex != null) tex.dispose();
+        }
         facesetCache.clear();
         dialogueBox.dispose();
+        if (questBgTexture != null) {
+            questBgTexture.dispose();
+        }
+        if (slotTexture != null) {
+            slotTexture.dispose();
+        }
     }
 }

@@ -30,6 +30,7 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
     private final Batch batch;
     private final OrthographicCamera camera;
     private final Viewport viewport;
+    private final WeaponHandSystem weaponHandSystem;
 
     private final PublicTiledMapRenderer tiledRenderer;
     private final List<MapLayer> fgdLayers;
@@ -38,7 +39,7 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
     private final Texture whiteTexture;
     private final TextureRegion whiteRegion;
 
-    public RenderSystem(Batch batch, Viewport viewport, OrthographicCamera camera) {
+    public RenderSystem(Batch batch, Viewport viewport, OrthographicCamera camera, WeaponHandSystem weaponHandSystem) {
         super(
             Family.all(Transform.class, Graphic.class).get(),
             Comparator.comparing(Transform.MAPPER::get)
@@ -47,6 +48,7 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         this.batch = batch;
         this.viewport = viewport;
         this.camera = camera;
+        this.weaponHandSystem = weaponHandSystem;
         this.tiledRenderer = new PublicTiledMapRenderer(null, GdxGame.UNIT_SCALE, batch);
         this.fgdLayers = new ArrayList<>();
         this.bgdLayers = new ArrayList<>();
@@ -110,6 +112,10 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
             scaling.x, scaling.y,
             transform.getRotationDeg()
         );
+
+        if (weaponHandSystem != null) {
+            weaponHandSystem.drawWeapon(entity, deltaTime);
+        }
 
         // Draw health bar for non-player entities with Life component that are not dead
         Life life = Life.MAPPER.get(entity);

@@ -63,7 +63,7 @@ public class MapHazardSystem extends IteratingSystem {
                             if (damage > 0f) {
                                 player.add(new Damaged(damage, null));
                                 audioService.playSound(SoundAsset.TRAP);
-                                hazardCooldown = 1.0f;
+                                hazardCooldown = 0.5f;
                                 return; // Apply damage once per tick
                             }
                         }

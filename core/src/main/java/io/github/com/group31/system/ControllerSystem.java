@@ -436,6 +436,67 @@ public class ControllerSystem extends IteratingSystem {
                 return;
             }
 
+            if (npc != null && ("Gold Key".equalsIgnoreCase(npc.getName()) || "Silver Key".equalsIgnoreCase(npc.getName()))) {
+                audioService.playSound(SoundAsset.PICKUP);
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    if ("Gold Key".equalsIgnoreCase(npc.getName())) {
+                        inventory.addItem(Item.Type.GOLD_KEY, 1);
+                        viewModel.showFloatingText("[GOLD]+1 Gold Key![]", 
+                            playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                    } else {
+                        inventory.addItem(Item.Type.SILVER_KEY, 1);
+                        viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 
+                            playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                    }
+                    viewModel.updateInventory(
+                        inventory.getItemCount(Item.Type.POTION_HEALTH),
+                        inventory.getItemCount(Item.Type.COIN),
+                        inventory.getItemCount(Item.Type.KEY),
+                        inventory.getItemCount(Item.Type.GOLD_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_KEY)
+                    );
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
+            if (npc != null && npc.getName() != null && npc.getName().startsWith("WEAPON_")) {
+                audioService.playSound(SoundAsset.PICKUP);
+                CombatState combatState = CombatState.MAPPER.get(player);
+                if (combatState != null) {
+                    io.github.com.group31.combat.Weapon unlocked = null;
+                    if (npc.getName().endsWith("SWORD")) {
+                        unlocked = io.github.com.group31.combat.Weapon.SWORD;
+                    } else if (npc.getName().endsWith("BOW")) {
+                        unlocked = io.github.com.group31.combat.Weapon.BOW;
+                    } else if (npc.getName().endsWith("MAGIC_WAND")) {
+                        unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
+                    }
+
+                    if (unlocked != null) {
+                        boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
+                        if (newlyUnlocked) {
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]", 
+                                playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                            io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(player);
+                        } else {
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!", 
+                                playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                        }
+                        
+                        // Sync to viewModel
+                        java.util.List<String> wNames = new java.util.ArrayList<>();
+                        for (io.github.com.group31.combat.Weapon w : combatState.getUnlockedWeapons()) {
+                            wNames.add(w.name());
+                        }
+                        viewModel.updateUnlockedWeapons(wNames);
+                    }
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
             activeNpcEntity = closestNpc;
             Move move = Move.MAPPER.get(player);
             if (move != null) {

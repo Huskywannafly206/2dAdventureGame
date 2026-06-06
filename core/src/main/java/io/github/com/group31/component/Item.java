@@ -17,6 +17,8 @@ public class Item implements Component {
         POTION_HEALTH,
         COIN,
         KEY,
+        GOLD_KEY,
+        SILVER_KEY,
         // Vũ khí nhặt được — mở khóa vũ khí tương ứng trong CombatState
         WEAPON_SWORD,
         WEAPON_BOW,

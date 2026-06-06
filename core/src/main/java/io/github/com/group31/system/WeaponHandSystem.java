@@ -70,15 +70,73 @@ public class WeaponHandSystem extends IteratingSystem {
         TextureRegion frame = getWeaponFrame(entity, weapon, dir, isAttacking, deltaTime);
         if (frame == null) return;
 
-        // Tính vị trí vẽ
+        // Lấy stateTime đã được cập nhật bởi getWeaponFrame
+        float[] st = stateTimeMap.computeIfAbsent(entity, e -> new float[]{0f});
+        float stateTime = st[0];
+
+        // Tính vị trí vẽ & origin (handle/chuôi kiếm làm tâm quay)
         Vector2 pos = transform.getPosition();
         Vector2 size = transform.getSize();
         Vector2 offset = getOffset(dir);
 
-        float drawX = pos.x + size.x * 0.5f + offset.x - WEAPON_SIZE * 0.5f;
-        float drawY = pos.y + size.y * 0.5f + offset.y - WEAPON_SIZE * 0.5f;
+        // Đặt tâm xoay (origin) ở phần chuôi/cạnh dưới của ô gạch chứa vũ khí
+        float originX = WEAPON_SIZE * 0.5f;
+        float originY = WEAPON_SIZE * 0.15f;
 
-        batch.draw(frame, drawX, drawY, WEAPON_SIZE, WEAPON_SIZE);
+        // Căn chỉnh sao cho tâm xoay trùng khớp với vị trí tay (pos + size * 0.5 + offset)
+        float drawX = pos.x + size.x * 0.5f + offset.x - originX;
+        float drawY = pos.y + size.y * 0.5f + offset.y - originY;
+
+        // Tính toán góc xoay (rotation) dựa theo hướng mặt và trạng thái chém
+        float rotation = 0f;
+        switch (dir) {
+            case RIGHT:
+                rotation = -45f; // Nghiêng 45 độ về phía trước bên phải
+                break;
+            case LEFT:
+                rotation = 45f;  // Nghiêng 45 độ về phía trước bên trái
+                break;
+            case UP:
+                rotation = 15f;  // Nghiêng nhẹ sang phải khi đi lên
+                break;
+            case DOWN:
+                rotation = -135f; // Chúc xuống dưới
+                break;
+        }
+
+        // Hiệu ứng vung vũ khí (swing animation) khi đang đánh
+        if (isAttacking) {
+            // Tốc độ vung chém dựa trên tiến trình thời gian của đòn đánh
+            float attackProgress = Math.min(1f, stateTime / 0.25f);
+            switch (dir) {
+                case RIGHT:
+                    // Chém từ trên xuống dưới
+                    rotation = -15f - attackProgress * 120f;
+                    break;
+                case LEFT:
+                    // Chém từ trên xuống dưới (phía bên trái)
+                    rotation = 15f + attackProgress * 120f;
+                    break;
+                case UP:
+                    // Vung ngang trên đầu
+                    rotation = -60f + attackProgress * 120f;
+                    break;
+                case DOWN:
+                    // Vung ngang dưới chân
+                    rotation = -120f - attackProgress * 120f;
+                    break;
+            }
+        }
+
+        // Vẽ vũ khí với gốc xoay và góc xoay
+        batch.draw(
+            frame,
+            drawX, drawY,
+            originX, originY,
+            WEAPON_SIZE, WEAPON_SIZE,
+            1f, 1f,
+            rotation
+        );
     }
 
     private TextureRegion getWeaponFrame(Entity entity, Weapon weapon,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="16" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="23" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -353,6 +353,68 @@
     </properties>
    </object>
    <object id="5" name="attack_sensor_right" x="10" y="2" width="6" height="12">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="21" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="Gold Key"/>
+  </properties>
+  <image source="objects/gold_key.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="22" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="Silver Key"/>
+  </properties>
+  <image source="objects/silver_key.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="23" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="WEAPON_BOW"/>
+  </properties>
+  <image source="objects/weapon_bow.png" width="15" height="7"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="15" height="7">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="24" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="WEAPON_MAGIC_WAND"/>
+  </properties>
+  <image source="objects/weapon_magic_wand.png" width="5" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="5" height="18">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="25" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="WEAPON_SWORD"/>
+  </properties>
+  <image source="objects/weapon_sword.png" width="6" height="15"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="6" height="15">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>

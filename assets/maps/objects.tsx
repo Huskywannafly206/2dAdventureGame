@@ -6,7 +6,7 @@
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="2"/>
    <property name="attackSound" value="SWING"/>
-   <property name="damage" type="float" value="30"/>
+   <property name="damage" type="float" value="100"/>
    <property name="damageDelay" type="float" value="0.2"/>
    <property name="life" type="int" value="20"/>
    <property name="lifeReg" type="float" value="0.5"/>
@@ -261,16 +261,6 @@
    <property name="hiddenBarrier" type="bool" value="true"/>
   </properties>
   <image source="objects/stone_block.png" width="16" height="16"/>
-  <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
-  </objectgroup>
- </tile>
- <tile id="18" type="Object">
-  <properties>
-   <property name="bodyType" value="StaticBody"/>
-   <property name="npcName" value="Heart Container"/>
-  </properties>
-  <image source="objects/heart_container.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>

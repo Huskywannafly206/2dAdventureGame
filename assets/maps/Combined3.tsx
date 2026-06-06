@@ -150,11 +150,24 @@
   </animation>
  </tile>
  <tile id="96">
+  <properties>
+   <property name="damage" type="float" value="8"/>
+  </properties>
   <animation>
    <frame tileid="96" duration="500"/>
    <frame tileid="97" duration="100"/>
    <frame tileid="99" duration="100"/>
    <frame tileid="98" duration="1000"/>
   </animation>
+ </tile>
+ <tile id="97">
+  <properties>
+   <property name="damage" type="float" value="8"/>
+  </properties>
+ </tile>
+ <tile id="99">
+  <properties>
+   <property name="damage" type="float" value="8"/>
+  </properties>
  </tile>
 </tileset>

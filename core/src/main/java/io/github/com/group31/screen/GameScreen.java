@@ -37,6 +37,7 @@ import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
 import io.github.com.group31.system.ItemSystem;
 import io.github.com.group31.system.LifeSystem;
+import io.github.com.group31.system.MapHazardSystem;
 import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
 import io.github.com.group31.system.PhysicSystem;
@@ -89,6 +90,7 @@ public class GameScreen extends ScreenAdapter {
         // detect when a damaged animation should be played.
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
+        this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new ItemSystem(audioService, viewModel));

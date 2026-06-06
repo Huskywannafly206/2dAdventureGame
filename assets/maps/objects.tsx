@@ -265,4 +265,16 @@
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
+ <tile id="18" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="Heart Container"/>
+  </properties>
+  <image source="objects/heart_container.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
 </tileset>

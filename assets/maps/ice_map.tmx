@@ -162,6 +162,11 @@
     <property name="npcName" value="FighterWhite"/>
    </properties>
   </object>
+  <object id="8" name="Heart Container" gid="2906" x="80" y="176" width="16" height="16">
+   <properties>
+    <property name="npcName" value="Heart Container"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="6" name="fore" width="30" height="20">
   <data encoding="csv">

@@ -419,6 +419,26 @@ public class ControllerSystem extends IteratingSystem {
         }
 
         if (closestNpc != null) {
+            Npc npc = Npc.MAPPER.get(closestNpc);
+            if (npc != null && "Heart Container".equalsIgnoreCase(npc.getName())) {
+                audioService.playSound(SoundAsset.HEAL);
+                Life life = Life.MAPPER.get(player);
+                if (life != null) {
+                    life.setMaxLife(life.getMaxLife() + 4);
+                    life.addLife(4);
+                    viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+                }
+                viewModel.showFloatingText("[RED]+4 Max HP![]", 
+                    playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+
+                Physic physic = Physic.MAPPER.get(closestNpc);
+                if (physic != null && physic.getBody() != null) {
+                    physicWorld.destroyBody(physic.getBody());
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
             activeNpcEntity = closestNpc;
             Move move = Move.MAPPER.get(player);
             if (move != null) {
@@ -428,7 +448,6 @@ public class ControllerSystem extends IteratingSystem {
             // Cập nhật dialogue của NPC dựa trên tiến trình Quest trước khi hiển thị
             io.github.com.group31.quest.QuestManager.INSTANCE.onTalkToNpc(activeNpcEntity, player);
 
-            Npc npc = Npc.MAPPER.get(activeNpcEntity);
             npc.resetDialogue();
             displayNpcDialogue(activeNpcEntity, npc);
         }

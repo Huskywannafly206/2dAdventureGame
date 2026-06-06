@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="80" tileheight="112" tilecount="14" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -177,6 +177,103 @@
   <objectgroup draworder="index" id="2">
    <object id="1" x="11" y="18" width="9" height="5">
     <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="15" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackSound" value="SWING"/>
+   <property name="bodyType" value="DynamicBody"/>
+   <property name="speed" type="float" value="1.2"/>
+  </properties>
+  <image source="objects/shaman.png" width="16" height="16"/>
+ </tile>
+ <tile id="16" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackSound" value="SWING"/>
+   <property name="bodyType" value="DynamicBody"/>
+   <property name="damage" type="float" value="1"/>
+   <property name="damageDelay" type="float" value="0.3"/>
+   <property name="life" type="int" value="20"/>
+   <property name="lifeReg" type="float" value="0.2"/>
+   <property name="sightRange" type="float" value="10"/>
+   <property name="speed" type="float" value="1.2"/>
+   <property name="type" value="mob"/>
+   <property name="xpReward" type="float" value="10"/>
+  </properties>
+  <image source="objects/spirit.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="7" width="8" height="6">
+    <ellipse/>
+   </object>
+   <object id="2" name="attack_sensor_down" x="2" y="8" width="12" height="6">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="3" name="attack_sensor_up" x="2" y="2" width="12" height="6">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="4" name="attack_sensor_left" x="0" y="2" width="6" height="12">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="5" name="attack_sensor_right" x="10" y="2" width="6" height="12">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="17" type="Object">
+  <properties>
+   <property name="animation" value="IDLE"/>
+   <property name="animationSpeed" type="float" value="1"/>
+   <property name="attackRange" type="float" value="0.5"/>
+   <property name="attackSound" value="SWING"/>
+   <property name="bodyType" value="DynamicBody"/>
+   <property name="damage" type="float" value="1"/>
+   <property name="damageDelay" type="float" value="0.3"/>
+   <property name="life" type="int" value="20"/>
+   <property name="lifeReg" type="float" value="0.2"/>
+   <property name="sightRange" type="float" value="10"/>
+   <property name="speed" type="float" value="1.2"/>
+   <property name="type" value="mob"/>
+   <property name="xpReward" type="float" value="10"/>
+  </properties>
+  <image source="objects/skull.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="7" width="8" height="6">
+    <ellipse/>
+   </object>
+   <object id="2" name="attack_sensor_down" x="2" y="8" width="12" height="6">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="3" name="attack_sensor_up" x="2" y="2" width="12" height="6">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="4" name="attack_sensor_left" x="0" y="2" width="6" height="12">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="5" name="attack_sensor_right" x="10" y="2" width="6" height="12">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
    </object>
   </objectgroup>
  </tile>

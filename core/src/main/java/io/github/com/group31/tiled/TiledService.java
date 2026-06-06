@@ -95,7 +95,10 @@ public class TiledService {
     public void loadMapObjects(TiledMap tiledMap) {
         for (MapLayer layer : tiledMap.getLayers()) {
             if (layer instanceof TiledMapTileLayer tileLayer) {
-                loadTileLayer(tileLayer);
+                boolean collisionEnabled = tileLayer.getProperties().get("collision", true, Boolean.class);
+                if (collisionEnabled) {
+                    loadTileLayer(tileLayer);
+                }
             } else if ("objects".equals(layer.getName())) {
                 loadObjectLayer(layer);
             } else if ("trigger".equals(layer.getName())) {

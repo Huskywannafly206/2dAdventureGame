@@ -248,8 +248,24 @@
   </properties>
  </tile>
  <tile id="98"/>
- <tile id="100"/>
- <tile id="101"/>
+ <tile id="100">
+  <animation>
+   <frame tileid="98" duration="200"/>
+   <frame tileid="96" duration="100"/>
+   <frame tileid="97" duration="100"/>
+   <frame tileid="99" duration="100"/>
+   <frame tileid="98" duration="800"/>
+  </animation>
+ </tile>
+ <tile id="101">
+  <animation>
+   <frame tileid="98" duration="400"/>
+   <frame tileid="96" duration="100"/>
+   <frame tileid="97" duration="100"/>
+   <frame tileid="99" duration="100"/>
+   <frame tileid="98" duration="600"/>
+  </animation>
+ </tile>
  <tile id="102"/>
  <tile id="103"/>
  <tile id="104"/>

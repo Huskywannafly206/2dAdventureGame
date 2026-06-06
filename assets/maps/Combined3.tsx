@@ -284,7 +284,11 @@
    <frame tileid="98" duration="200"/>
   </animation>
  </tile>
- <tile id="104">
+ <tile id="104"/>
+ <tile id="105"/>
+ <tile id="106"/>
+ <tile id="107"/>
+ <tile id="108">
   <animation>
    <frame tileid="98" duration="1000"/>
    <frame tileid="96" duration="100"/>
@@ -292,10 +296,6 @@
    <frame tileid="99" duration="100"/>
   </animation>
  </tile>
- <tile id="105"/>
- <tile id="106"/>
- <tile id="107"/>
- <tile id="108"/>
  <tile id="109"/>
  <tile id="110"/>
  <tile id="111"/>

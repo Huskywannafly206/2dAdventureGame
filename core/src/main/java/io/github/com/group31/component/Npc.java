@@ -7,7 +7,7 @@ public class Npc implements Component {
     public static final ComponentMapper<Npc> MAPPER = ComponentMapper.getFor(Npc.class);
 
     private final String name;
-    private final String[] dialogue;
+    private String[] dialogue;
     /** Đường dẫn tương đối đến ảnh faceset (trong assets/), null nếu không có. */
     private final String facesetPath;
     private int currentLineIndex;
@@ -30,6 +30,10 @@ public class Npc implements Component {
 
     public String[] getDialogue() {
         return dialogue;
+    }
+
+    public void setDialogue(String[] dialogue) {
+        this.dialogue = dialogue != null ? dialogue : new String[0];
     }
 
     /** Trả về đường dẫn ảnh faceset (tương đối từ assets/), hoặc null nếu không có. */

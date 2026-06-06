@@ -63,6 +63,14 @@ public class ItemSystem extends IteratingSystem {
                         "[YELLOW]Nhận: " + unlocked.displayName + "![]", x, y);
                 }
                 audioService.playSound(item.getPickupSound());
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(collector);
+
+                // Sync to viewModel
+                java.util.List<String> wNames = new java.util.ArrayList<>();
+                for (Weapon w : combatState.getUnlockedWeapons()) {
+                    wNames.add(w.name());
+                }
+                viewModel.updateUnlockedWeapons(wNames);
             }
             toRemove.add(entity);
             return;
@@ -72,6 +80,9 @@ public class ItemSystem extends IteratingSystem {
         Inventory inventory = Inventory.MAPPER.get(collector);
         if (inventory != null) {
             inventory.addItem(type, 1);
+            if (type == Item.Type.POTION_HEALTH) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
+            }
         }
 
         // Phát âm thanh

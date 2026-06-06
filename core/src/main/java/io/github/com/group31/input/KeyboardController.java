@@ -20,7 +20,9 @@ public class KeyboardController extends InputAdapter {
         Map.entry(Input.Keys.H, Command.USE_ITEM),
         Map.entry(Input.Keys.E, Command.INTERACT),
         Map.entry(Input.Keys.SHIFT_LEFT, Command.DASH),
-        Map.entry(Input.Keys.V, Command.SWITCH_WEAPON)
+        Map.entry(Input.Keys.V, Command.SWITCH_WEAPON),
+        Map.entry(Input.Keys.TAB, Command.TOGGLE_MENU),
+        Map.entry(Input.Keys.I, Command.TOGGLE_MENU)
     );
 
     private final boolean[] commandState;

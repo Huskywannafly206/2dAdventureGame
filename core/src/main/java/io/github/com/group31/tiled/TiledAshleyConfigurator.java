@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import io.github.com.group31.GdxGame;
 import io.github.com.group31.asset.AssetService;
 import io.github.com.group31.asset.AtlasAsset;
+import io.github.com.group31.asset.MapAsset;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.component.Ai;
 import io.github.com.group31.component.Animation2D;
@@ -268,11 +269,65 @@ public class TiledAshleyConfigurator {
             if (transform != null) {
                 float px = transform.getPosition().x;
                 float py = transform.getPosition().y;
-                spawnTestWeapon(Item.Type.WEAPON_SWORD, px + 1f, py, "weapon_sword/weapon_sword");
-                spawnTestWeapon(Item.Type.WEAPON_BOW, px + 2f, py, "weapon_bow/weapon_bow");
-                spawnTestWeapon(Item.Type.WEAPON_MAGIC_WAND, px + 3f, py, "weapon_magicWand/weapon_magicWand");
+                
+                MapAsset asset = currentMap != null ? currentMap.getProperties().get("mapAsset", MapAsset.class) : null;
+                if (asset == MapAsset.VILLAGE) {
+                    spawnTestWeapon(Item.Type.WEAPON_SWORD, px + 1f, py, "weapon_sword/weapon_sword");
+                    spawnTestWeapon(Item.Type.WEAPON_BOW, px + 2f, py, "weapon_bow/weapon_bow");
+                    spawnTestWeapon(Item.Type.WEAPON_MAGIC_WAND, px + 3f, py, "weapon_magicWand/weapon_magicWand");
+                } else if (asset == MapAsset.VILLAGE_HOUSE) {
+                    spawnPotion(px + 2f, py);
+                }
             }
         }
+    }
+
+    private void spawnPotion(float x, float y) {
+        Entity itemEntity = this.engine.createEntity();
+
+        // 1. Transform
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        // 2. Graphic
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion("potion_health/potion_health");
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.WHITE.cpy()));
+        } else {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Failed to find atlas region: potion_health/potion_health");
+        }
+
+        // 3. Physic Body (StaticBody sensor)
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+
+        // 4. Item component
+        itemEntity.add(new Item(Item.Type.POTION_HEALTH, 1f, SoundAsset.PICKUP));
+
+        this.engine.addEntity(itemEntity);
     }
 
     private void spawnTestWeapon(Item.Type type, float x, float y, String atlasRegionName) {

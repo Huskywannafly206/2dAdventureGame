@@ -56,4 +56,10 @@ public class CombatState implements Component {
     public int getCurrentIndex() {
         return currentIndex;
     }
+
+    public void setCurrentIndex(int index) {
+        if (index >= 0 && index < unlockedWeapons.size()) {
+            this.currentIndex = index;
+        }
+    }
 }

@@ -95,6 +95,20 @@ public class ControllerSystem extends IteratingSystem {
             return;
         }
 
+        if (viewModel.isMenuOpen()) {
+            if (controller.getPressedCommands().contains(Command.TOGGLE_MENU) ||
+                controller.getPressedCommands().contains(Command.CANCEL)) {
+                viewModel.toggleMenu();
+            } else if (controller.getPressedCommands().contains(Command.LEFT)) {
+                viewModel.prevTab();
+            } else if (controller.getPressedCommands().contains(Command.RIGHT)) {
+                viewModel.nextTab();
+            }
+            controller.getPressedCommands().clear();
+            controller.getReleasedCommands().clear();
+            return;
+        }
+
         if (activeNpcEntity != null) {
             if (controller.getPressedCommands().contains(Command.INTERACT)) {
                 interactWithNpc(entity);
@@ -116,6 +130,7 @@ public class ControllerSystem extends IteratingSystem {
                 case INTERACT      -> interactWithNpc(entity);
                 case DASH          -> startDash(entity);
                 case SWITCH_WEAPON -> switchWeapon(entity);
+                case TOGGLE_MENU   -> viewModel.toggleMenu();
             }
         }
         controller.getPressedCommands().clear();
@@ -409,6 +424,9 @@ public class ControllerSystem extends IteratingSystem {
             if (move != null) {
                 move.getDirection().setZero();
             }
+
+            // Cập nhật dialogue của NPC dựa trên tiến trình Quest trước khi hiển thị
+            io.github.com.group31.quest.QuestManager.INSTANCE.onTalkToNpc(activeNpcEntity, player);
 
             Npc npc = Npc.MAPPER.get(activeNpcEntity);
             npc.resetDialogue();

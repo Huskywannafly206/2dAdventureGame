@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="12" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="4">
+ <tileset firstgid="1" source="TilesetFloor.tsx"/>
+ <tileset firstgid="573" source="TilesetInteriorFloor.tsx"/>
+ <tileset firstgid="947" source="TilesetElement.tsx"/>
+ <tileset firstgid="1187" source="TilesetHouse.tsx"/>
+ <tileset firstgid="1946" source="TilesetNature.tsx"/>
+ <tileset firstgid="2450" source="Tree.tsx"/>
+ <tileset firstgid="2454" source="objects.tsx"/>
+ <tileset firstgid="2471" source="TilesetField.tsx"/>
+ <tileset firstgid="2546" source="Combined3.tsx"/>
+ <layer id="1" name="background" width="12" height="10">
+  <data encoding="base64" compression="zlib">
+   eJyzZWJgsB3FDMMVAwDtFR2J
+  </data>
+ </layer>
+ <layer id="2" name="obstacle" width="12" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxbzMLAsJgEfJhEDNJDLIDZMaqeAa96dIxPHgBlqyDR
+  </data>
+ </layer>
+ <objectgroup id="3" name="trigger">
+  <object id="1" name="portal_trigger" x="80" y="144" width="32" height="16">
+   <properties>
+    <property name="targetMap" value="VILLAGE"/>
+    <property name="targetX" type="float" value="496"/>
+    <property name="targetY" type="float" value="176"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="objects">
+  <object id="2" name="Player" gid="2455" x="96" y="96" width="32" height="32">
+   <properties>
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" name="Old Man" gid="2464" x="64" y="64" width="32" height="32">
+   <properties>
+    <property name="npcName" value="Old Man"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

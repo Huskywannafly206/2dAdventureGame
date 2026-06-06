@@ -199,7 +199,9 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.POTION_HEALTH, data.playerPotions);
                     inventory.setItemCount(Item.Type.COIN,          data.playerCoins);
                     inventory.setItemCount(Item.Type.KEY,           data.playerKeys);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys);
+                    inventory.setItemCount(Item.Type.GOLD_KEY,      data.playerGoldKeys);
+                    inventory.setItemCount(Item.Type.SILVER_KEY,    data.playerSilverKeys);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -279,9 +281,11 @@ public class GameScreen extends ScreenAdapter {
                     // Lưu trạng thái Inventory
                     Inventory inventory = Inventory.MAPPER.get(player);
                     if (inventory != null) {
-                        data.playerPotions = inventory.getItemCount(Item.Type.POTION_HEALTH);
-                        data.playerCoins   = inventory.getItemCount(Item.Type.COIN);
-                        data.playerKeys    = inventory.getItemCount(Item.Type.KEY);
+                        data.playerPotions    = inventory.getItemCount(Item.Type.POTION_HEALTH);
+                        data.playerCoins      = inventory.getItemCount(Item.Type.COIN);
+                        data.playerKeys       = inventory.getItemCount(Item.Type.KEY);
+                        data.playerGoldKeys   = inventory.getItemCount(Item.Type.GOLD_KEY);
+                        data.playerSilverKeys = inventory.getItemCount(Item.Type.SILVER_KEY);
                     }
 
                     // Lưu trạng thái CombatState (vũ khí)
@@ -358,9 +362,11 @@ public class GameScreen extends ScreenAdapter {
 
         // Lưu lại trạng thái Inventory trước khi chuyển map
         Inventory inventory = Inventory.MAPPER.get(player);
-        int potions = inventory != null ? inventory.getItemCount(Item.Type.POTION_HEALTH) : 0;
-        int coins = inventory != null ? inventory.getItemCount(Item.Type.COIN) : 0;
-        int keys = inventory != null ? inventory.getItemCount(Item.Type.KEY) : 0;
+        int potions    = inventory != null ? inventory.getItemCount(Item.Type.POTION_HEALTH) : 0;
+        int coins      = inventory != null ? inventory.getItemCount(Item.Type.COIN) : 0;
+        int keys       = inventory != null ? inventory.getItemCount(Item.Type.KEY) : 0;
+        int goldKeys   = inventory != null ? inventory.getItemCount(Item.Type.GOLD_KEY) : 0;
+        int silverKeys = inventory != null ? inventory.getItemCount(Item.Type.SILVER_KEY) : 0;
 
         // Lưu lại trạng thái CombatState trước khi chuyển map
         CombatState cs = CombatState.MAPPER.get(player);
@@ -418,7 +424,9 @@ public class GameScreen extends ScreenAdapter {
                     newInventory.setItemCount(Item.Type.POTION_HEALTH, potions);
                     newInventory.setItemCount(Item.Type.COIN, coins);
                     newInventory.setItemCount(Item.Type.KEY, keys);
-                    viewModel.updateInventory(potions, coins, keys);
+                    newInventory.setItemCount(Item.Type.GOLD_KEY, goldKeys);
+                    newInventory.setItemCount(Item.Type.SILVER_KEY, silverKeys);
+                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys);
                 }
 
                 // Khôi phục CombatState

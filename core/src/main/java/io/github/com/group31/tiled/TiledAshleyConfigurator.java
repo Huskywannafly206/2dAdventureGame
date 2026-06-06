@@ -142,7 +142,11 @@ public class TiledAshleyConfigurator {
         if (itemTypeStr != null && !itemTypeStr.isBlank()) {
             BodyType bodyType = BodyType.StaticBody; // item không di chuyển
             addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);
-            addEntityItem(tile, entity);
+            if (itemTypeStr.startsWith("WEAPON_")) {
+                entity.add(new Npc(itemTypeStr, new String[0]));
+            } else {
+                addEntityItem(tile, entity);
+            }
             entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
             entity.add(new Tiled(tileMapObject, getLocalTileId(tileMapObject.getTile())));
             this.engine.addEntity(entity);
@@ -379,8 +383,8 @@ public class TiledAshleyConfigurator {
 
         itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
 
-        // 4. Item component
-        itemEntity.add(new Item(type, 1f, SoundAsset.PICKUP));
+        // 4. Npc component (để nhặt bằng nút E thay vì tự động chạm nhặt)
+        itemEntity.add(new Npc(type.name(), new String[0]));
 
         this.engine.addEntity(itemEntity);
     }
@@ -405,6 +409,8 @@ public class TiledAshleyConfigurator {
             case COIN          -> SoundAsset.COIN;
             case POTION_HEALTH -> SoundAsset.PICKUP;
             case KEY           -> SoundAsset.PICKUP;
+            case GOLD_KEY      -> SoundAsset.PICKUP;
+            case SILVER_KEY    -> SoundAsset.PICKUP;
             case WEAPON_SWORD  -> SoundAsset.PICKUP;
             case WEAPON_BOW    -> SoundAsset.PICKUP;
             case WEAPON_MAGIC_WAND -> SoundAsset.PICKUP;

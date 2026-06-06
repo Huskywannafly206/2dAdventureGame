@@ -233,7 +233,7 @@
   <animation>
    <frame tileid="96" duration="100"/>
    <frame tileid="97" duration="100"/>
-   <frame tileid="99" duration="500"/>
+   <frame tileid="99" duration="100"/>
    <frame tileid="98" duration="1000"/>
   </animation>
  </tile>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="40">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="42">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="101" source="Combined3.tsx"/>
  <tileset firstgid="213" source="TilesetHole.tsx"/>
@@ -60,7 +60,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,21,236,236,236,236,236,236,236,237,80,80,73,24,24,24,6,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,21,80,80,80,80,80,73,24,24,24,23,24,24,23,24,6,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,21,80,80,23,80,80,24,24,80,80,24,24,24,24,24,6,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,31,5,67,68,5,55,42,42,42,42,43,44,44,44,44,46,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,31,5,0,0,5,55,42,42,42,42,43,44,44,44,44,46,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,11,80,80,80,80,16,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,11,80,80,80,80,16,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,11,80,80,80,80,16,0,0,0,0,0,0,0,0,0,0,0,
@@ -114,5 +114,7 @@
   <object id="35" gid="1431" x="378" y="128" width="16" height="16"/>
   <object id="38" gid="1442" x="241.667" y="209.333" width="16" height="16"/>
   <object id="39" gid="1442" x="256.667" y="209.333" width="16" height="16"/>
+  <object id="40" gid="67" x="239.333" y="192" width="16" height="16"/>
+  <object id="41" gid="68" x="256.333" y="192" width="16" height="16"/>
  </objectgroup>
 </map>

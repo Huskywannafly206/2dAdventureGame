@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="25">
- <tileset firstgid="1" source="fields.tsx" />
- <tileset firstgid="15" source="Dungeon_Tileset.tsx" />
- <tileset firstgid="115" source="TilesetHouse.tsx" />
- <tileset firstgid="874" source="TilesetReliefDetail.tsx" />
- <tileset firstgid="1018" source="Combined3.tsx" />
- <tileset firstgid="1130" source="objects.tsx" />
+ <tileset firstgid="1" source="fields.tsx"/>
+ <tileset firstgid="15" source="Dungeon_Tileset.tsx"/>
+ <tileset firstgid="115" source="TilesetHouse.tsx"/>
+ <tileset firstgid="874" source="TilesetReliefDetail.tsx"/>
+ <tileset firstgid="1018" source="Combined3.tsx"/>
+ <tileset firstgid="1130" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
@@ -32,20 +33,20 @@
  <objectgroup id="12" name="trigger">
   <object id="1" name="portal_trigger" x="245.16" y="305.23" width="21.7485" height="8.90909">
    <properties>
-    <property name="targetMap" value="DUNGEONMAP4" />
-    <property name="targetX" type="float" value="736.333333333" />
-    <property name="targetY" type="float" value="55" />
+    <property name="targetMap" value="DUNGEONMAP4"/>
+    <property name="targetX" type="float" value="736.333333333"/>
+    <property name="targetY" type="float" value="55"/>
    </properties>
   </object>
   <object id="6" name="portal_trigger" x="297.167" y="27.25" width="28.6667" height="8.66667">
    <properties>
-    <property name="targetMap" value="DUNGEONMAP3" />
-    <property name="targetX" type="float" value="216.757894737" />
-    <property name="targetY" type="float" value="303.157894737" />
+    <property name="targetMap" value="DUNGEONMAP3"/>
+    <property name="targetX" type="float" value="216.757894737"/>
+    <property name="targetY" type="float" value="303.157894737"/>
    </properties>
   </object>
   <object id="15" x="242.75" y="298.75">
-   <point />
+   <point/>
   </object>
  </objectgroup>
  <layer id="7" name="floor2" width="30" height="20">
@@ -123,41 +124,49 @@
  <objectgroup id="13" name="objects">
   <object id="4" name="Player" gid="1131" x="240.182" y="297.182" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true" />
-    <property name="controller" type="bool" value="true" />
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="11" gid="1139" x="389.5" y="110.25" width="32" height="32" />
-  <object id="12" gid="1150" x="412" y="128.333" width="16" height="16" />
-  <object id="13" gid="1149" x="427" y="82" width="16" height="16" />
-  <object id="19" gid="82" x="256.25" y="224.5" width="16" height="16" />
-  <object id="20" gid="81" x="239.75" y="224.5" width="16" height="16" />
+  <object id="11" gid="1139" x="389.5" y="110.25" width="32" height="32"/>
+  <object id="12" gid="1150" x="412" y="128.333" width="16" height="16"/>
+  <object id="13" gid="1149" x="427" y="82" width="16" height="16"/>
+  <object id="19" gid="82" x="256.25" y="224.5" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="58"/>
+   </properties>
+  </object>
+  <object id="20" gid="81" x="239.75" y="224.5" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="57"/>
+   </properties>
+  </object>
   <object id="21" gid="62" x="351.25" y="175.75" width="16" height="16">
    <properties>
-    <property name="openRotation" value="90" type="float" />
-    <property name="openTileId" value="48" type="int" />
-    <property name="type" value="door" />
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="48"/>
+    <property name="type" value="door"/>
    </properties>
   </object>
   <object id="22" gid="72" x="351.25" y="192.75" width="16" height="16">
    <properties>
-    <property name="openRotation" value="-90" type="float" />
-    <property name="openTileId" value="47" type="int" />
-    <property name="type" value="door" />
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="47"/>
+    <property name="type" value="door"/>
    </properties>
   </object>
   <object id="23" gid="63" x="192.75" y="175.75" width="16" height="16">
    <properties>
-    <property name="openRotation" value="-90" type="float" />
-    <property name="openTileId" value="58" type="int" />
-    <property name="type" value="door" />
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="58"/>
+    <property name="type" value="door"/>
    </properties>
   </object>
   <object id="24" gid="73" x="192.75" y="192.5" width="16" height="16">
    <properties>
-    <property name="openRotation" value="90" type="float" />
-    <property name="openTileId" value="57" type="int" />
-    <property name="type" value="door" />
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="57"/>
+    <property name="type" value="door"/>
    </properties>
   </object>
  </objectgroup>

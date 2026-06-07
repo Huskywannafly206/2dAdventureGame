@@ -782,28 +782,48 @@
   </object>
   <object id="19" gid="67" x="864" y="1776.25" width="16" height="16">
    <properties>
+    <property name="openTileId" type="int" value="57"/>
     <property name="type" value="door"/>
    </properties>
   </object>
   <object id="21" gid="68" x="880.75" y="1776.25" width="16" height="16">
    <properties>
+    <property name="openTileId" type="int" value="58"/>
     <property name="type" value="door"/>
    </properties>
   </object>
   <object id="22" gid="67" x="736.25" y="1136" width="16" height="16">
    <properties>
+    <property name="openTileId" type="int" value="57"/>
     <property name="type" value="door"/>
    </properties>
   </object>
   <object id="23" gid="68" x="752.75" y="1136" width="16" height="16">
    <properties>
+    <property name="openTileId" type="int" value="58"/>
     <property name="type" value="door"/>
    </properties>
   </object>
-  <object id="24" gid="37" x="735.75" y="592" width="16" height="16"/>
-  <object id="25" gid="38" x="752.5" y="592.25" width="16" height="16"/>
-  <object id="26" gid="37" x="735.875" y="447.625" width="16" height="16"/>
-  <object id="27" gid="38" x="752.625" y="447.875" width="16" height="16"/>
+  <object id="24" gid="37" x="735.75" y="592" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="57"/>
+   </properties>
+  </object>
+  <object id="25" gid="38" x="752.5" y="592.25" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="58"/>
+   </properties>
+  </object>
+  <object id="26" gid="37" x="735.875" y="447.625" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="57"/>
+   </properties>
+  </object>
+  <object id="27" gid="38" x="752.625" y="447.875" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="58"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="5" name="fore1" width="120" height="120">
   <data encoding="csv">

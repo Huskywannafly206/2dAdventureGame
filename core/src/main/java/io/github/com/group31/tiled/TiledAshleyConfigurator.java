@@ -205,6 +205,7 @@ public class TiledAshleyConfigurator {
         addEntityAi(tile, entity);
         addEntityExperience(tile, entity);
         addEntityDoor(tile, tileMapObject, entity);
+        addEntityChest(tile, tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         Color graphicColor = Color.WHITE.cpy();
@@ -259,6 +260,47 @@ public class TiledAshleyConfigurator {
             }
         } else {
              com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door tile missing openTileId property!");
+        }
+    }
+
+    private void addEntityChest(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"chest".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        String lootType = tileMapObject.getProperties().get("lootType", "COIN", String.class);
+        if (lootType.equals("COIN")) {
+            lootType = tile.getProperties().get("lootType", "COIN", String.class);
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType));
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest tile missing openTileId property!");
         }
     }
 

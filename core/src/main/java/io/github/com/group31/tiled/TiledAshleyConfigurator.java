@@ -251,7 +251,7 @@ public class TiledAshleyConfigurator {
         
         currentMapObjects.put(uniqueId, tileMapObject);
         
-        float respawnTime = respawnTimeObj != null ? respawnTimeObj : -1f;
+        float respawnTime = respawnTimeObj != null ? respawnTimeObj : 0f;
         entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));
         
         boolean isRespawning = io.github.com.group31.save.RespawnState.getInstance().isRespawning(uniqueId);

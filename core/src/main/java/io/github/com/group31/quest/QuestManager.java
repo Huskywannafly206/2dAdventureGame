@@ -50,23 +50,23 @@ public class QuestManager {
     }
 
     public String getQuestTitle() {
-        if (currentStage == 0) return "Gap Truong Lang";
-        if (currentStage == 1) return "Thu thap Thao Duoc";
-        if (currentStage == 2) return "Gap Tho San";
-        if (currentStage == 3) return "Tieu diet Slime";
-        if (currentStage == 4) return "Bao cao voi Tho san";
-        if (currentStage == 5) return "Nhat Kiem Ri Sat";
-        if (currentStage == 6) return "Tien Vao Rung Gioc";
-        if (currentStage == 7) return "Bi Mat Rung Gioc";
-        if (currentStage == 8) return "Ba Co Vat";
-        if (currentStage == 9) return "Golden Key";
-        if (currentStage == 10) return "Bao Cao Truong Lang";
-        return "Nhiem Vu Da Xong";
+        if (currentStage == 0) return "Meet the Village Chief";
+        if (currentStage == 1) return "Gather Soothing Herbs";
+        if (currentStage == 2) return "Meet the Hunter";
+        if (currentStage == 3) return "Defeat the Slimes";
+        if (currentStage == 4) return "Report to the Hunter";
+        if (currentStage == 5) return "Pick up the Rusty Sword";
+        if (currentStage == 6) return "Enter the Ancient Forest";
+        if (currentStage == 7) return "Secrets of the Forest";
+        if (currentStage == 8) return "The Three Relics";
+        if (currentStage == 9) return "The Golden Key";
+        if (currentStage == 10) return "Report to the Chief";
+        return "All Quests Completed";
     }
 
     public String getQuestObjective() {
         return switch (currentStage) {
-            case 0 -> "Di gap Truong Lang de nhan chi dan.";
+            case 0 -> "Go meet the Village Chief to receive instructions.";
             case 1 -> {
                 int count = 0;
                 if (player != null) {
@@ -75,18 +75,18 @@ public class QuestManager {
                         count = inv.getItemCount(Item.Type.SOOTHING_HERB);
                     }
                 }
-                yield "Thu thap 5 Thao Duoc Lam Diu (da co: " + count + "/5).";
+                yield "Gather 5 Soothing Herbs (Gathered: " + count + "/5).";
             }
-            case 2 -> "Ghe qua can leu dau lang gap Tho san.";
-            case 3 -> "Tieu diet 4 Slime o lang (da diet: " + slimesDefeated + "/4).";
-            case 4 -> "Quay lai bao cao voi Tho san.";
-            case 5 -> "Nhat thanh kiem ri sat gan Tho san.";
-            case 6 -> "Tiến vào khu rừng để tìm hiểu bí mật.";
-            case 7 -> "Gặp Forest_Spirit để nói chuyện.";
-            case 8 -> "Đi tìm đủ 3 objects: coin, silvercup và silverkey theo chỉ dẫn của 3 bia đá.";
-            case 9 -> "Nhặt chiếc chìa khóa golden_key bên phải Forest_Spirit.";
-            case 10 -> "Quay lại gặp Trưởng làng để báo cáo và nhận chỉ dẫn tiếp theo.";
-            default -> "Khong co nhiem vu nao.";
+            case 2 -> "Go to the cabin at the edge of the village and meet the Hunter.";
+            case 3 -> "Defeat 4 Slimes in the village (Defeated: " + slimesDefeated + "/4).";
+            case 4 -> "Go back and report to the Hunter.";
+            case 5 -> "Pick up the rusty sword near the Hunter.";
+            case 6 -> "Enter the Ancient Forest to investigate its secrets.";
+            case 7 -> "Meet the Forest Spirit to talk.";
+            case 8 -> "Find all 3 objects: coin, silver cup, and silver key following the 3 stone tablets.";
+            case 9 -> "Pick up the golden key to the right of the Forest Spirit.";
+            case 10 -> "Return to the Village Chief to report and receive further instructions.";
+            default -> "No active quests.";
         };
     }
 
@@ -99,7 +99,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Tien vao Rung Gioc![]", 
+                        viewModel.showFloatingText("[YELLOW]Quest: Enter the Ancient Forest![]", 
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -114,7 +114,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Nhiem vu: Gap Forest_Spirit![]", 
+                    viewModel.showFloatingText("[YELLOW]Quest: Meet the Forest Spirit![]", 
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -132,7 +132,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Nhiem vu: Ve gap Truong Lang![]", 
+                    viewModel.showFloatingText("[YELLOW]Quest: Return to the Chief![]", 
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -148,7 +148,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Da du 5 Thao Duoc, hay ve gap Truong Lang![]", 
+                        viewModel.showFloatingText("[YELLOW]Got 5 herbs, return to the Chief![]", 
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -172,7 +172,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Da tieu diet 4 Slime, hay ve gap Tho san![]", 
+                        viewModel.showFloatingText("[YELLOW]Defeated 4 Slimes, return to the Hunter![]", 
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -230,7 +230,7 @@ public class QuestManager {
                         }
                         Transform transform = Transform.MAPPER.get(player);
                         if (transform != null) {
-                            viewModel.showFloatingText("[YELLOW]Nhiem vu: Gap Tho San![]", 
+                            viewModel.showFloatingText("[YELLOW]Quest: Meet the Hunter![]", 
                                 transform.getPosition().x, transform.getPosition().y + 1f);
                         }
                     }
@@ -241,19 +241,19 @@ public class QuestManager {
                 }
             } else if (currentStage == 6) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Hãy tiến vào khu rừng để tìm hiểu bí mật."
+                    "[IDLE]Enter the forest to investigate its secrets."
                 });
             } else if (currentStage == 7) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Hãy tìm gặp Forest_Spirit trong khu rừng."
+                    "[IDLE]Find and meet the Forest Spirit in the forest."
                 });
             } else if (currentStage == 8) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Hãy tìm đủ 3 báu vật theo chỉ dẫn của 3 bia đá."
+                    "[IDLE]Find all 3 relics following the instructions of the 3 stone tablets."
                 });
             } else if (currentStage == 9) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Hãy nhặt chiếc chìa khóa vàng (Golden Key) và mang về đây."
+                    "[IDLE]Pick up the Golden Key and bring it back here."
                 });
             } else if (currentStage == 10) {
                 npc.setDialogue(new String[]{
@@ -305,7 +305,7 @@ public class QuestManager {
                 int iceKeyCount = inv != null ? inv.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
                 if (currentStage >= 11 && iceKeyCount <= 0) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Cháu đã làm mất Ice Map Key ư? Ta sẽ để một cái khác ở đây cho cháu."
+                        "[IDLE]Did you lose the Ice Map Key? I will leave another one here for you."
                     });
                     Transform npcT = Transform.MAPPER.get(npcEntity);
                     float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
@@ -315,15 +315,15 @@ public class QuestManager {
                     }
                 } else {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Hãy chuẩn bị kỹ lưỡng để vào ngục tối (Dark Dungeon).",
-                        "[IDLE]Ta tin tưởng vào năng lực của cháu."
+                        "[IDLE]Prepare yourself well to enter the Dark Dungeon.",
+                        "[IDLE]I believe in your strength."
                     });
                 }
             }
         } else if ("tho_san".equalsIgnoreCase(npc.getName())) {
             if (currentStage < 2) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Chào cháu! Ta là Thợ Săn. Có việc gì sao?"
+                    "[IDLE]Hello! I am the Hunter. Is there something you need?"
                 });
             } else if (currentStage == 2) {
                 npc.setDialogue(new String[]{

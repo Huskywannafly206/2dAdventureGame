@@ -148,6 +148,7 @@ public class GameScreen extends ScreenAdapter {
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
+        this.engine.getSystem(TriggerSystem.class).registerTrigger("checkpoint_trigger", this::checkpointTrigger);
         MapAsset startMapAsset = MapAsset.ICEMAP1;
         SaveService saveService = game.getSaveService();
         SaveData data = null;
@@ -250,10 +251,24 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    @Override
-    public void hide() {
-        // Chỉ lưu save khi player còn sống (HP > 0)
-        // Nếu lưu HP=0 vào file, lần sau load lên sẽ chết ngay lập tức
+    private long lastCheckpointTime = 0;
+
+    private void checkpointTrigger(Trigger trigger, Entity player) {
+        if (com.badlogic.gdx.utils.TimeUtils.timeSinceMillis(lastCheckpointTime) < 5000) {
+            return; // 5-second cooldown on checkpoints
+        }
+        lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
+
+        saveGame(true);
+
+        Transform transform = Transform.MAPPER.get(player);
+        if (transform != null) {
+            viewModel.showFloatingText("[GREEN]Checkpoint Reached! Game Saved.[]", transform.getPosition().x, transform.getPosition().y + 1f);
+        }
+        audioService.playSound(io.github.com.group31.asset.SoundAsset.PICKUP);
+    }
+
+    public void saveGame(boolean restoreHealth) {
         SaveService saveService = game.getSaveService();
         if (saveService != null) {
             ImmutableArray<com.badlogic.ashley.core.Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
@@ -263,11 +278,20 @@ public class GameScreen extends ScreenAdapter {
                 Life life = Life.MAPPER.get(player);
                 float currentHp = life != null ? life.getLife() : 0f;
 
-                // Không lưu nếu player đã chết
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
-                    data.playerHp = currentHp;
                     data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
+                    
+                    if (restoreHealth) {
+                        data.playerHp = data.playerMaxHp;
+                        if (life != null) {
+                            life.setLife(life.getMaxLife());
+                            viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+                        }
+                    } else {
+                        data.playerHp = currentHp;
+                    }
+
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
 
                     Experience xp = Experience.MAPPER.get(player);
@@ -291,7 +315,6 @@ public class GameScreen extends ScreenAdapter {
                     }
                     data.mapName = currentAsset.name();
 
-                    // Lưu trạng thái Inventory
                     Inventory inventory = Inventory.MAPPER.get(player);
                     if (inventory != null) {
                         data.playerPotions    = inventory.getItemCount(Item.Type.POTION_HEALTH);
@@ -303,7 +326,6 @@ public class GameScreen extends ScreenAdapter {
                         data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
                     }
 
-                    // Lưu trạng thái CombatState (vũ khí)
                     CombatState cs = CombatState.MAPPER.get(player);
                     if (cs != null) {
                         data.unlockedWeapons = new java.util.ArrayList<>();
@@ -318,7 +340,11 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         }
+    }
 
+    @Override
+    public void hide() {
+        saveGame(false);
         this.viewModel.clearPropertyChanges();
         this.engine.removeAllEntities();
         this.stage.clear();

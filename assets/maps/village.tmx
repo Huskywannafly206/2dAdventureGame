@@ -76,18 +76,53 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="96" gid="2486" x="431.25" y="589.5" width="16" height="16"/>
-  <object id="97" gid="2486" x="480.333" y="508" width="16" height="16"/>
-  <object id="98" gid="2486" x="766" y="580.5" width="16" height="16"/>
-  <object id="99" gid="2486" x="848" y="577.5" width="16" height="16"/>
-  <object id="102" gid="2486" x="834.25" y="127.5" width="16" height="16"/>
+  <object id="96" gid="2486" x="431.25" y="589.5" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="97" gid="2486" x="480.333" y="508" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="98" gid="2486" x="766" y="580.5" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="99" gid="2486" x="848" y="577.5" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="120"/>
+   </properties>
+  </object>
+  <object id="102" gid="2486" x="834.25" y="127.5" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="120"/>
+   </properties>
+  </object>
   <object id="104" gid="2487" x="743.5" y="625.5" width="16" height="16"/>
   <object id="105" gid="2485" x="553" y="211.5" width="16" height="16"/>
-  <object id="106" gid="2463" x="135" y="555" width="32" height="32"/>
-  <object id="107" gid="2463" x="200" y="569" width="32" height="32"/>
-  <object id="108" gid="2463" x="121" y="592" width="32" height="32"/>
-  <object id="109" gid="2463" x="155.5" y="627" width="32" height="32"/>
-  <object id="114" gid="2489" x="456" y="456" width="16" height="16"/>
+  <object id="106" gid="2463" x="135" y="555" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="107" gid="2463" x="200" y="569" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="108" gid="2463" x="121" y="592" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="109" gid="2463" x="155.5" y="627" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="13" name="fore1" width="54" height="45">
   <data encoding="base64" compression="zlib">

@@ -263,7 +263,7 @@
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
- <tile id="18" type="item">
+ <tile id="18" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="itemType" value="HEART_CONTAINER"/>

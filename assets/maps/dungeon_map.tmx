@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="31">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="32">
  <tileset firstgid="1" source="fields.tsx"/>
  <tileset firstgid="15" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="125" source="TilesetHouse.tsx"/>
@@ -129,9 +129,21 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="11" gid="1149" x="389.5" y="110.25" width="32" height="32"/>
-  <object id="12" gid="1160" x="412" y="128.333" width="16" height="16"/>
-  <object id="13" gid="1159" x="427" y="82" width="16" height="16"/>
+  <object id="11" gid="1149" x="389.5" y="110.25" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="12" gid="1160" x="412" y="128.333" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="13" gid="1159" x="427" y="82" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
   <object id="19" gid="82" x="256.25" y="224.5" width="16" height="16">
    <properties>
     <property name="openTileId" type="int" value="58"/>
@@ -195,7 +207,6 @@
     <property name="type" value="chest"/>
    </properties>
   </object>
-  <object id="30" gid="1158" x="386.75" y="187.25" width="16" height="16"/>
  </objectgroup>
  <layer id="11" name="fore1" width="30" height="20">
   <data encoding="csv">

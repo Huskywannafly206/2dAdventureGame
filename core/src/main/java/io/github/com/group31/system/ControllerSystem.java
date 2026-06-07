@@ -94,6 +94,12 @@ public class ControllerSystem extends IteratingSystem {
             if (dashCooldown < 0f) dashCooldown = 0f;
         }
 
+        // Always poll for item use from UI regardless of keyboard input
+        io.github.com.group31.component.Item.Type typeToUse = viewModel.consumeItemToUse();
+        if (typeToUse != null) {
+            handleInventoryItemUse(typeToUse);
+        }
+
         Controller controller = Controller.MAPPER.get(entity);
         if (controller.getPressedCommands().isEmpty() && controller.getReleasedCommands().isEmpty()) {
             return;
@@ -351,35 +357,56 @@ public class ControllerSystem extends IteratingSystem {
     // =========================================================================
 
     private void usePotion(Entity entity) {
+        // Keep the method but do nothing or keep it for hotkey "Q" if we want.
+        // Actually, let's keep the Q hotkey working for potion, but it uses whatever is selected.
+        // Wait, the plan says remove it from USE_ITEM if we move entirely, or map it.
+        // Let's just make the Q key use the currently selected item.
+        io.github.com.group31.component.Item.Type type = viewModel.getSelectedItemType();
+        if (type != null) {
+            handleInventoryItemUse(type);
+        }
+    }
+
+    private void handleInventoryItemUse(Item.Type type) {
+        if (getEntities().size() == 0) return;
+        Entity entity = getEntities().first(); // the player
         Inventory inventory = Inventory.MAPPER.get(entity);
         Life life = Life.MAPPER.get(entity);
         if (inventory == null || life == null) return;
 
-        if (inventory.getItemCount(Item.Type.POTION_HEALTH) <= 0) return;
-        if (life.getLife() >= life.getMaxLife()) return;
+        if (inventory.getItemCount(type) <= 0) return;
 
-        life.addLife(POTION_HEAL_AMOUNT);
-        inventory.removeItem(Item.Type.POTION_HEALTH, 1);
-        audioService.playSound(SoundAsset.HEAL);
-        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+        if (type == Item.Type.POTION_HEALTH) {
+            if (life.getLife() >= life.getMaxLife()) return;
+            life.addLife(POTION_HEAL_AMOUNT);
+            inventory.removeItem(Item.Type.POTION_HEALTH, 1);
+            audioService.playSound(SoundAsset.HEAL);
+            
+            Transform transform = Transform.MAPPER.get(entity);
+            if (transform != null) {
+                float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+                float y = transform.getPosition().y + transform.getSize().y;
+                viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+            }
+        } else if (type == Item.Type.HEART_CONTAINER) {
+            float oldMax = life.getMaxLife();
+            life.setMaxLife(oldMax + 4f);
+            life.setLife(life.getMaxLife());
+            inventory.removeItem(Item.Type.HEART_CONTAINER, 1);
+            audioService.playSound(SoundAsset.HEAL);
 
-        Transform transform = Transform.MAPPER.get(entity);
-        if (transform != null) {
-            float x = transform.getPosition().x + transform.getSize().x * 0.5f;
-            float y = transform.getPosition().y + transform.getSize().y;
-            viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+            Transform transform = Transform.MAPPER.get(entity);
+            if (transform != null) {
+                float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+                float y = transform.getPosition().y + transform.getSize().y;
+                viewModel.showFloatingText("[RED]Max HP + 4![]", x, y);
+            }
+        } else {
+            return;
         }
 
-        viewModel.updateInventory(
-            inventory.getItemCount(Item.Type.POTION_HEALTH),
-            inventory.getItemCount(Item.Type.COIN),
-            inventory.getItemCount(Item.Type.KEY),
-            inventory.getItemCount(Item.Type.GOLD_KEY),
-            inventory.getItemCount(Item.Type.SILVER_KEY),
-            inventory.getItemCount(Item.Type.SOOTHING_HERB),
-            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-            inventory.getItemCount(Item.Type.SILVER_CUP)
-        );
+        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+        viewModel.updateInventory(inventory);
     }
 
     private void moveEntity(Entity entity, float dx, float dy) {
@@ -510,15 +537,7 @@ public class ControllerSystem extends IteratingSystem {
                     if (inventory != null) {
                         inventory.addItem(type, 1);
                         viewModel.showFloatingText("+1 " + type.name(), chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
-                        viewModel.updateInventory(
-                            inventory.getItemCount(Item.Type.POTION_HEALTH),
-                            inventory.getItemCount(Item.Type.COIN),
-                            inventory.getItemCount(Item.Type.KEY),
-                            inventory.getItemCount(Item.Type.GOLD_KEY),
-                            inventory.getItemCount(Item.Type.SILVER_KEY),
-                            inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-                        );
+                        viewModel.updateInventory(inventory);
                     }
                 } catch (Exception e) {
                     com.badlogic.gdx.Gdx.app.error("ControllerSystem", "Invalid loot type in chest: " + lootType);
@@ -552,16 +571,7 @@ public class ControllerSystem extends IteratingSystem {
                 Inventory inventory = Inventory.MAPPER.get(player);
                 if (inventory != null) {
                     inventory.addItem(Item.Type.COIN, 1);
-                    viewModel.updateInventory(
-                        inventory.getItemCount(Item.Type.POTION_HEALTH),
-                        inventory.getItemCount(Item.Type.COIN),
-                        inventory.getItemCount(Item.Type.KEY),
-                        inventory.getItemCount(Item.Type.GOLD_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_KEY),
-                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_CUP)
-                    );
+                    viewModel.updateInventory(inventory);
                 }
                 getEngine().removeEntity(closestNpc);
                 return;
@@ -572,16 +582,7 @@ public class ControllerSystem extends IteratingSystem {
                 Inventory inventory = Inventory.MAPPER.get(player);
                 if (inventory != null) {
                     inventory.addItem(Item.Type.SILVER_CUP, 1);
-                    viewModel.updateInventory(
-                        inventory.getItemCount(Item.Type.POTION_HEALTH),
-                        inventory.getItemCount(Item.Type.COIN),
-                        inventory.getItemCount(Item.Type.KEY),
-                        inventory.getItemCount(Item.Type.GOLD_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_KEY),
-                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_CUP)
-                    );
+                    viewModel.updateInventory(inventory);
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
                         viewModel.showFloatingText("[YELLOW]Nhat: Silver Cup![]", 
@@ -608,16 +609,7 @@ public class ControllerSystem extends IteratingSystem {
                         viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                     }
-                    viewModel.updateInventory(
-                        inventory.getItemCount(Item.Type.POTION_HEALTH),
-                        inventory.getItemCount(Item.Type.COIN),
-                        inventory.getItemCount(Item.Type.KEY),
-                        inventory.getItemCount(Item.Type.GOLD_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_KEY),
-                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_CUP)
-                    );
+                    viewModel.updateInventory(inventory);
                 }
                 getEngine().removeEntity(closestNpc);
                 return;

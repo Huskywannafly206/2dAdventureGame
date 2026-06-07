@@ -80,25 +80,9 @@ public class ItemSystem extends IteratingSystem {
             return;
         }
 
-        // --- Xử lý vật phẩm thường ---
-        if (type == Item.Type.HEART_CONTAINER) {
-            io.github.com.group31.component.Life life = io.github.com.group31.component.Life.MAPPER.get(collector);
-            if (life != null) {
-                life.setMaxLife(life.getMaxLife() + 4);
-                life.addLife(4);
-                viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
-                
-                Transform t = Transform.MAPPER.get(collector);
-                if (t != null) {
-                    float x = t.getPosition().x + t.getSize().x * 0.5f;
-                    float y = t.getPosition().y + t.getSize().y;
-                    viewModel.showFloatingText("[RED]+4 Max HP![]", x, y + 1f);
-                }
-            }
-        }
-
+        // --- Xử lý vật phẩm ---
         Inventory inventory = Inventory.MAPPER.get(collector);
-        if (inventory != null && type != Item.Type.HEART_CONTAINER) {
+        if (inventory != null) {
             inventory.addItem(type, 1);
             if (type == Item.Type.POTION_HEALTH) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
@@ -129,7 +113,8 @@ public class ItemSystem extends IteratingSystem {
                 inventory.getItemCount(Item.Type.SILVER_KEY),
                 inventory.getItemCount(Item.Type.SOOTHING_HERB),
                 inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                inventory.getItemCount(Item.Type.SILVER_CUP)
+                inventory.getItemCount(Item.Type.SILVER_CUP),
+                inventory.getItemCount(Item.Type.HEART_CONTAINER)
             );
         }
 

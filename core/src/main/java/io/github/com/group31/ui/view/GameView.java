@@ -100,7 +100,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
         });
         viewModel.onPropertyChange(GameViewModel.INVENTORY_CHANGED, int[].class, counts -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
@@ -112,18 +112,23 @@ public class GameView extends View<GameViewModel> implements Disposable {
         viewModel.onPropertyChange(GameViewModel.WEAPON_CHANGED, String.class, this::updateWeaponLabel);
         viewModel.onPropertyChange(GameViewModel.QUEST_CHANGED, String[].class, questInfo -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.MENU_TOGGLED, Boolean.class, this::setMenuVisible);
         viewModel.onPropertyChange(GameViewModel.TAB_CHANGED, Integer.class, tab -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.UNLOCKED_WEAPONS_CHANGED, java.util.List.class, weapons -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
+            }
+        });
+        viewModel.onPropertyChange(GameViewModel.SELECTED_ITEM_CHANGED, io.github.com.group31.component.Item.Type.class, type -> {
+            if (menuContainer != null && menuContainer.isVisible()) {
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
     }
@@ -299,7 +304,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
         if (menuContainer != null) {
             menuContainer.setVisible(visible);
             if (visible) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         }
     }
@@ -384,9 +389,11 @@ public class GameView extends View<GameViewModel> implements Disposable {
         class InvItem {
             TextureRegion region;
             int count;
-            InvItem(TextureRegion region, int count) {
+            io.github.com.group31.component.Item.Type type;
+            InvItem(TextureRegion region, int count, io.github.com.group31.component.Item.Type type) {
                 this.region = region;
                 this.count = count;
+                this.type = type;
             }
         }
         java.util.List<InvItem> items = new java.util.ArrayList<>();
@@ -394,38 +401,41 @@ public class GameView extends View<GameViewModel> implements Disposable {
         TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
         if (atlas != null) {
             if (viewModel.getPotions() > 0) {
-                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getPotions()));
+                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getPotions(), io.github.com.group31.component.Item.Type.POTION_HEALTH));
+            }
+            if (viewModel.getHeartContainers() > 0) {
+                items.add(new InvItem(atlas.findRegion("heart_container/heart_container"), viewModel.getHeartContainers(), io.github.com.group31.component.Item.Type.HEART_CONTAINER));
             }
             if (viewModel.getCoins() > 0) {
-                items.add(new InvItem(atlas.findRegion("coin/coin"), viewModel.getCoins()));
+                items.add(new InvItem(atlas.findRegion("coin/coin"), viewModel.getCoins(), io.github.com.group31.component.Item.Type.COIN));
             }
             if (viewModel.getKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("key/key"), viewModel.getKeys()));
+                items.add(new InvItem(atlas.findRegion("key/key"), viewModel.getKeys(), io.github.com.group31.component.Item.Type.KEY));
             }
             if (viewModel.getGoldKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("gold_key/gold_key"), viewModel.getGoldKeys()));
+                items.add(new InvItem(atlas.findRegion("gold_key/gold_key"), viewModel.getGoldKeys(), io.github.com.group31.component.Item.Type.GOLD_KEY));
             }
             if (viewModel.getSilverKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("silver_key/silver_key"), viewModel.getSilverKeys()));
+                items.add(new InvItem(atlas.findRegion("silver_key/silver_key"), viewModel.getSilverKeys(), io.github.com.group31.component.Item.Type.SILVER_KEY));
             }
             if (viewModel.getSoothingHerbs() > 0) {
-                items.add(new InvItem(atlas.findRegion("soothing_herb/soothing_herb"), viewModel.getSoothingHerbs()));
+                items.add(new InvItem(atlas.findRegion("soothing_herb/soothing_herb"), viewModel.getSoothingHerbs(), io.github.com.group31.component.Item.Type.SOOTHING_HERB));
             }
             if (viewModel.getJungleMapKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys()));
+                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys(), io.github.com.group31.component.Item.Type.JUNGLE_MAP_KEY));
             }
             if (viewModel.getSilverCups() > 0) {
-                items.add(new InvItem(atlas.findRegion("silver_cup/silver_cup"), viewModel.getSilverCups()));
+                items.add(new InvItem(atlas.findRegion("silver_cup/silver_cup"), viewModel.getSilverCups(), io.github.com.group31.component.Item.Type.SILVER_CUP));
             }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1, io.github.com.group31.component.Item.Type.WEAPON_SWORD));
                 } else if ("BOW".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1, io.github.com.group31.component.Item.Type.WEAPON_BOW));
                 } else if ("MAGIC_WAND".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1, io.github.com.group31.component.Item.Type.WEAPON_MAGIC_WAND));
                 } else if ("RUSTY_SWORD".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_rusty_sword/weapon_rusty_sword"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_rusty_sword/weapon_rusty_sword"), 1, io.github.com.group31.component.Item.Type.WEAPON_RUSTY_SWORD));
                 }
             }
         }
@@ -453,9 +463,24 @@ public class GameView extends View<GameViewModel> implements Disposable {
                         stack.add(countWrapper);
                     }
                     slot.add(stack).size(16f, 16f).center();
+
+                    slot.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
+                    slot.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                            viewModel.setSelectedItemType(item.type);
+                        }
+                    });
+
+                    if (viewModel.getSelectedItemType() == item.type) {
+                        slot.setColor(Color.YELLOW);
+                    } else {
+                        slot.setColor(Color.WHITE);
+                    }
                 }
             } else {
                 slot.add().size(16f, 16f);
+                slot.setColor(Color.WHITE);
             }
 
             grid.add(slot).size(24f, 24f).pad(2f);
@@ -464,7 +489,32 @@ public class GameView extends View<GameViewModel> implements Disposable {
             }
         }
 
-        content.add(grid).center();
+        content.add(grid).center().row();
+
+        com.badlogic.gdx.scenes.scene2d.ui.TextButton useBtn = new com.badlogic.gdx.scenes.scene2d.ui.TextButton("USE", skin);
+        io.github.com.group31.component.Item.Type selType = viewModel.getSelectedItemType();
+        boolean canUse = false;
+        if (selType == io.github.com.group31.component.Item.Type.POTION_HEALTH && viewModel.getPotions() > 0) canUse = true;
+        if (selType == io.github.com.group31.component.Item.Type.HEART_CONTAINER && viewModel.getHeartContainers() > 0) canUse = true;
+        useBtn.setDisabled(!canUse);
+        if (!canUse) {
+            useBtn.setColor(Color.DARK_GRAY);
+        } else {
+            useBtn.setColor(Color.WHITE);
+        }
+        useBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                if (!useBtn.isDisabled()) {
+                    viewModel.useInventoryItem();
+                }
+            }
+        });
+        
+        Table btnTable = new Table();
+        btnTable.add(useBtn).height(20f);
+        content.add(btnTable).padTop(4f).center();
+
         return content;
     }
 

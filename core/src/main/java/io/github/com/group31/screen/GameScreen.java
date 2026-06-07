@@ -218,7 +218,8 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.SOOTHING_HERB, data.playerSoothingHerbs);
                     inventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, data.playerJungleMapKeys);
                     inventory.setItemCount(Item.Type.SILVER_CUP, data.playerSilverCups);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups);
+                    inventory.setItemCount(Item.Type.HEART_CONTAINER, data.playerHeartContainers);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups, data.playerHeartContainers);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -344,6 +345,7 @@ public class GameScreen extends ScreenAdapter {
                         data.playerSoothingHerbs = inventory.getItemCount(Item.Type.SOOTHING_HERB);
                         data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
                         data.playerSilverCups = inventory.getItemCount(Item.Type.SILVER_CUP);
+                        data.playerHeartContainers = inventory.getItemCount(Item.Type.HEART_CONTAINER);
                     }
 
                     CombatState cs = CombatState.MAPPER.get(player);

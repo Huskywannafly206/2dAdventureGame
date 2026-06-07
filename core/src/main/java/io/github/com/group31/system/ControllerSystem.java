@@ -447,6 +447,12 @@ public class ControllerSystem extends IteratingSystem {
         if (closestChest != null) {
             io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(closestChest);
             chest.setOpen(true);
+            
+            io.github.com.group31.component.Respawnable respawnable = closestChest.getComponent(io.github.com.group31.component.Respawnable.class);
+            if (respawnable != null) {
+                io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
+            }
+
             Graphic graphic = Graphic.MAPPER.get(closestChest);
             if (graphic != null && chest.getOpenRegion() != null) {
                 graphic.setRegion(chest.getOpenRegion());

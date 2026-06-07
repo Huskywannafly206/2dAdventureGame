@@ -73,6 +73,11 @@ public class DeadSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.onSlimeDefeated();
             }
 
+            io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+            if (respawnable != null) {
+                io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
+            }
+
             getEngine().removeEntity(entity);
         }
     }

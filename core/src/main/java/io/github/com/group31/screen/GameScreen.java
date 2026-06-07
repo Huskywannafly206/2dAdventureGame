@@ -151,16 +151,20 @@ public class GameScreen extends ScreenAdapter {
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
+        this.engine.getSystem(TriggerSystem.class).registerTrigger("checkpoint_trigger", this::checkpointTrigger);
         MapAsset startMapAsset = MapAsset.ICEMAP1;
         SaveService saveService = game.getSaveService();
         SaveData data = null;
         if(saveService != null && saveService.hasSaveFile()){
             data = saveService.load();
-            if(data != null && data.mapName != null){
-                try{
-                    startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
-                } catch(IllegalArgumentException e){
-                    startMapAsset = MapAsset.ICEMAP1;
+            if(data != null) {
+                io.github.com.group31.save.RespawnState.getInstance().setEntityRespawnTimes(data.respawnTimes);
+                if (data.mapName != null){
+                    try{
+                        startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
+                    } catch(IllegalArgumentException e){
+                        startMapAsset = MapAsset.ICEMAP1;
+                    }
                 }
             }
         }
@@ -252,10 +256,24 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    @Override
-    public void hide() {
-        // Chỉ lưu save khi player còn sống (HP > 0)
-        // Nếu lưu HP=0 vào file, lần sau load lên sẽ chết ngay lập tức
+    private long lastCheckpointTime = 0;
+
+    private void checkpointTrigger(Trigger trigger, Entity player) {
+        if (com.badlogic.gdx.utils.TimeUtils.timeSinceMillis(lastCheckpointTime) < 5000) {
+            return; // 5-second cooldown on checkpoints
+        }
+        lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
+
+        saveGame(true);
+
+        Transform transform = Transform.MAPPER.get(player);
+        if (transform != null) {
+            viewModel.showFloatingText("[GREEN]Checkpoint Reached! Game Saved.[]", transform.getPosition().x, transform.getPosition().y + 1f);
+        }
+        audioService.playSound(io.github.com.group31.asset.SoundAsset.PICKUP);
+    }
+
+    public void saveGame(boolean restoreHealth) {
         SaveService saveService = game.getSaveService();
         if (saveService != null) {
             ImmutableArray<com.badlogic.ashley.core.Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
@@ -265,11 +283,20 @@ public class GameScreen extends ScreenAdapter {
                 Life life = Life.MAPPER.get(player);
                 float currentHp = life != null ? life.getLife() : 0f;
 
-                // Không lưu nếu player đã chết
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
-                    data.playerHp = currentHp;
                     data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
+                    
+                    if (restoreHealth) {
+                        data.playerHp = data.playerMaxHp;
+                        if (life != null) {
+                            life.setLife(life.getMaxLife());
+                            viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+                        }
+                    } else {
+                        data.playerHp = currentHp;
+                    }
+
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
 
                     Experience xp = Experience.MAPPER.get(player);
@@ -293,7 +320,6 @@ public class GameScreen extends ScreenAdapter {
                     }
                     data.mapName = currentAsset.name();
 
-                    // Lưu trạng thái Inventory
                     Inventory inventory = Inventory.MAPPER.get(player);
                     if (inventory != null) {
                         data.playerPotions    = inventory.getItemCount(Item.Type.POTION_HEALTH);
@@ -306,7 +332,6 @@ public class GameScreen extends ScreenAdapter {
                         data.playerSilverCups = inventory.getItemCount(Item.Type.SILVER_CUP);
                     }
 
-                    // Lưu trạng thái CombatState (vũ khí)
                     CombatState cs = CombatState.MAPPER.get(player);
                     if (cs != null) {
                         data.unlockedWeapons = new java.util.ArrayList<>();
@@ -316,11 +341,16 @@ public class GameScreen extends ScreenAdapter {
                         data.currentWeaponIndex = cs.getCurrentIndex();
                     }
 
+                    data.respawnTimes = io.github.com.group31.save.RespawnState.getInstance().getEntityRespawnTimes();
                     saveService.save(data);
                 }
             }
         }
+    }
 
+    @Override
+    public void hide() {
+        saveGame(false);
         this.viewModel.clearPropertyChanges();
         this.engine.removeAllEntities();
         this.stage.clear();

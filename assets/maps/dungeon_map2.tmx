@@ -102,16 +102,58 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="23" gid="1430" x="387.667" y="113" width="32" height="32"/>
+  <object id="23" gid="1430" x="387.667" y="113" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
   <object id="24" gid="1430" x="406" y="71.6667" width="32" height="32"/>
   <object id="25" gid="1430" x="390.667" y="164.333" width="32" height="32"/>
-  <object id="26" gid="1430" x="390.667" y="164.333" width="32" height="32"/>
-  <object id="27" gid="1430" x="247.667" y="70" width="32" height="32"/>
-  <object id="28" gid="1430" x="260" y="95.6666" width="32" height="32"/>
-  <object id="32" gid="1440" x="288.666" y="61" width="16" height="16"/>
-  <object id="33" gid="1440" x="319" y="53" width="16" height="16"/>
-  <object id="34" gid="1441" x="366" y="58.3333" width="16" height="16"/>
-  <object id="35" gid="1441" x="378" y="128" width="16" height="16"/>
+  <object id="26" gid="1430" x="390.667" y="164.333" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="27" gid="1430" x="247.667" y="70" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="28" gid="1430" x="260" y="95.6666" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="32" gid="1440" x="288.666" y="61" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="33" gid="1440" x="319" y="53" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="34" gid="1441" x="366" y="58.3333" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="35" gid="1441" x="378" y="128" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="38" gid="1457" x="241.667" y="209.333" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="39" gid="1457" x="256.667" y="209.333" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
   <object id="40" gid="67" x="239.333" y="192" width="16" height="16"/>
   <object id="41" gid="68" x="256.333" y="192" width="16" height="16"/>
  </objectgroup>

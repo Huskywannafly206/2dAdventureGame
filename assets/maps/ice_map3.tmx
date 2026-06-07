@@ -1,14 +1,14 @@
-<?xml version='1.0' encoding='utf-8'?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="11">
- <tileset firstgid="1" source="TilesetRelief.tsx" />
- <tileset firstgid="241" source="TilesetNature.tsx" />
- <tileset firstgid="745" source="TilesetReliefDetail.tsx" />
- <tileset firstgid="889" source="TilesetHouse.tsx" />
- <tileset firstgid="1648" source="TilesetFloorB.tsx" />
- <tileset firstgid="1725" source="TilesetFloorDetail.tsx" />
- <tileset firstgid="1805" source="TilesetTowers.tsx" />
- <tileset firstgid="1949" source="tileset_camp.tsx" />
- <tileset firstgid="2156" source="objects.tsx" />
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="12">
+ <tileset firstgid="1" source="TilesetRelief.tsx"/>
+ <tileset firstgid="241" source="TilesetNature.tsx"/>
+ <tileset firstgid="745" source="TilesetReliefDetail.tsx"/>
+ <tileset firstgid="889" source="TilesetHouse.tsx"/>
+ <tileset firstgid="1648" source="TilesetFloorB.tsx"/>
+ <tileset firstgid="1725" source="TilesetFloorDetail.tsx"/>
+ <tileset firstgid="1805" source="TilesetTowers.tsx"/>
+ <tileset firstgid="1949" source="tileset_camp.tsx"/>
+ <tileset firstgid="2156" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 23,23,23,23,23,619,620,620,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -48,6 +48,7 @@
     <property name="targetY" type="float" value="68.5" />
    </properties>
   </object>
+  <object id="11" name="checkpoint_trigger" x="38" y="79" width="35" height="17.75"/>
  </objectgroup>
  <layer id="2" name="floor2" width="30" height="20">
   <data encoding="csv">

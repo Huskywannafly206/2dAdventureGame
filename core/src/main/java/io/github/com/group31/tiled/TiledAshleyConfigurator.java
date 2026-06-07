@@ -229,6 +229,30 @@ public class TiledAshleyConfigurator {
         boolean isSilverCup = (tileMapObject.getName() != null && tileMapObject.getName().equalsIgnoreCase("silvercup")) || objTileId == 29;
         boolean isInteractableCoin = isCoin1 || isCoin2 || isCoin3 || isSilverCup;
 
+        Float respawnTimeObj = tileMapObject.getProperties().get("respawnTime", Float.class);
+        if (respawnTimeObj == null) {
+            Object prop = tile.getProperties().get("respawnTime");
+            if (prop != null) {
+                try { respawnTimeObj = Float.parseFloat(prop.toString()); } catch(Exception ignored){}
+            }
+        }
+        
+        String mapName = mapAsset != null ? mapAsset.name() : "UNKNOWN";
+        Integer objId = tileMapObject.getProperties().get("id", Integer.class);
+        String uniqueId = mapName + "_" + (objId != null ? objId : tileMapObject.hashCode());
+        
+        float respawnTime = respawnTimeObj != null ? respawnTimeObj : -1f;
+        entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));
+        
+        boolean isRespawning = io.github.com.group31.save.RespawnState.getInstance().isRespawning(uniqueId);
+        
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) classType = tile.getProperties().get("type", "", String.class);
+        
+        if (isRespawning && !"chest".equals(classType)) {
+            return; // Entity is still dead/looted, do not spawn
+        }
+
         // ── Rẽ nhánh riêng cho Item tile (không cần Fsm / Facing / Move / AI) ──
         String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
         if (!isInteractableCoin && itemTypeStr != null && !itemTypeStr.isBlank()) {
@@ -380,6 +404,14 @@ public class TiledAshleyConfigurator {
         }
         entity.add(new Tiled(tileMapObject, localTileId));
 
+        io.github.com.group31.component.Chest chest = entity.getComponent(io.github.com.group31.component.Chest.class);
+        if (chest != null && chest.isOpen()) {
+            Graphic graphic = entity.getComponent(Graphic.class);
+            if (graphic != null && chest.getOpenRegion() != null) {
+                graphic.setRegion(chest.getOpenRegion());
+            }
+        }
+
         this.engine.addEntity(entity);
     }
 
@@ -462,7 +494,12 @@ public class TiledAshleyConfigurator {
             if (tileset != null) {
                 TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
                 if (openTile != null) {
-                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage));
+                    io.github.com.group31.component.Chest chest = new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage);
+                    io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+                    if (respawnable != null && io.github.com.group31.save.RespawnState.getInstance().isRespawning(respawnable.getEntityId())) {
+                        chest.setOpen(true);
+                    }
+                    entity.add(chest);
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
                 }

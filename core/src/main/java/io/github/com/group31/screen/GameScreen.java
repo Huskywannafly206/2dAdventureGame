@@ -27,6 +27,7 @@ import io.github.com.group31.input.KeyboardController;
 import io.github.com.group31.save.SaveData;
 import io.github.com.group31.save.SaveService;
 import io.github.com.group31.system.AiSystem;
+import io.github.com.group31.system.BombSystem;
 import io.github.com.group31.system.AnimationSystem;
 import io.github.com.group31.system.SlashFxLifetimeSystem;
 import io.github.com.group31.system.SlashFxSystem;
@@ -52,6 +53,7 @@ import io.github.com.group31.tiled.TiledAshleyConfigurator;
 import io.github.com.group31.tiled.TiledService;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.GameView;
+import io.github.com.group31.puzzle.ScarecrowPuzzleManager;
 
 import java.util.function.Consumer;
 
@@ -96,6 +98,7 @@ public class GameScreen extends ScreenAdapter {
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
         this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
+        this.engine.addSystem(new BombSystem(this.audioService, this.viewModel));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
@@ -111,7 +114,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
         this.engine.addSystem(new ProjectileSystem());
         this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,
-            physicWorld, game.getAssetService()));
+            physicWorld, game.getAssetService(), tiledAshleyConfigurator));
     }
 
     @Override
@@ -162,6 +165,7 @@ public class GameScreen extends ScreenAdapter {
 
         TiledMap startMap = this.tiledService.loadMap(startMapAsset);
         this.tiledService.setMap(startMap);
+        checkMapPuzzleSetup(startMapAsset);
 
         if (data != null) {
             ImmutableArray<com.badlogic.ashley.core.Entity> players =
@@ -205,7 +209,8 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.SILVER_KEY,    data.playerSilverKeys);
                     inventory.setItemCount(Item.Type.SOOTHING_HERB, data.playerSoothingHerbs);
                     inventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, data.playerJungleMapKeys);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys);
+                    inventory.setItemCount(Item.Type.SILVER_CUP, data.playerSilverCups);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -296,6 +301,7 @@ public class GameScreen extends ScreenAdapter {
                         data.playerSilverKeys = inventory.getItemCount(Item.Type.SILVER_KEY);
                         data.playerSoothingHerbs = inventory.getItemCount(Item.Type.SOOTHING_HERB);
                         data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
+                        data.playerSilverCups = inventory.getItemCount(Item.Type.SILVER_CUP);
                     }
 
                     // Lưu trạng thái CombatState (vũ khí)
@@ -392,6 +398,7 @@ public class GameScreen extends ScreenAdapter {
         int silverKeys = inventory != null ? inventory.getItemCount(Item.Type.SILVER_KEY) : 0;
         int soothingHerbs = inventory != null ? inventory.getItemCount(Item.Type.SOOTHING_HERB) : 0;
         int jungleMapKeys = inventory != null ? inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0;
+        int silverCups = inventory != null ? inventory.getItemCount(Item.Type.SILVER_CUP) : 0;
 
         // Lưu lại trạng thái CombatState trước khi chuyển map
         CombatState cs = CombatState.MAPPER.get(player);
@@ -419,6 +426,7 @@ public class GameScreen extends ScreenAdapter {
             MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr.toUpperCase());
             TiledMap newMap = tiledService.loadMap(targetMapAsset);
             tiledService.setMap(newMap);
+            checkMapPuzzleSetup(targetMapAsset);
 
             // 4. Khôi phục trạng thái cho Player được tạo mới ở bản đồ tiếp theo
             ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
@@ -454,7 +462,8 @@ public class GameScreen extends ScreenAdapter {
                     newInventory.setItemCount(Item.Type.SILVER_KEY, silverKeys);
                     newInventory.setItemCount(Item.Type.SOOTHING_HERB, soothingHerbs);
                     newInventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, jungleMapKeys);
-                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys);
+                    newInventory.setItemCount(Item.Type.SILVER_CUP, silverCups);
+                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups);
                 }
 
                 // Khôi phục CombatState
@@ -505,5 +514,31 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         });
+    }
+
+    private void checkMapPuzzleSetup(MapAsset mapAsset) {
+        if (mapAsset == MapAsset.JUNGLEMAP2) {
+            ScarecrowPuzzleManager.INSTANCE.reset();
+            ScarecrowPuzzleManager.INSTANCE.setViewModel(viewModel);
+
+            ImmutableArray<Entity> tiledEntities = engine.getEntitiesFor(Family.all(Tiled.class).get());
+            Entity silverCupEntity = null;
+            for (Entity e : tiledEntities) {
+                Tiled tiled = Tiled.MAPPER.get(e);
+                if (tiled != null && (tiled.getTileId() == 29 || (tiled.getMapObjectRef() != null && "silvercup".equalsIgnoreCase(tiled.getMapObjectRef().getName())))) {
+                    silverCupEntity = e;
+                    break;
+                }
+            }
+            ScarecrowPuzzleManager.INSTANCE.registerSilverCup(silverCupEntity);
+
+            if (gameView != null) {
+                gameView.setupScarecrowLabels(engine);
+            }
+        } else {
+            if (gameView != null) {
+                gameView.clearScarecrowLabels();
+            }
+        }
     }
 }

@@ -29,6 +29,9 @@ import io.github.com.group31.asset.AssetService;
 import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.DialogueBox;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
+import io.github.com.group31.component.Transform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +59,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
 
     // Tabbed Menu Overlay
     private Table menuContainer;
+    private final Label[] scarecrowLabels = new Label[4];
 
     // Atlas để lấy icon item
     private final AssetService assetService;
@@ -81,6 +85,19 @@ public class GameView extends View<GameViewModel> implements Disposable {
         viewModel.onPropertyChange(GameViewModel.FLOATING_TEXT, Map.Entry.class, this::showFloatingText);
         viewModel.onPropertyChange(GameViewModel.XP_CHANGED, Float.class, this::updateXp);
         viewModel.onPropertyChange(GameViewModel.LEVEL_CHANGED, Integer.class, this::updateLevel);
+        viewModel.onPropertyChange(GameViewModel.SCARECROW_HITS_CHANGED, int[].class, indexAndHits -> {
+            if (indexAndHits != null && indexAndHits.length >= 2) {
+                int index = indexAndHits[0];
+                int hits = indexAndHits[1];
+                if (index >= 1 && index <= 3 && scarecrowLabels[index] != null) {
+                    scarecrowLabels[index].setText(hits + "/" + index);
+                    scarecrowLabels[index].addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence(
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.color(Color.RED),
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.color(Color.YELLOW, 0.5f)
+                    ));
+                }
+            }
+        });
         viewModel.onPropertyChange(GameViewModel.INVENTORY_CHANGED, int[].class, counts -> {
             if (menuContainer != null && menuContainer.isVisible()) {
                 rebuildMenu();
@@ -397,6 +414,9 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (viewModel.getJungleMapKeys() > 0) {
                 items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys()));
             }
+            if (viewModel.getSilverCups() > 0) {
+                items.add(new InvItem(atlas.findRegion("silver_cup/silver_cup"), viewModel.getSilverCups()));
+            }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
                     items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));
@@ -539,6 +559,49 @@ public class GameView extends View<GameViewModel> implements Disposable {
                 }))
             )
         );
+    }
+
+    public void clearScarecrowLabels() {
+        for (int i = 1; i <= 3; i++) {
+            if (scarecrowLabels[i] != null) {
+                scarecrowLabels[i].remove();
+                scarecrowLabels[i] = null;
+            }
+        }
+    }
+
+    public void setupScarecrowLabels(com.badlogic.ashley.core.Engine engine) {
+        clearScarecrowLabels();
+
+        ImmutableArray<Entity> scarecrows = engine.getEntitiesFor(
+            com.badlogic.ashley.core.Family.all(io.github.com.group31.component.ScarecrowComponent.class, Transform.class).get()
+        );
+        for (Entity sc : scarecrows) {
+            final io.github.com.group31.component.ScarecrowComponent scComp = io.github.com.group31.component.ScarecrowComponent.MAPPER.get(sc);
+            if (scComp != null) {
+                int index = scComp.getIndex();
+                int target = index;
+                int current = io.github.com.group31.puzzle.ScarecrowPuzzleManager.INSTANCE.getHits(index);
+
+                final Label label = new Label(current + "/" + target, skin, "small");
+                label.setColor(Color.YELLOW);
+                stage.addActor(label);
+                scarecrowLabels[index] = label;
+                scComp.setLabel(label);
+
+                label.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.forever(
+                    com.badlogic.gdx.scenes.scene2d.actions.Actions.run(() -> {
+                        Transform transform = Transform.MAPPER.get(sc);
+                        if (transform != null) {
+                            Vector2 pos = transform.getPosition();
+                            Vector2 size = transform.getSize();
+                            Vector2 stageCoords = toStageCoords(new Vector2(pos.x + size.x * 0.5f, pos.y + size.y + 0.2f));
+                            label.setPosition(stageCoords.x - label.getPrefWidth() * 0.5f, stageCoords.y);
+                        }
+                    })
+                ));
+            }
+        }
     }
 
     /** Giải phóng tất cả texture faceset đã cache và nền dialogue khi screen bị hủy. */

@@ -84,6 +84,8 @@ public class ItemSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
             } else if (type == Item.Type.SOOTHING_HERB) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkHerbPickup(collector);
+            } else if (type == Item.Type.GOLD_KEY) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(collector);
             } else if (type == Item.Type.JUNGLE_MAP_KEY) {
                 Transform t = Transform.MAPPER.get(collector);
                 if (t != null) {
@@ -106,7 +108,8 @@ public class ItemSystem extends IteratingSystem {
                 inventory.getItemCount(Item.Type.GOLD_KEY),
                 inventory.getItemCount(Item.Type.SILVER_KEY),
                 inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+                inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                inventory.getItemCount(Item.Type.SILVER_CUP)
             );
         }
 

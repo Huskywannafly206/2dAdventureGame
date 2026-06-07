@@ -40,6 +40,7 @@ import io.github.com.group31.component.Transform;
 import io.github.com.group31.input.Command;
 import io.github.com.group31.screen.MenuScreen;
 import io.github.com.group31.ui.model.GameViewModel;
+import io.github.com.group31.tiled.TiledAshleyConfigurator;
 
 public class ControllerSystem extends IteratingSystem {
     private static final float POTION_HEAL_AMOUNT = 4f;
@@ -57,6 +58,7 @@ public class ControllerSystem extends IteratingSystem {
     private final GameViewModel viewModel;
     private final World physicWorld;
     private final AssetService assetService;
+    private final TiledAshleyConfigurator configurator;
     private Entity activeNpcEntity = null;
 
     // --- Dash state (per-player, gắn trên system vì chỉ có 1 player) ---
@@ -66,13 +68,14 @@ public class ControllerSystem extends IteratingSystem {
 
     public ControllerSystem(GdxGame game, AudioService audioService,
                             GameViewModel viewModel, World physicWorld,
-                            AssetService assetService) {
+                            AssetService assetService, TiledAshleyConfigurator configurator) {
         super(Family.all(Controller.class).get());
         this.game         = game;
         this.audioService = audioService;
         this.viewModel    = viewModel;
         this.physicWorld  = physicWorld;
         this.assetService = assetService;
+        this.configurator = configurator;
     }
 
     /**
@@ -373,7 +376,8 @@ public class ControllerSystem extends IteratingSystem {
             inventory.getItemCount(Item.Type.GOLD_KEY),
             inventory.getItemCount(Item.Type.SILVER_KEY),
             inventory.getItemCount(Item.Type.SOOTHING_HERB),
-            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+            inventory.getItemCount(Item.Type.SILVER_CUP)
         );
     }
 
@@ -428,6 +432,69 @@ public class ControllerSystem extends IteratingSystem {
 
         if (closestNpc != null) {
             Npc npc = Npc.MAPPER.get(closestNpc);
+            if (npc != null && "coin1".equalsIgnoreCase(npc.getName())) {
+                getEngine().removeEntity(closestNpc);
+                Transform coinTransform = Transform.MAPPER.get(closestNpc);
+                if (coinTransform != null) {
+                    float cx = coinTransform.getPosition().x;
+                    float cy = coinTransform.getPosition().y;
+                    configurator.spawnBomb(cx - 1f, cy);
+                    configurator.spawnBomb(cx + 1f, cy);
+                }
+                return;
+            }
+
+            if (npc != null && "coin2".equalsIgnoreCase(npc.getName())) {
+                getEngine().removeEntity(closestNpc);
+                configurator.spawnCoin2Slimes();
+                return;
+            }
+
+            if (npc != null && "coin3".equalsIgnoreCase(npc.getName())) {
+                audioService.playSound(SoundAsset.COIN);
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    inventory.addItem(Item.Type.COIN, 1);
+                    viewModel.updateInventory(
+                        inventory.getItemCount(Item.Type.POTION_HEALTH),
+                        inventory.getItemCount(Item.Type.COIN),
+                        inventory.getItemCount(Item.Type.KEY),
+                        inventory.getItemCount(Item.Type.GOLD_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_KEY),
+                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
+                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_CUP)
+                    );
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
+            if (npc != null && "silvercup".equalsIgnoreCase(npc.getName())) {
+                audioService.playSound(SoundAsset.PICKUP);
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    inventory.addItem(Item.Type.SILVER_CUP, 1);
+                    viewModel.updateInventory(
+                        inventory.getItemCount(Item.Type.POTION_HEALTH),
+                        inventory.getItemCount(Item.Type.COIN),
+                        inventory.getItemCount(Item.Type.KEY),
+                        inventory.getItemCount(Item.Type.GOLD_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_KEY),
+                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
+                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_CUP)
+                    );
+                    Transform transform = Transform.MAPPER.get(player);
+                    if (transform != null) {
+                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Cup![]", 
+                            transform.getPosition().x, transform.getPosition().y + 1f);
+                    }
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
             if (npc != null && "Heart Container".equalsIgnoreCase(npc.getName())) {
                 audioService.playSound(SoundAsset.HEAL);
                 Life life = Life.MAPPER.get(player);
@@ -452,6 +519,7 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.addItem(Item.Type.GOLD_KEY, 1);
                         viewModel.showFloatingText("[GOLD]+1 Gold Key![]", 
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                        io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(player);
                     } else {
                         inventory.addItem(Item.Type.SILVER_KEY, 1);
                         viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 
@@ -464,7 +532,8 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.getItemCount(Item.Type.GOLD_KEY),
                         inventory.getItemCount(Item.Type.SILVER_KEY),
                         inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                        inventory.getItemCount(Item.Type.SILVER_CUP)
                     );
                 }
                 getEngine().removeEntity(closestNpc);

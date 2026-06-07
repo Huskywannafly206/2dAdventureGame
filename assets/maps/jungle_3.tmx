@@ -1,69 +1,66 @@
-<?xml version='1.0' encoding='utf-8'?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="11">
- <tileset firstgid="1" source="TilesetFloor.tsx" />
- <tileset firstgid="573" source="TilesetVillageAbandoned.tsx" />
- <tileset firstgid="813" source="object1.tsx" />
- <tileset firstgid="820" source="objects.tsx" />
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="12">
+ <tileset firstgid="1" source="TilesetFloor.tsx"/>
+ <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
+ <tileset firstgid="813" source="object1.tsx"/>
+ <tileset firstgid="820" source="objects.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
-eJy1VDsWgCAMiyP3H9VDKIdAL+SsPh/vdegHsB2yQGlIUkgTkAwUAMeDE/z+9qzvAlbhzCiKwpWduTQ+
-yQtvvl6eq7Ney3YJyE9CVH4cqF7OrxYPrZoZn38eeVk19f1R3qjc6rxQ3tbcXh0VLd5RDdyc9s665l12
-7stpt/7R0b4R9/2DG5U+R5c=
-</data>
+   eJy1VDsWgCAMiyP3H9VDKIdAL+SsPh/vdegHsB2yQGlIUkgTkAwUAMeDE/z+9qzvAlbhzCiKwpWduTQ+yQtvvl6eq7Ney3YJyE9CVH4cqF7OrxYPrZoZn38eeVk19f1R3qjc6rxQ3tbcXh0VLd5RDdyc9s665l127stpt/7R0b4R9/2DG5U+R5c=
+  </data>
  </layer>
  <layer id="2" name="obstacle" width="27" height="15">
   <data encoding="base64" compression="zlib">
-eJytlFtOAkEQRTvTASPoAnwk6G7ANahrUDfggz8VPxT0T00MBvaAugfdg35P4uOX06E7lOVMBoe+yQk9
-TNct6jI9xsRRMzGmBVvJ33sVa0zVTtaf3L+En4x9s2qb2h3YhVd4gy/4hhX6rMKCne6v23yvIu3huQ8H
-8A4fsIhfzXumXK+xXlc9Tvn+DM5LzvlI3QCGvv5Q+KRi7fK8hTu4nyPTEbVP0IUrn2OYsaryLKNjPE/U
-70vVdfjvsvL8j3r4XmdkEebQ+R3NkVvQg/CQc8i+Ti7fXoR+HTwuhE8/iZeflDunOi+thu8lz0UZ1Que
-t36E3KTy8mpH7iPVUHPd+F7PfL749RJ7lu3vM1+kUOMkn7G2f1/laYN7m3Zy5mdVqNEKs4wB8Owtrg==
-</data>
+   eJytlFtOAkEQRTvTASPoAnwk6G7ANahrUDfggz8VPxT0T00MBvaAugfdg35P4uOX06E7lOVMBoe+yQk9TNct6jI9xsRRMzGmBVvJ33sVa0zVTtaf3L+En4x9s2qb2h3YhVd4gy/4hhX6rMKCne6v23yvIu3huQ8H8A4fsIhfzXumXK+xXlc9Tvn+DM5LzvlI3QCGvv5Q+KRi7fK8hTu4nyPTEbVP0IUrn2OYsaryLKNjPE/U70vVdfjvsvL8j3r4XmdkEebQ+R3NkVvQg/CQc8i+Ti7fXoR+HTwuhE8/iZeflDunOi+thu8lz0UZ1Quet36E3KTy8mpH7iPVUHPd+F7PfL749RJ7lu3vM1+kUOMkn7G2f1/laYN7m3Zy5mdVqNEKs4wB8Owtrg==
+  </data>
  </layer>
  <objectgroup id="5" name="trigger">
   <object id="1" name="portal_trigger" x="64" y="0" width="218.5" height="15">
    <properties>
-    <property name="targetMap" value="JUNGLEMAP2" />
-    <property name="targetX" type="float" value="160" />
-    <property name="targetY" type="float" value="208.731665229" />
+    <property name="targetMap" value="JUNGLEMAP2"/>
+    <property name="targetX" type="float" value="160"/>
+    <property name="targetY" type="float" value="208.731665229"/>
    </properties>
   </object>
   <object id="2" x="167.5" y="37">
-   <point />
+   <point/>
   </object>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="4" name="Player" gid="821" x="151.5" y="53.5" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true" />
-    <property name="controller" type="bool" value="true" />
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
   <object id="5" gid="847" x="191.941" y="47.7497" width="16" height="16">
    <properties>
-    <property name="dialogue" value="Eyes can deceive, ears can mistake, but the heart never lies. The key is only granted to those who listen to the sound of truth." />
+    <property name="dialogue" value="Eyes can deceive, ears can mistake, but the heart never lies. The key is only granted to those who listen to the sound of truth."/>
    </properties>
   </object>
   <object id="8" gid="850" x="201.674" y="176.731" width="32" height="28">
    <properties>
-    <property name="dialogue" value="Wah! Wah! / Waaah!" />
+    <property name="dialogue" value="Wah! Wah! / Waaah!"/>
+    <property name="npcName" value="Chest2"/>
    </properties>
   </object>
   <object id="9" type="Object" gid="850" x="157.309" y="127.509" width="32" height="28">
    <properties>
-    <property name="dialogue" value="Grrrrrr" />
+    <property name="dialogue" value="Grrrrrr"/>
+    <property name="npcName" value="Chest1"/>
    </properties>
   </object>
   <object id="10" gid="850" x="243.566" y="127.907" width="32" height="28">
    <properties>
-    <property name="dialogue" value="Clink! Clank!" />
+    <property name="dialogue" value="Clink! Clank!"/>
+    <property name="npcName" value="Chest3"/>
    </properties>
   </object>
+  <object id="11" gid="842" x="112" y="123.667" width="16" height="16"/>
  </objectgroup>
  <layer id="6" name="fore1" width="27" height="15">
   <data encoding="base64" compression="zlib">
-eJxjYICAOiYGmoMzdLBjIO2jNdjGhPATMpvWdsIANeyrRjMDZP52GvmjH8ncbVjs3UVleyuB5lVhsQcG
-qG0fMYBa/qRlPCGDkySktydA+ackuokUPauA6lZD1f4A0j9JtAufnpMDkBboBQDydRvr
-</data>
+   eJxjYICAOiYGmoMzdLBjIO2jNdjGhPATMpvWdsIANeyrRjMDZP52GvmjH8ncbVjs3UVleyuB5lVhsQcGqG0fMYBa/qRlPCGDkySktydA+ackuokUPauA6lZD1f4A0j9JtAufnpMDkBboBQDydRvr
+  </data>
  </layer>
 </map>

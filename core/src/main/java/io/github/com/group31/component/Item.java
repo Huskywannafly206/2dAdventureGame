@@ -25,7 +25,9 @@ public class Item implements Component {
         WEAPON_BOW,
         WEAPON_MAGIC_WAND,
         WEAPON_RUSTY_SWORD,
-        JUNGLE_MAP_KEY
+        JUNGLE_MAP_KEY,
+        BOMB,
+        SILVER_CUP
     }
 
     private final Type type;

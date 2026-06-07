@@ -22,6 +22,7 @@ public class GameViewModel extends ViewModel {
     public static final String QUEST_CHANGED       = "questChanged";
     public static final String MENU_TOGGLED        = "menuToggled";
     public static final String UNLOCKED_WEAPONS_CHANGED = "unlockedWeaponsChanged";
+    public static final String SCARECROW_HITS_CHANGED = "scarecrowHitsChanged";
 
 
     private final AudioService audioService;
@@ -44,6 +45,7 @@ public class GameViewModel extends ViewModel {
     private int silverKeys;
     private int soothingHerbs;
     private int jungleMapKeys;
+    private int silverCups;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -128,23 +130,28 @@ public class GameViewModel extends ViewModel {
     public int getSilverKeys() { return silverKeys; }
     public int getSoothingHerbs() { return soothingHerbs; }
     public int getJungleMapKeys() { return jungleMapKeys; }
+    public int getSilverCups() { return silverCups; }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
     public void updateInventory(int potions, int coins, int keys) {
-        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -152,8 +159,13 @@ public class GameViewModel extends ViewModel {
         this.silverKeys = silverKeys;
         this.soothingHerbs = soothingHerbs;
         this.jungleMapKeys = jungleMapKeys;
+        this.silverCups = silverCups;
         // Gửi các số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys});
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups});
+    }
+
+    public void scarecrowHitsChanged(int index, int hits) {
+        this.propertyChangeSupport.firePropertyChange(SCARECROW_HITS_CHANGED, null, new int[]{index, hits});
     }
 
     /** Called by LifeSystem when player life reaches 0. */

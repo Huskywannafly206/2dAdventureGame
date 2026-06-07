@@ -55,9 +55,12 @@ public class QuestManager {
         if (currentStage == 2) return "Gap Tho San";
         if (currentStage == 3) return "Tieu diet Slime";
         if (currentStage == 4) return "Bao cao voi Tho san";
-        if (currentStage <= 6) return "Khoi Dau Moi";
-        if (currentStage <= 9) return "Can Nha Bi An";
-        if (currentStage == 10) return "Bao Cao Ket Qua";
+        if (currentStage == 5) return "Nhat Kiem Ri Sat";
+        if (currentStage == 6) return "Tien Vao Rung Gioc";
+        if (currentStage == 7) return "Bi Mat Rung Gioc";
+        if (currentStage == 8) return "Ba Co Vat";
+        if (currentStage == 9) return "Golden Key";
+        if (currentStage == 10) return "Bao Cao Truong Lang";
         return "Nhiem Vu Da Xong";
     }
 
@@ -78,11 +81,11 @@ public class QuestManager {
             case 3 -> "Tieu diet 4 Slime o lang (da diet: " + slimesDefeated + "/4).";
             case 4 -> "Quay lai bao cao voi Tho san.";
             case 5 -> "Nhat thanh kiem ri sat gan Tho san.";
-            case 6 -> "Noi chuyen voi vo su Monk o phia dong.";
-            case 7 -> "Di vao can nha go o phia tay.";
-            case 8 -> "Noi chuyen voi Ong Lao trong nha.";
-            case 9 -> "Nhat Binh Mau Than Ky tren giuong.";
-            case 10 -> "Mang Than Duoc ve cho Monk o phia dong.";
+            case 6 -> "Tiến vào khu rừng để tìm hiểu bí mật.";
+            case 7 -> "Gặp Forest_Spirit để nói chuyện.";
+            case 8 -> "Đi tìm đủ 3 objects: coin, silvercup và silverkey theo chỉ dẫn của 3 bia đá.";
+            case 9 -> "Nhặt chiếc chìa khóa golden_key bên phải Forest_Spirit.";
+            case 10 -> "Quay lại gặp Trưởng làng để báo cáo và nhận chỉ dẫn tiếp theo.";
             default -> "Khong co nhiem vu nao.";
         };
     }
@@ -96,7 +99,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Gap Monk![]", 
+                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Tien vao Rung Gioc![]", 
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -106,12 +109,12 @@ public class QuestManager {
 
     public void checkMapEnter(String mapName, Entity player) {
         this.player = player;
-        if (currentStage == 7 && "VILLAGE_HOUSE".equalsIgnoreCase(mapName)) {
-            setStage(8);
+        if (currentStage == 6 && "JUNGLEMAP1".equalsIgnoreCase(mapName)) {
+            setStage(7);
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Nhiem vu: Gap Ong Lao![]", 
+                    viewModel.showFloatingText("[YELLOW]Nhiem vu: Gap Forest_Spirit![]", 
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -119,17 +122,18 @@ public class QuestManager {
     }
 
     public void checkPotionPickup(Entity player) {
+        // Potion pickup is no longer a quest stage, keeping method empty for compatibility
+    }
+
+    public void checkGoldKeyPickup(Entity player) {
         this.player = player;
         if (currentStage == 9) {
-            Inventory inv = Inventory.MAPPER.get(player);
-            if (inv != null && inv.getItemCount(Item.Type.POTION_HEALTH) > 0) {
-                setStage(10);
-                if (viewModel != null) {
-                    Transform transform = Transform.MAPPER.get(player);
-                    if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Ve gap Monk![]", 
-                            transform.getPosition().x, transform.getPosition().y + 1f);
-                    }
+            setStage(10);
+            if (viewModel != null) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[YELLOW]Nhiem vu: Ve gap Truong Lang![]", 
+                        transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
         }
@@ -217,7 +221,8 @@ public class QuestManager {
                                 inv.getItemCount(Item.Type.GOLD_KEY),
                                 inv.getItemCount(Item.Type.SILVER_KEY),
                                 inv.getItemCount(Item.Type.SOOTHING_HERB),
-                                inv.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+                                inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                                inv.getItemCount(Item.Type.SILVER_CUP)
                             );
                         }
                         Transform transform = Transform.MAPPER.get(player);
@@ -231,10 +236,61 @@ public class QuestManager {
                         "[IDLE]Before you leave, there is a small favor I must ask. Please help me gather 5 Soothing Herbs from the south so I can brew some medicine to help the sick hold on."
                     });
                 }
+            } else if (currentStage == 6) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Hãy tiến vào khu rừng để tìm hiểu bí mật."
+                });
+            } else if (currentStage == 7) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Hãy tìm gặp Forest_Spirit trong khu rừng."
+                });
+            } else if (currentStage == 8) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Hãy tìm đủ 3 báu vật theo chỉ dẫn của 3 bia đá."
+                });
+            } else if (currentStage == 9) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Hãy nhặt chiếc chìa khóa vàng (Golden Key) và mang về đây."
+                });
+            } else if (currentStage == 10) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Ah! You have returned safely, and with the Golden Key! Incredible!",
+                    "[IDLE]This Golden Key is the key to the Dark Dungeon, where the cure for our village is located.",
+                    "[IDLE]Prepare yourself well, then proceed to the dungeon."
+                });
+                setStage(11);
+                
+                Inventory inv = Inventory.MAPPER.get(player);
+                if (inv != null) {
+                    inv.addItem(Item.Type.COIN, 30);
+                }
+                Experience xp = Experience.MAPPER.get(player);
+                if (xp != null) {
+                    xp.addXp(200f);
+                }
+                if (viewModel != null) {
+                    if (inv != null) {
+                        viewModel.updateInventory(
+                            inv.getItemCount(Item.Type.POTION_HEALTH),
+                            inv.getItemCount(Item.Type.COIN),
+                            inv.getItemCount(Item.Type.KEY),
+                            inv.getItemCount(Item.Type.GOLD_KEY),
+                            inv.getItemCount(Item.Type.SILVER_KEY),
+                            inv.getItemCount(Item.Type.SOOTHING_HERB),
+                            inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                            inv.getItemCount(Item.Type.SILVER_CUP)
+                        );
+                    }
+                    Transform transform = Transform.MAPPER.get(player);
+                    if (transform != null) {
+                        viewModel.showFloatingText("[GOLD]+200 XP, +30 Coins![]",
+                            transform.getPosition().x, transform.getPosition().y + 1f);
+                    }
+                }
             } else {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Chao cau be! Hay di hoan thanh thu thach cua Monk nhe.",
-                    "[IDLE]Ta tin tuong vao nang luc cua cau."
+                    "[IDLE]Hãy chuẩn bị kỹ lưỡng để vào ngục tối (Dark Dungeon).",
+                    "[IDLE]Ta tin tưởng vào năng lực của cháu."
                 });
             }
         } else if ("tho_san".equalsIgnoreCase(npc.getName())) {
@@ -288,7 +344,8 @@ public class QuestManager {
                             inv.getItemCount(Item.Type.GOLD_KEY),
                             inv.getItemCount(Item.Type.SILVER_KEY),
                             inv.getItemCount(Item.Type.SOOTHING_HERB),
-                            inv.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+                            inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                            inv.getItemCount(Item.Type.SILVER_CUP)
                         );
                     }
                 }
@@ -299,86 +356,68 @@ public class QuestManager {
                     "[IDLE]Keep your wits about you, young man."
                 });
             }
-        } else if ("Monk".equalsIgnoreCase(npc.getName())) {
-            if (currentStage <= 5) {
+        } else if ("Forest_Spirit".equalsIgnoreCase(npc.getName())) {
+            if (currentStage == 7) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Chao cau vo si tre! Hay noi chuyen voi Truong Lang truoc, sau do nhat mot mon vu khi tren mat dat."
+                    "[IDLE]Halt, mortal... This forest does not welcome the weak and shallow-minded. You come seeking the guardian relics, do you not?",
+                    "[IDLE]Hahaha! Pleading holds no value here. If you wish to claim the Key, the Chalice, and the Coin, you must overcome three trials representing the three virtues of a hero: Courage, Wisdom, and Character.",
+                    "[IDLE]Venture deeper inside, the mist shall guide your way."
                 });
-            } else if (currentStage == 6) {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Tot lam, cau da co vu khi trong tay!",
-                    "[IDLE]Ta muon thu thach cau.",
-                    "[IDLE]Hay den dieu tra can nha go co kinh o phia tay cua lang.",
-                    "[IDLE]Nghe don noi do co mot Ong Lao dang giu mot Than Duoc bi an.",
-                    "[IDLE]Cau co san long di lay no ve day giup ta khong?"
-                });
-                setStage(7);
-            } else if (currentStage >= 7 && currentStage <= 9) {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Cau van chua lay duoc Than Duoc sao?",
-                    "[IDLE]Hay tim can nha go phia tay lang va noi chuyen voi Ong Lao."
-                });
-            } else if (currentStage == 10) {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Oi troi! Cau thuc su da mang Than Duoc tro ve!",
-                    "[IDLE]Cau da hoan thanh thu thach xuat sac.",
-                    "[IDLE]Day la phan thuong xung dang danh cho su dung cam cua cau!"
-                });
-                
-                // Rewards
-                Inventory inv = Inventory.MAPPER.get(player);
-                if (inv != null) {
-                    inv.addItem(Item.Type.COIN, 20); // Reward 20 coins
-                    inv.removeItem(Item.Type.POTION_HEALTH, 1); // Consume the quest potion
-                }
-                Experience xp = Experience.MAPPER.get(player);
-                if (xp != null) {
-                    xp.addXp(150f); // Reward 150 XP
-                }
-                if (viewModel != null) {
-                    viewModel.updateInventory(
-                        inv != null ? inv.getItemCount(Item.Type.POTION_HEALTH) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.COIN) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.KEY) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.GOLD_KEY) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.SILVER_KEY) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.SOOTHING_HERB) : 0,
-                        inv != null ? inv.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0
-                    );
-                    Transform transform = Transform.MAPPER.get(player);
-                    if (transform != null) {
-                        viewModel.showFloatingText("[GOLD]+150 XP, +20 Coins![]",
-                            transform.getPosition().x, transform.getPosition().y + 1f);
-                    }
-                }
-                
-                setStage(11); // Quest completed
-            } else {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Cam on cau vi Than Duoc!",
-                    "[IDLE]Hay luyen tap cham chi nhe!"
-                });
-            }
-        } else if ("Old Man".equalsIgnoreCase(npc.getName())) {
-            if (currentStage <= 7) {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Khu khu... Cau be tre tuoi, cau tim ai o day?"
-                });
+                setStage(8);
             } else if (currentStage == 8) {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Khu khu... Ta la chu nhan ngoi nha nay.",
-                    "[IDLE]Cau tim kiem Than Duoc cho vo su Monk sao?",
-                    "[IDLE]Ta co thi dua no cho cau.",
-                    "[IDLE]Nhung ta gia yeu qua, hay nhat binh mau than ky ta de tren chiec giuong kia giup ta."
-                });
-                setStage(9);
+                Inventory inv = Inventory.MAPPER.get(player);
+                boolean hasCoin = inv != null && inv.getItemCount(Item.Type.COIN) >= 1;
+                boolean hasCup = inv != null && inv.getItemCount(Item.Type.SILVER_CUP) >= 1;
+                boolean hasKey = inv != null && inv.getItemCount(Item.Type.SILVER_KEY) >= 1;
+
+                if (hasCoin && hasCup && hasKey) {
+                    npc.setDialogue(new String[]{
+                        "[IDLE]Impressive, human youth. You possess the Courage to endure, the Wisdom to see through, and the Character to choose wisely. You have gathered all three relics."
+                    });
+                    if (inv != null) {
+                        inv.removeItem(Item.Type.COIN, 1);
+                        inv.removeItem(Item.Type.SILVER_CUP, 1);
+                        inv.removeItem(Item.Type.SILVER_KEY, 1);
+                    }
+                    if (configurator != null) {
+                        Transform t = Transform.MAPPER.get(npcEntity);
+                        if (t != null) {
+                            configurator.spawnGoldKey(t.getPosition().x + 1f, t.getPosition().y);
+                        }
+                    }
+                    setStage(9);
+                    if (viewModel != null) {
+                        if (inv != null) {
+                            viewModel.updateInventory(
+                                inv.getItemCount(Item.Type.POTION_HEALTH),
+                                inv.getItemCount(Item.Type.COIN),
+                                inv.getItemCount(Item.Type.KEY),
+                                inv.getItemCount(Item.Type.GOLD_KEY),
+                                inv.getItemCount(Item.Type.SILVER_KEY),
+                                inv.getItemCount(Item.Type.SOOTHING_HERB),
+                                inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
+                                inv.getItemCount(Item.Type.SILVER_CUP)
+                            );
+                        }
+                        Transform transform = Transform.MAPPER.get(player);
+                        if (transform != null) {
+                            viewModel.showFloatingText("[YELLOW]Nhiem vu: Nhat Golden Key![]", 
+                                transform.getPosition().x, transform.getPosition().y + 1f);
+                        }
+                    }
+                } else {
+                    npc.setDialogue(new String[]{
+                        "[IDLE]If you wish to claim the Key, the Chalice, and the Coin, you must overcome three trials representing the three virtues of a hero: Courage, Wisdom, and Character.",
+                        "[IDLE]Venture deeper inside, the mist shall guide your way."
+                    });
+                }
             } else if (currentStage == 9) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Binh thuoc o ngay tren chiec giuong do cau be."
+                    "[IDLE]Take the Golden Key on the right and return to the village chief."
                 });
             } else {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Cam on cau da lay binh thuoc giup ta khu khu..."
+                    "[IDLE]Return to your village chief. He is waiting for you."
                 });
             }
         }

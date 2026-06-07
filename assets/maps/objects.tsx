@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="37" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="38" columns="0">
  <grid orientation="orthogonal" width="1" height="1" />
  <tile id="1" type="Object">
   <properties>
@@ -528,6 +528,33 @@
     <properties>
      <property name="sensor" type="bool" value="true" />
     </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="37" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody" />
+   <property name="itemType" value="BOMB" />
+  </properties>
+  <image source="objects/bomb.png" width="16" height="16" />
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true" />
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="38" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody" />
+   <property name="npcName" value="Forest_Spirit" />
+   <property name="dialogue" value="Chào chiến binh! Ta là Thần Rừng.|Khu rừng này đang bị ô nhiễm bởi năng lượng hắc ám, hãy cẩn thận!" />
+  </properties>
+  <image source="objects/forest_spirit.png" width="16" height="16" />
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse />
    </object>
   </objectgroup>
  </tile>

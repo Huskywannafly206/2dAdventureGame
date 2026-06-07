@@ -7,17 +7,13 @@
  <tileset firstgid="1946" source="TilesetNature.tsx" />
  <tileset firstgid="2450" source="Tree.tsx" />
  <tileset firstgid="2454" source="objects.tsx" />
- <tileset firstgid="2476" source="TilesetField.tsx" />
- <tileset firstgid="2551" source="Combined3.tsx" />
+ <tileset firstgid="2478" source="TilesetField.tsx" />
+ <tileset firstgid="2553" source="Combined3.tsx" />
  <layer id="1" name="background" width="12" height="10">
-  <data encoding="base64" compression="zlib">
-eJyzZWJgsB3FwxYDAO0VHYk=
-</data>
+  <data encoding="base64" compression="zlib">eJyzZWJgsB3FwxYDAO0VHYk=</data>
  </layer>
  <layer id="2" name="obstacle" width="12" height="10">
-  <data encoding="base64" compression="zlib">
-eJxbzMLAsJgEfJhEDNJDLFg8qp4o9egYnzwAZasg0Q==
-</data>
+  <data encoding="base64" compression="zlib">eJxbzMLAsJgEfJhEDNJDLFg8qp4o9egYnzwAZasg0Q==</data>
  </layer>
  <objectgroup id="3" name="trigger">
   <object id="1" name="portal_trigger" x="80" y="144" width="32" height="16">

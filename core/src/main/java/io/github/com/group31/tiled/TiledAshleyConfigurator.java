@@ -103,6 +103,7 @@ public class TiledAshleyConfigurator {
                 rect.getX(), rect.getY(), 0,
                 rect.getWidth(), rect.getHeight(),
                 1f, 1f,
+                0f,
                 0,
                 entity);
             addEntityPhysic(
@@ -135,6 +136,7 @@ public class TiledAshleyConfigurator {
             tileMapObject.getX(), tileMapObject.getY(), z,
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
+            -tileMapObject.getRotation(), // LibGDX RenderSystem rotation is CCW, Tiled is CW
             sortOffsetY,
             entity);
 
@@ -231,6 +233,11 @@ public class TiledAshleyConfigurator {
             openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
         }
 
+        float openRotation = tileMapObject.getProperties().get("openRotation", 0f, Float.class);
+        if (openRotation == 0f) {
+            openRotation = tile.getProperties().get("openRotation", 0f, Float.class);
+        }
+
         if (openTileLocalId != -1) {
             com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
             int firstGid = -1;
@@ -245,7 +252,7 @@ public class TiledAshleyConfigurator {
             if (tileset != null) {
                 TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
                 if (openTile != null) {
-                    entity.add(new Door(getTextureRegion(tile), getTextureRegion(openTile)));
+                    entity.add(new Door(getTextureRegion(tile), getTextureRegion(openTile), openRotation));
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door openTileId " + openTileLocalId + " not found in tileset!");
                 }
@@ -639,6 +646,7 @@ public class TiledAshleyConfigurator {
         float x, float y, int z,
         float w, float h,
         float scaleX, float scaleY,
+        float rotation,
         float sortOffsetY,
         Entity entity
     ) {
@@ -649,7 +657,7 @@ public class TiledAshleyConfigurator {
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, z, size, scaling, 0f, sortOffsetY));
+        entity.add(new Transform(position, z, size, scaling, rotation, sortOffsetY));
     }
 
     /**
@@ -698,7 +706,7 @@ public class TiledAshleyConfigurator {
         float pixelY = worldY / GdxGame.UNIT_SCALE - tileH * 0.5f;
 
         Entity entity = this.engine.createEntity();
-        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, sortOffsetY, entity);
+        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, 0f, sortOffsetY, entity);
 
         BodyType bodyType = getObjectBodyType(tile);
         addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);

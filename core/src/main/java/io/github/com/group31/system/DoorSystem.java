@@ -54,6 +54,11 @@ public class DoorSystem extends IteratingSystem {
         Graphic graphic = Graphic.MAPPER.get(entity);
         graphic.setRegion(door.getOpenRegion());
 
+        Transform transform = Transform.MAPPER.get(entity);
+        if (door.getOpenRotation() != 0f) {
+            transform.setRotationDeg(transform.getRotationDeg() + door.getOpenRotation());
+        }
+
         Physic physic = Physic.MAPPER.get(entity);
         if (physic != null && physic.getBody() != null) {
             for (com.badlogic.gdx.physics.box2d.Fixture fixture : physic.getBody().getFixtureList()) {
@@ -68,6 +73,11 @@ public class DoorSystem extends IteratingSystem {
 
         Graphic graphic = Graphic.MAPPER.get(entity);
         graphic.setRegion(door.getClosedRegion());
+
+        Transform transform = Transform.MAPPER.get(entity);
+        if (door.getOpenRotation() != 0f) {
+            transform.setRotationDeg(transform.getRotationDeg() - door.getOpenRotation());
+        }
 
         Physic physic = Physic.MAPPER.get(entity);
         if (physic != null && physic.getBody() != null) {

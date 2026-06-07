@@ -10,12 +10,14 @@ public class Door implements Component {
     private boolean isOpen;
     private final TextureRegion openRegion;
     private final TextureRegion closedRegion;
+    private final float openRotation;
     private float timeSincePlayerLeft;
 
-    public Door(TextureRegion closedRegion, TextureRegion openRegion) {
+    public Door(TextureRegion closedRegion, TextureRegion openRegion, float openRotation) {
         this.isOpen = false;
         this.closedRegion = closedRegion;
         this.openRegion = openRegion;
+        this.openRotation = openRotation;
         this.timeSincePlayerLeft = 0f;
     }
 
@@ -37,6 +39,10 @@ public class Door implements Component {
 
     public float getTimeSincePlayerLeft() {
         return timeSincePlayerLeft;
+    }
+
+    public float getOpenRotation() {
+        return openRotation;
     }
 
     public void setTimeSincePlayerLeft(float timeSincePlayerLeft) {

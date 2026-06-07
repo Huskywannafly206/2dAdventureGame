@@ -90,6 +90,13 @@ public class ItemSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkHerbPickup(collector);
             } else if (type == Item.Type.GOLD_KEY) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(collector);
+            } else if (type == Item.Type.LAUREL_LEAF) {
+                Transform t = Transform.MAPPER.get(collector);
+                if (t != null) {
+                    float x = t.getPosition().x + t.getSize().x * 0.5f;
+                    float y = t.getPosition().y + t.getSize().y;
+                    viewModel.showFloatingText("[GREEN]+1 Laurel Leaf![]", x, y);
+                }
             } else if (type == Item.Type.JUNGLE_MAP_KEY) {
                 Transform t = Transform.MAPPER.get(collector);
                 if (t != null) {
@@ -113,7 +120,8 @@ public class ItemSystem extends IteratingSystem {
                 inventory.getItemCount(Item.Type.SILVER_KEY),
                 inventory.getItemCount(Item.Type.SOOTHING_HERB),
                 inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                inventory.getItemCount(Item.Type.SILVER_CUP)
+                inventory.getItemCount(Item.Type.SILVER_CUP),
+                inventory.getItemCount(Item.Type.LAUREL_LEAF)
             );
         }
 

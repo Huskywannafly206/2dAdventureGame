@@ -8,6 +8,8 @@ import io.github.com.group31.component.Animation2D;
 import io.github.com.group31.component.Dead;
 import io.github.com.group31.component.Experience;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.tiled.TiledAshleyConfigurator;
+import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.ui.model.GameViewModel;
 
@@ -19,11 +21,13 @@ public class DeadSystem extends IteratingSystem {
     private static final float REMOVAL_DELAY = 1.5f;
 
     private final GameViewModel viewModel;
+    private final TiledAshleyConfigurator configurator;
     private ImmutableArray<Entity> playerEntities;
 
-    public DeadSystem(GameViewModel viewModel) {
+    public DeadSystem(GameViewModel viewModel, TiledAshleyConfigurator configurator) {
         super(Family.all(Dead.class).get());
         this.viewModel = viewModel;
+        this.configurator = configurator;
     }
 
     @Override
@@ -67,6 +71,10 @@ public class DeadSystem extends IteratingSystem {
                 }
                 if ("GiantBlueSamurai".equals(name)) {
                     removeStoneBlockGates();
+                    Transform transform = Transform.MAPPER.get(entity);
+                    if (transform != null) {
+                        configurator.spawnLaurelLeaf(transform.getPosition().x, transform.getPosition().y);
+                    }
                 }
             }
             if (tiled != null && tiled.getTileId() == 9) {

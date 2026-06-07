@@ -3142,6 +3142,13 @@ jungle_map_key/jungle_map_key
   orig: 16, 16
   offset: 0, 0
   index: -1
+laurel_leaf/laurel_leaf
+  rotate: false
+  xy: 370, 86
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 monk/idle_down
   rotate: false
   xy: 218, 6
@@ -3669,7 +3676,7 @@ player/walk_up
   index: 3
 potion_health/potion_health
   rotate: false
-  xy: 370, 86
+  xy: 390, 86
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -3704,7 +3711,7 @@ shaman/idle_up
   index: -1
 silver_key/silver_key
   rotate: false
-  xy: 390, 86
+  xy: 406, 162
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4089,119 +4096,119 @@ skull/idle_up
   index: 3
 skull/walk_down
   rotate: false
-  xy: 298, 18
+  xy: 442, 198
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_down
   rotate: false
-  xy: 334, 54
+  xy: 354, 66
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_down
   rotate: false
-  xy: 374, 66
+  xy: 394, 66
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_down
   rotate: false
-  xy: 318, 34
+  xy: 318, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_left
   rotate: false
-  xy: 338, 34
+  xy: 338, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_left
   rotate: false
-  xy: 426, 162
+  xy: 426, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_left
   rotate: false
-  xy: 410, 122
+  xy: 410, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_left
   rotate: false
-  xy: 462, 198
+  xy: 446, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_right
   rotate: false
-  xy: 446, 158
+  xy: 466, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_right
   rotate: false
-  xy: 466, 158
+  xy: 446, 138
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_right
   rotate: false
-  xy: 466, 138
+  xy: 374, 46
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_right
   rotate: false
-  xy: 394, 46
+  xy: 358, 26
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_up
   rotate: false
-  xy: 378, 26
+  xy: 398, 26
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_up
   rotate: false
-  xy: 358, 6
+  xy: 378, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_up
   rotate: false
-  xy: 398, 6
+  xy: 430, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_up
   rotate: false
-  xy: 414, 82
+  xy: 414, 62
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 soothing_herb/soothing_herb
   rotate: false
-  xy: 406, 162
+  xy: 406, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4348,112 +4355,112 @@ spirit/idle_up
   index: 3
 spirit/walk_down
   rotate: false
-  xy: 442, 198
+  xy: 334, 54
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_down
   rotate: false
-  xy: 354, 66
+  xy: 374, 66
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_down
   rotate: false
-  xy: 394, 66
+  xy: 318, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_down
   rotate: false
-  xy: 318, 14
+  xy: 338, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_left
   rotate: false
-  xy: 338, 14
+  xy: 426, 162
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_left
   rotate: false
-  xy: 426, 142
+  xy: 410, 122
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_left
   rotate: false
-  xy: 410, 102
+  xy: 462, 198
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_left
   rotate: false
-  xy: 446, 178
+  xy: 446, 158
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_right
   rotate: false
-  xy: 466, 178
+  xy: 466, 158
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_right
   rotate: false
-  xy: 446, 138
+  xy: 466, 138
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_right
   rotate: false
-  xy: 374, 46
+  xy: 394, 46
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_right
   rotate: false
-  xy: 358, 26
+  xy: 378, 26
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_up
   rotate: false
-  xy: 398, 26
+  xy: 358, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_up
   rotate: false
-  xy: 378, 6
+  xy: 398, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_up
   rotate: false
-  xy: 430, 102
+  xy: 414, 82
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_up
   rotate: false
-  xy: 414, 62
+  xy: 450, 118
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4467,7 +4474,7 @@ stone_block/idle_down
   index: 0
 tho_san/tho_san
   rotate: false
-  xy: 406, 142
+  xy: 298, 38
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4488,7 +4495,7 @@ trap/idle_down
   index: 1
 truong_lang/truong_lang
   rotate: false
-  xy: 298, 38
+  xy: 298, 18
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

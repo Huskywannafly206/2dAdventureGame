@@ -46,6 +46,7 @@ public class GameViewModel extends ViewModel {
     private int soothingHerbs;
     private int jungleMapKeys;
     private int silverCups;
+    private int laurelLeaves;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -131,6 +132,7 @@ public class GameViewModel extends ViewModel {
     public int getSoothingHerbs() { return soothingHerbs; }
     public int getJungleMapKeys() { return jungleMapKeys; }
     public int getSilverCups() { return silverCups; }
+    public int getLaurelLeaves() { return laurelLeaves; }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
@@ -152,6 +154,10 @@ public class GameViewModel extends ViewModel {
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.laurelLeaves);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int laurelLeaves) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -160,8 +166,9 @@ public class GameViewModel extends ViewModel {
         this.soothingHerbs = soothingHerbs;
         this.jungleMapKeys = jungleMapKeys;
         this.silverCups = silverCups;
+        this.laurelLeaves = laurelLeaves;
         // Gửi các số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups});
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, laurelLeaves});
     }
 
     public void scarecrowHitsChanged(int index, int hits) {

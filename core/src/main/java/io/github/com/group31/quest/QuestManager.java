@@ -222,7 +222,8 @@ public class QuestManager {
                                 inv.getItemCount(Item.Type.SILVER_KEY),
                                 inv.getItemCount(Item.Type.SOOTHING_HERB),
                                 inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                                inv.getItemCount(Item.Type.SILVER_CUP)
+                                inv.getItemCount(Item.Type.SILVER_CUP),
+                                inv.getItemCount(Item.Type.LAUREL_LEAF)
                             );
                         }
                         Transform transform = Transform.MAPPER.get(player);
@@ -278,7 +279,8 @@ public class QuestManager {
                             inv.getItemCount(Item.Type.SILVER_KEY),
                             inv.getItemCount(Item.Type.SOOTHING_HERB),
                             inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                            inv.getItemCount(Item.Type.SILVER_CUP)
+                            inv.getItemCount(Item.Type.SILVER_CUP),
+                            inv.getItemCount(Item.Type.LAUREL_LEAF)
                         );
                     }
                     Transform transform = Transform.MAPPER.get(player);
@@ -345,7 +347,8 @@ public class QuestManager {
                             inv.getItemCount(Item.Type.SILVER_KEY),
                             inv.getItemCount(Item.Type.SOOTHING_HERB),
                             inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                            inv.getItemCount(Item.Type.SILVER_CUP)
+                            inv.getItemCount(Item.Type.SILVER_CUP),
+                            inv.getItemCount(Item.Type.LAUREL_LEAF)
                         );
                     }
                 }
@@ -396,7 +399,8 @@ public class QuestManager {
                                 inv.getItemCount(Item.Type.SILVER_KEY),
                                 inv.getItemCount(Item.Type.SOOTHING_HERB),
                                 inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                                inv.getItemCount(Item.Type.SILVER_CUP)
+                                inv.getItemCount(Item.Type.SILVER_CUP),
+                                inv.getItemCount(Item.Type.LAUREL_LEAF)
                             );
                         }
                         Transform transform = Transform.MAPPER.get(player);

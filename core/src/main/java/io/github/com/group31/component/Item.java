@@ -27,7 +27,8 @@ public class Item implements Component {
         WEAPON_RUSTY_SWORD,
         JUNGLE_MAP_KEY,
         BOMB,
-        SILVER_CUP
+        SILVER_CUP,
+        LAUREL_LEAF
     }
 
     private final Type type;

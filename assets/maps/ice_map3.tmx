@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="11">
- <tileset firstgid="1" source="TilesetRelief.tsx"/>
- <tileset firstgid="241" source="TilesetNature.tsx"/>
- <tileset firstgid="745" source="TilesetReliefDetail.tsx"/>
- <tileset firstgid="889" source="TilesetHouse.tsx"/>
- <tileset firstgid="1648" source="TilesetFloorB.tsx"/>
- <tileset firstgid="1725" source="TilesetFloorDetail.tsx"/>
- <tileset firstgid="1805" source="TilesetTowers.tsx"/>
- <tileset firstgid="1949" source="tileset_camp.tsx"/>
- <tileset firstgid="2156" source="objects.tsx"/>
+ <tileset firstgid="1" source="TilesetRelief.tsx" />
+ <tileset firstgid="241" source="TilesetNature.tsx" />
+ <tileset firstgid="745" source="TilesetReliefDetail.tsx" />
+ <tileset firstgid="889" source="TilesetHouse.tsx" />
+ <tileset firstgid="1648" source="TilesetFloorB.tsx" />
+ <tileset firstgid="1725" source="TilesetFloorDetail.tsx" />
+ <tileset firstgid="1805" source="TilesetTowers.tsx" />
+ <tileset firstgid="1949" source="tileset_camp.tsx" />
+ <tileset firstgid="2156" source="objects.tsx" />
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 23,23,23,23,23,619,620,620,22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -36,16 +36,16 @@
  <objectgroup id="9" name="trigger">
   <object id="4" name="portal_trigger" x="41.4316" y="31.8316" width="28.8" height="10.6105">
    <properties>
-    <property name="targetMap" value="DUNGEONMAP2"/>
-    <property name="targetX" type="float" value="240.5"/>
-    <property name="targetY" type="float" value="299.5"/>
+    <property name="targetMap" value="DUNGEONMAP2" />
+    <property name="targetX" type="float" value="240.5" />
+    <property name="targetY" type="float" value="299.5" />
    </properties>
   </object>
   <object id="8" name="portal_trigger" x="242.091" y="310.779" width="45.3333" height="8">
    <properties>
-    <property name="targetMap" value="ICEMAP2"/>
-    <property name="targetX" type="float" value="263"/>
-    <property name="targetY" type="float" value="68.5"/>
+    <property name="targetMap" value="ICEMAP2" />
+    <property name="targetX" type="float" value="263" />
+    <property name="targetY" type="float" value="68.5" />
    </properties>
   </object>
  </objectgroup>
@@ -148,8 +148,8 @@
  <objectgroup id="8" name="objects">
   <object id="3" name="Player" gid="2157" x="40.1541" y="71.3962" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
+    <property name="camFollow" type="bool" value="true" />
+    <property name="controller" type="bool" value="true" />
    </properties>
   </object>
  </objectgroup>

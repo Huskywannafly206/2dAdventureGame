@@ -1,57 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="12">
- <tileset firstgid="1" source="TilesetFloor.tsx"/>
- <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
- <tileset firstgid="813" source="Tree.tsx"/>
- <tileset firstgid="817" source="objects.tsx"/>
+<?xml version='1.0' encoding='utf-8'?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="24">
+ <tileset firstgid="1" source="TilesetFloor.tsx" />
+ <tileset firstgid="573" source="TilesetVillageAbandoned.tsx" />
+ <tileset firstgid="813" source="Tree.tsx" />
+ <tileset firstgid="817" source="objects.tsx" />
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJzjZGRg4ETCGxkYGDZB8UkGVDlq4+NA80/QwZ6hirnppIcQ/kqF+KGGGfQwczDZR07czga6cQ4Qz8XiVmqnDVhZsZkO4UKPsuILAyKc7gLZ94D4Pgn2oYcvvrggFeNKezA7NiFhcu3E597ZaHagY2Q9ALufMBw=
-  </data>
+eJzjZGRg4ETCGxkYGDZB8UkGVDlq4+NA80/QwZ6hirnppIcQ/kqF+KGGGfQwczDZR07czga6cQ4Qz8Xi
+VmqnDVhZsZkO4UKPsuILAyKc7gLZ94D4Pgn2oYcvvrggFeNKezA7NiFhcu3E597ZaHagY2Q9ALufMBw=
+</data>
  </layer>
  <layer id="2" name="obstacle" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJytk8lKA0EQhmNHlPgGLuC7GZ9BczJRD+rVJR5iDpKL3hUEFTwrKqgXl8SAEHNxGcgD+BXphqJNz6L54SM9PbVNpera5HI3kEYV7JZhJcZ+Z8C7yN75vkcJefdT1FU2/bq0xvLJfnHaDeTd4n5bvZskz5TN9cj9EzzDS8p+Op0G7CN131PnD86f8AXfGXPdxthL38bt97iejvBsIA+j/+xr2cZ0fZuGmUDMO2zvM36blvxXDeUfebEe1HOH87uao6QZTyPXS9mtrop1Ys8yR7IrMmtVL5fLv5pQg/jrXjr7S36v7HnQfviqmvDMhyT2TWjBK7TN7/34q6TeAzj0YskOvA0hvtYS8c7g3MbVO5BVBfwmYI5YRZiHNViHDdj0atc7kKVvs6q+BfwWoQQ12IO6jXU85F45XQTiurn7ASJ5QAs=
-  </data>
+eJytk8lKA0EQhmNHlPgGLuC7GZ9BczJRD+rVJR5iDpKL3hUEFTwrKqgXl8SAEHNxGcgD+BXphqJNz6L5
+4SM9PbVNpera5HI3kEYV7JZhJcZ+Z8C7yN75vkcJefdT1FU2/bq0xvLJfnHaDeTd4n5bvZskz5TN9cj9
+EzzDS8p+Op0G7CN131PnD86f8AXfGXPdxthL38bt97iejvBsIA+j/+xr2cZ0fZuGmUDMO2zvM36blvxX
+DeUfebEe1HOH87uao6QZTyPXS9mtrop1Ys8yR7IrMmtVL5fLv5pQg/jrXjr7S36v7HnQfviqmvDMhyT2
+TWjBK7TN7/34q6TeAzj0YskOvA0hvtYS8c7g3MbVO5BVBfwmYI5YRZiHNViHDdj0atc7kKVvs6q+BfwW
+oQQ12IO6jXU85F45XQTiurn7ASJ5QAs=
+</data>
  </layer>
  <objectgroup id="5" name="trigger">
   <object id="6" name="portal_trigger" x="64.2968" y="0" width="62.8991" height="14.9094">
    <properties>
-    <property name="targetMap" value="JUNGLEMAP1"/>
-    <property name="targetX" type="float" value="95.513373598"/>
-    <property name="targetY" type="float" value="211.993097498"/>
+    <property name="targetMap" value="JUNGLEMAP1" />
+    <property name="targetX" type="float" value="95.513373598" />
+    <property name="targetY" type="float" value="211.993097498" />
    </properties>
   </object>
   <object id="7" x="95.9793" y="34.478">
-   <point/>
+   <point />
   </object>
   <object id="10" name="portal_trigger" x="1.39776" y="223.641" width="220.846" height="15.3753">
    <properties>
-    <property name="targetMap" value="JUNGLEMAP3"/>
-    <property name="targetX" type="float" value="167.5"/>
-    <property name="targetY" type="float" value="37"/>
+    <property name="targetMap" value="JUNGLEMAP3" />
+    <property name="targetX" type="float" value="167.5" />
+    <property name="targetY" type="float" value="37" />
    </properties>
   </object>
   <object id="11" x="160" y="208.732">
-   <point/>
+   <point />
   </object>
- </objectgroup>
- <objectgroup id="3" name="Object Layer 1">
-  <object id="3" gid="816" x="63.5256" y="211.345" width="32" height="32"/>
-  <object id="4" gid="816" x="346.402" y="135.555" width="32" height="32"/>
-  <object id="5" gid="816" x="201.761" y="56.0297" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="9" name="Player" gid="818" x="80.9111" y="47.6825" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true"/>
-    <property name="controller" type="bool" value="true"/>
+    <property name="camFollow" type="bool" value="true" />
+    <property name="controller" type="bool" value="true" />
+   </properties>
+  </object>
+  <object id="18" name="scarecrow_A" gid="824" x="63.3005" y="220.511" width="32" height="32" />
+  <object id="19" name="Scarecrow_B" gid="824" x="336.382" y="145.384" width="32" height="32" />
+  <object id="20" name="Scarecrow_C" gid="824" x="209.182" y="51.9718" width="32" height="32" />
+  <object id="23" type="Object" gid="844" x="127.547" y="42.1848" width="16" height="16">
+   <properties>
+    <property name="dialogue" value="The strong use swords, the wise use their minds. Look upon nature’s creations to correct these motionless figures." />
    </properties>
   </object>
  </objectgroup>
  <layer id="6" name="fore1" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYKAP2MYEoTcC6U1AvBmItzBR356TSGYeBbKPAfFxID5BA7voAUDhtp3Gbq9mQg23MzS0r38A4wEWlrT0HwicxGI+PeIR3W5K/ekN1O8DxL50cHc80I4EIE6kctjB9PoBsT8QBwBxMRCXAHEpHjNpnUboBQYi3QEAz0Ub9Q==
-  </data>
+eJxjYKAP2MYEoTcC6U1AvBmItzBR356TSGYeBbKPAfFxID5BA7voAUDhtp3Gbq9mQg23MzS0r38A4wEW
+lrT0HwicxGI+PeIR3W5K/ekN1O8DxL50cHc80I4EIE6kctjB9PoBsT8QBwBxMRCXAHEpHjNpnUboBQYi
+3QEAz0Ub9Q==
+</data>
  </layer>
 </map>

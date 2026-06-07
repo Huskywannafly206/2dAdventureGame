@@ -19,6 +19,12 @@ public class SaveData {
     public java.util.List<String> unlockedWeapons;
     public int currentWeaponIndex;
 
+    // Ice World quest tracking fields
+    public int frostOreCount;
+    public boolean hasSacredSpringWater;
+    public boolean hasFrozenHeart;
+    public boolean fishingRodSpawned;
+
     public SaveData() {
         // Default constructor for libGDX JSON
     }

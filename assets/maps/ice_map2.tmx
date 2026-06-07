@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="14">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="15">
  <tileset firstgid="1" source="TilesetFloorB.tsx"/>
  <tileset firstgid="78" source="TilesetWater.tsx"/>
  <tileset firstgid="554" source="TilesetFloor.tsx"/>
@@ -11,7 +11,7 @@
  <tileset firstgid="3013" source="tileset_camp.tsx"/>
  <tileset firstgid="3220" source="TilesetField.tsx"/>
  <tileset firstgid="3295" source="objects.tsx"/>
- <tileset firstgid="3309" source="Combined.tsx"/>
+ <tileset firstgid="3330" source="Combined.tsx"/>
  <layer id="7" name="floor1" width="30" height="20">
   <data encoding="csv">
 896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,
@@ -97,7 +97,7 @@
 0,0,0,2583,2584,0,1794,1794,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,2421,2422,2423,2424,0,0,0,0,0,0,0,0,2686,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,2445,2446,2447,2448,0,0,0,0,0,0,0,0,2686,0,2886,145,117,145,117,145,145,2886,0,0,0,1763,1765,0,0,
-0,2469,2470,2471,2472,0,0,0,0,0,0,0,0,0,0,2898,3320,3320,3320,3320,3320,3320,2898,0,0,0,1796,1798,0,0
+0,2469,2470,2471,2472,0,0,0,0,0,0,0,0,0,0,2898,3341,3341,3341,3341,3341,3341,2898,0,0,0,1796,1798,0,0
 </data>
  </layer>
  <layer id="5" name="back2" width="30" height="20">
@@ -153,6 +153,12 @@
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="14" name="fisher_man" gid="3328" x="208.246" y="206.699" width="16" height="16">
+   <properties>
+    <property name="npcName" value="fisher_man"/>
+    <property name="dialogue" value="Hmm? You don't look like you're from around here, kid."/>
    </properties>
   </object>
  </objectgroup>

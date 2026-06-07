@@ -173,6 +173,10 @@ public class GameScreen extends ScreenAdapter {
                 io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
                 io.github.com.group31.quest.QuestManager.INSTANCE.setPlayer(player);
                 io.github.com.group31.quest.QuestManager.INSTANCE.setStage(data.questStage);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setFrostOreCount(data.frostOreCount);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setHasSacredSpringWater(data.hasSacredSpringWater);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setHasFrozenHeart(data.hasFrozenHeart);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setFishingRodSpawned(data.fishingRodSpawned);
 
                 Life life = Life.MAPPER.get(player);
                 if(life != null){
@@ -264,6 +268,10 @@ public class GameScreen extends ScreenAdapter {
                     data.playerHp = currentHp;
                     data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
+                    data.frostOreCount = io.github.com.group31.quest.QuestManager.INSTANCE.getFrostOreCount();
+                    data.hasSacredSpringWater = io.github.com.group31.quest.QuestManager.INSTANCE.isHasSacredSpringWater();
+                    data.hasFrozenHeart = io.github.com.group31.quest.QuestManager.INSTANCE.isHasFrozenHeart();
+                    data.fishingRodSpawned = io.github.com.group31.quest.QuestManager.INSTANCE.isFishingRodSpawned();
 
                     Experience xp = Experience.MAPPER.get(player);
                     if (xp != null) {

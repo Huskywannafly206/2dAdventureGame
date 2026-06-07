@@ -47,6 +47,7 @@ public class GameViewModel extends ViewModel {
     private int jungleMapKeys;
     private int silverCups;
     private int laurelLeaves;
+    private int iceMapKeys;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -133,31 +134,36 @@ public class GameViewModel extends ViewModel {
     public int getJungleMapKeys() { return jungleMapKeys; }
     public int getSilverCups() { return silverCups; }
     public int getLaurelLeaves() { return laurelLeaves; }
+    public int getIceMapKeys() { return iceMapKeys; }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
     public void updateInventory(int potions, int coins, int keys) {
-        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups);
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.laurelLeaves);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int laurelLeaves) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, laurelLeaves, this.iceMapKeys);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int laurelLeaves, int iceMapKeys) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -167,8 +173,9 @@ public class GameViewModel extends ViewModel {
         this.jungleMapKeys = jungleMapKeys;
         this.silverCups = silverCups;
         this.laurelLeaves = laurelLeaves;
+        this.iceMapKeys = iceMapKeys;
         // Gửi các số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, laurelLeaves});
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, laurelLeaves, iceMapKeys});
     }
 
     public void scarecrowHitsChanged(int index, int hits) {

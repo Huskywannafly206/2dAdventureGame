@@ -379,7 +379,8 @@ public class ControllerSystem extends IteratingSystem {
             inventory.getItemCount(Item.Type.SOOTHING_HERB),
             inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
             inventory.getItemCount(Item.Type.SILVER_CUP),
-            inventory.getItemCount(Item.Type.LAUREL_LEAF)
+            inventory.getItemCount(Item.Type.LAUREL_LEAF),
+            inventory.getItemCount(Item.Type.ICE_MAP_KEY)
         );
     }
 
@@ -520,7 +521,8 @@ public class ControllerSystem extends IteratingSystem {
                             inventory.getItemCount(Item.Type.SOOTHING_HERB),
                             inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                             inventory.getItemCount(Item.Type.SILVER_CUP),
-                            inventory.getItemCount(Item.Type.LAUREL_LEAF)
+                            inventory.getItemCount(Item.Type.LAUREL_LEAF),
+                            inventory.getItemCount(Item.Type.ICE_MAP_KEY)
                         );
                     }
                 } catch (Exception e) {
@@ -564,7 +566,8 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.getItemCount(Item.Type.SOOTHING_HERB),
                         inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                         inventory.getItemCount(Item.Type.SILVER_CUP),
-                        inventory.getItemCount(Item.Type.LAUREL_LEAF)
+                        inventory.getItemCount(Item.Type.LAUREL_LEAF),
+                        inventory.getItemCount(Item.Type.ICE_MAP_KEY)
                     );
                 }
                 getEngine().removeEntity(closestNpc);
@@ -585,7 +588,8 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.getItemCount(Item.Type.SOOTHING_HERB),
                         inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                         inventory.getItemCount(Item.Type.SILVER_CUP),
-                        inventory.getItemCount(Item.Type.LAUREL_LEAF)
+                        inventory.getItemCount(Item.Type.LAUREL_LEAF),
+                        inventory.getItemCount(Item.Type.ICE_MAP_KEY)
                     );
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
@@ -636,7 +640,8 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.getItemCount(Item.Type.SOOTHING_HERB),
                         inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                         inventory.getItemCount(Item.Type.SILVER_CUP),
-                        inventory.getItemCount(Item.Type.LAUREL_LEAF)
+                        inventory.getItemCount(Item.Type.LAUREL_LEAF),
+                        inventory.getItemCount(Item.Type.ICE_MAP_KEY)
                     );
                 }
                 getEngine().removeEntity(closestNpc);

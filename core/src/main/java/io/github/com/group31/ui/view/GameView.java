@@ -420,6 +420,9 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (viewModel.getLaurelLeaves() > 0) {
                 items.add(new InvItem(atlas.findRegion("laurel_leaf/laurel_leaf"), viewModel.getLaurelLeaves()));
             }
+            if (viewModel.getIceMapKeys() > 0) {
+                items.add(new InvItem(atlas.findRegion("ice_map_key/ice_map_key"), viewModel.getIceMapKeys()));
+            }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
                     items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));

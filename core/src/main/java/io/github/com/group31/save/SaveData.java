@@ -17,6 +17,7 @@ public class SaveData {
     public int playerJungleMapKeys;
     public int playerSilverCups;
     public int playerLaurelLeaves;
+    public int playerIceMapKeys;
     public int questStage;
     public java.util.List<String> unlockedWeapons;
     public int currentWeaponIndex;

@@ -28,7 +28,8 @@ public class Item implements Component {
         JUNGLE_MAP_KEY,
         BOMB,
         SILVER_CUP,
-        LAUREL_LEAF
+        LAUREL_LEAF,
+        ICE_MAP_KEY
     }
 
     private final Type type;

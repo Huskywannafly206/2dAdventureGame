@@ -97,6 +97,13 @@ public class ItemSystem extends IteratingSystem {
                     float y = t.getPosition().y + t.getSize().y;
                     viewModel.showFloatingText("[GREEN]+1 Laurel Leaf![]", x, y);
                 }
+            } else if (type == Item.Type.ICE_MAP_KEY) {
+                Transform t = Transform.MAPPER.get(collector);
+                if (t != null) {
+                    float x = t.getPosition().x + t.getSize().x * 0.5f;
+                    float y = t.getPosition().y + t.getSize().y;
+                    viewModel.showFloatingText("[GREEN]+1 Ice Map Key![]", x, y);
+                }
             } else if (type == Item.Type.JUNGLE_MAP_KEY) {
                 Transform t = Transform.MAPPER.get(collector);
                 if (t != null) {
@@ -121,7 +128,8 @@ public class ItemSystem extends IteratingSystem {
                 inventory.getItemCount(Item.Type.SOOTHING_HERB),
                 inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                 inventory.getItemCount(Item.Type.SILVER_CUP),
-                inventory.getItemCount(Item.Type.LAUREL_LEAF)
+                inventory.getItemCount(Item.Type.LAUREL_LEAF),
+                inventory.getItemCount(Item.Type.ICE_MAP_KEY)
             );
         }
 

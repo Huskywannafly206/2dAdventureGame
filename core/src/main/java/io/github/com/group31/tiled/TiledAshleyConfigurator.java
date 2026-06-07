@@ -763,6 +763,49 @@ public class TiledAshleyConfigurator {
         this.engine.addEntity(itemEntity);
     }
 
+    public void spawnIceMapKey(float x, float y) {
+        Entity itemEntity = this.engine.createEntity();
+
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion("ice_map_key/ice_map_key");
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.WHITE.cpy()));
+        } else {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Failed to find atlas region: ice_map_key/ice_map_key");
+        }
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+        itemEntity.add(new Item(Item.Type.ICE_MAP_KEY, 1f, SoundAsset.PICKUP));
+
+        this.engine.addEntity(itemEntity);
+    }
+
     public void spawnBomb(float x, float y) {
         Entity bombEntity = this.engine.createEntity();
 
@@ -890,6 +933,7 @@ public class TiledAshleyConfigurator {
             case BOMB          -> SoundAsset.TRAP;
             case SILVER_CUP    -> SoundAsset.PICKUP;
             case LAUREL_LEAF   -> SoundAsset.PICKUP;
+            case ICE_MAP_KEY   -> SoundAsset.PICKUP;
         };
 
         entity.add(new Item(type, 1f, sound));

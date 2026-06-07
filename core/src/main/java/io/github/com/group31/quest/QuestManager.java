@@ -223,7 +223,8 @@ public class QuestManager {
                                 inv.getItemCount(Item.Type.SOOTHING_HERB),
                                 inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                                 inv.getItemCount(Item.Type.SILVER_CUP),
-                                inv.getItemCount(Item.Type.LAUREL_LEAF)
+                                inv.getItemCount(Item.Type.LAUREL_LEAF),
+                                inv.getItemCount(Item.Type.ICE_MAP_KEY)
                             );
                         }
                         Transform transform = Transform.MAPPER.get(player);
@@ -269,6 +270,14 @@ public class QuestManager {
                 if (xp != null) {
                     xp.addXp(200f);
                 }
+
+                Transform npcT = Transform.MAPPER.get(npcEntity);
+                float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
+                float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
+                if (configurator != null) {
+                    configurator.spawnIceMapKey(spawnX, spawnY);
+                }
+
                 if (viewModel != null) {
                     if (inv != null) {
                         viewModel.updateInventory(
@@ -280,7 +289,8 @@ public class QuestManager {
                             inv.getItemCount(Item.Type.SOOTHING_HERB),
                             inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                             inv.getItemCount(Item.Type.SILVER_CUP),
-                            inv.getItemCount(Item.Type.LAUREL_LEAF)
+                            inv.getItemCount(Item.Type.LAUREL_LEAF),
+                            inv.getItemCount(Item.Type.ICE_MAP_KEY)
                         );
                     }
                     Transform transform = Transform.MAPPER.get(player);
@@ -290,10 +300,24 @@ public class QuestManager {
                     }
                 }
             } else {
-                npc.setDialogue(new String[]{
-                    "[IDLE]Hãy chuẩn bị kỹ lưỡng để vào ngục tối (Dark Dungeon).",
-                    "[IDLE]Ta tin tưởng vào năng lực của cháu."
-                });
+                Inventory inv = Inventory.MAPPER.get(player);
+                int iceKeyCount = inv != null ? inv.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
+                if (currentStage >= 11 && iceKeyCount <= 0) {
+                    npc.setDialogue(new String[]{
+                        "[IDLE]Cháu đã làm mất Ice Map Key ư? Ta sẽ để một cái khác ở đây cho cháu."
+                    });
+                    Transform npcT = Transform.MAPPER.get(npcEntity);
+                    float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
+                    float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
+                    if (configurator != null) {
+                        configurator.spawnIceMapKey(spawnX, spawnY);
+                    }
+                } else {
+                    npc.setDialogue(new String[]{
+                        "[IDLE]Hãy chuẩn bị kỹ lưỡng để vào ngục tối (Dark Dungeon).",
+                        "[IDLE]Ta tin tưởng vào năng lực của cháu."
+                    });
+                }
             }
         } else if ("tho_san".equalsIgnoreCase(npc.getName())) {
             if (currentStage < 2) {
@@ -348,7 +372,8 @@ public class QuestManager {
                             inv.getItemCount(Item.Type.SOOTHING_HERB),
                             inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                             inv.getItemCount(Item.Type.SILVER_CUP),
-                            inv.getItemCount(Item.Type.LAUREL_LEAF)
+                            inv.getItemCount(Item.Type.LAUREL_LEAF),
+                            inv.getItemCount(Item.Type.ICE_MAP_KEY)
                         );
                     }
                 }
@@ -400,7 +425,8 @@ public class QuestManager {
                                 inv.getItemCount(Item.Type.SOOTHING_HERB),
                                 inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
                                 inv.getItemCount(Item.Type.SILVER_CUP),
-                                inv.getItemCount(Item.Type.LAUREL_LEAF)
+                                inv.getItemCount(Item.Type.LAUREL_LEAF),
+                                inv.getItemCount(Item.Type.ICE_MAP_KEY)
                             );
                         }
                         Transform transform = Transform.MAPPER.get(player);

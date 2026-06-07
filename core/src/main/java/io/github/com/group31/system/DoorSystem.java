@@ -15,7 +15,7 @@ public class DoorSystem extends IteratingSystem {
     private static final float OPEN_DISTANCE_SQR = 1.5f * 1.5f; // Adjust trigger distance as needed
 
     public DoorSystem() {
-        super(Family.all(Door.class, Transform.class, Graphic.class, Physic.class).get());
+        super(Family.all(Door.class, Transform.class, Graphic.class).get());
     }
 
     @Override

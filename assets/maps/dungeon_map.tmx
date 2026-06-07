@@ -173,6 +173,7 @@
    <properties>
     <property name="lootType" value="POTION_HEALTH"/>
     <property name="openTileId" type="int" value="103"/>
+    <property name="respawnTime" type="float" value="60"/>
     <property name="type" value="chest"/>
    </properties>
   </object>
@@ -180,6 +181,7 @@
    <properties>
     <property name="lootType" value="TRAP"/>
     <property name="openTileId" type="int" value="102"/>
+    <property name="respawnTime" type="float" value="60"/>
     <property name="trapDamage" type="float" value="5"/>
     <property name="type" value="chest"/>
    </properties>

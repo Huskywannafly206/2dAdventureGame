@@ -244,6 +244,14 @@ public class TiledAshleyConfigurator {
         }
         entity.add(new Tiled(tileMapObject, localTileId));
 
+        io.github.com.group31.component.Chest chest = entity.getComponent(io.github.com.group31.component.Chest.class);
+        if (chest != null && chest.isOpen()) {
+            Graphic graphic = entity.getComponent(Graphic.class);
+            if (graphic != null && chest.getOpenRegion() != null) {
+                graphic.setRegion(chest.getOpenRegion());
+            }
+        }
+
         this.engine.addEntity(entity);
     }
 
@@ -332,13 +340,6 @@ public class TiledAshleyConfigurator {
                         chest.setOpen(true);
                     }
                     entity.add(chest);
-                    
-                    if (chest.isOpen()) {
-                        io.github.com.group31.component.Graphic graphic = entity.getComponent(io.github.com.group31.component.Graphic.class);
-                        if (graphic != null) {
-                            graphic.setRegion(chest.getOpenRegion());
-                        }
-                    }
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
                 }

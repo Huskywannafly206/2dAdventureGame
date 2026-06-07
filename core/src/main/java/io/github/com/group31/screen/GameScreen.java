@@ -151,6 +151,7 @@ public class GameScreen extends ScreenAdapter {
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
+        this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger36", this::portalTrigger);
         this.engine.getSystem(TriggerSystem.class).registerTrigger("checkpoint_trigger", this::checkpointTrigger);
         MapAsset startMapAsset = MapAsset.ICEMAP1;
         SaveService saveService = game.getSaveService();

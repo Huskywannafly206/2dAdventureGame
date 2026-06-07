@@ -25,6 +25,7 @@ import io.github.com.group31.component.Animation2D.AnimationType;
 import io.github.com.group31.component.Attack;
 import io.github.com.group31.component.CombatState;
 import io.github.com.group31.component.Controller;
+import io.github.com.group31.component.Damaged;
 import io.github.com.group31.component.Facing;
 import io.github.com.group31.component.Facing.FacingDirection;
 import io.github.com.group31.component.Graphic;
@@ -474,6 +475,16 @@ public class ControllerSystem extends IteratingSystem {
                         }
                         viewModel.updateUnlockedWeapons(wNames);
                     }
+                }
+            } else if ("EXPLOSION".equalsIgnoreCase(lootType) || "BOMB".equalsIgnoreCase(lootType) || "TRAP".equalsIgnoreCase(lootType)) {
+                audioService.playSound(SoundAsset.TRAP);
+                viewModel.showFloatingText("[RED]It's a trap! -2 HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                
+                Damaged currentDamage = Damaged.MAPPER.get(player);
+                if (currentDamage != null) {
+                    currentDamage.addDamage(2f);
+                } else {
+                    player.add(new Damaged(2f, closestChest));
                 }
             } else {
                 try {

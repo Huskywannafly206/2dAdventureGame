@@ -9,10 +9,14 @@ public class Door implements Component {
 
     private boolean isOpen;
     private final TextureRegion openRegion;
+    private final TextureRegion closedRegion;
+    private float timeSincePlayerLeft;
 
-    public Door(TextureRegion openRegion) {
+    public Door(TextureRegion closedRegion, TextureRegion openRegion) {
         this.isOpen = false;
+        this.closedRegion = closedRegion;
         this.openRegion = openRegion;
+        this.timeSincePlayerLeft = 0f;
     }
 
     public boolean isOpen() {
@@ -25,5 +29,17 @@ public class Door implements Component {
 
     public TextureRegion getOpenRegion() {
         return openRegion;
+    }
+
+    public TextureRegion getClosedRegion() {
+        return closedRegion;
+    }
+
+    public float getTimeSincePlayerLeft() {
+        return timeSincePlayerLeft;
+    }
+
+    public void setTimeSincePlayerLeft(float timeSincePlayerLeft) {
+        this.timeSincePlayerLeft = timeSincePlayerLeft;
     }
 }

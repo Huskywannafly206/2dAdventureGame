@@ -245,7 +245,7 @@ public class TiledAshleyConfigurator {
             if (tileset != null) {
                 TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
                 if (openTile != null) {
-                    entity.add(new Door(getTextureRegion(openTile)));
+                    entity.add(new Door(getTextureRegion(tile), getTextureRegion(openTile)));
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door openTileId " + openTileLocalId + " not found in tileset!");
                 }

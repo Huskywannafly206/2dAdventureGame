@@ -81,6 +81,7 @@ public class GameScreen extends ScreenAdapter {
         this.tiledService = new TiledService(game.getAssetService(), this.physicWorld);
         this.engine = new Engine();
         this.tiledAshleyConfigurator = new TiledAshleyConfigurator(this.engine, this.physicWorld, this.game.getAssetService());
+        io.github.com.group31.quest.QuestManager.INSTANCE.setConfigurator(this.tiledAshleyConfigurator);
         this.keyboardController = new KeyboardController(GameControllerState.class, engine, null);
 
         this.engine.addSystem(new AiSystem());
@@ -170,6 +171,7 @@ public class GameScreen extends ScreenAdapter {
 
                 // Setup QuestManager with loaded quest stage
                 io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setPlayer(player);
                 io.github.com.group31.quest.QuestManager.INSTANCE.setStage(data.questStage);
 
                 Life life = Life.MAPPER.get(player);
@@ -201,7 +203,9 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.KEY,           data.playerKeys);
                     inventory.setItemCount(Item.Type.GOLD_KEY,      data.playerGoldKeys);
                     inventory.setItemCount(Item.Type.SILVER_KEY,    data.playerSilverKeys);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys);
+                    inventory.setItemCount(Item.Type.SOOTHING_HERB, data.playerSoothingHerbs);
+                    inventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, data.playerJungleMapKeys);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -232,6 +236,10 @@ public class GameScreen extends ScreenAdapter {
         } else {
             // New game: setup viewModel on QuestManager and start at stage 0
             io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
+            ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
+            if (players.size() > 0) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.setPlayer(players.first());
+            }
             io.github.com.group31.quest.QuestManager.INSTANCE.setStage(0);
             viewModel.updateUnlockedWeapons(java.util.List.of("FIST"));
         }
@@ -286,6 +294,8 @@ public class GameScreen extends ScreenAdapter {
                         data.playerKeys       = inventory.getItemCount(Item.Type.KEY);
                         data.playerGoldKeys   = inventory.getItemCount(Item.Type.GOLD_KEY);
                         data.playerSilverKeys = inventory.getItemCount(Item.Type.SILVER_KEY);
+                        data.playerSoothingHerbs = inventory.getItemCount(Item.Type.SOOTHING_HERB);
+                        data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
                     }
 
                     // Lưu trạng thái CombatState (vũ khí)
@@ -348,6 +358,19 @@ public class GameScreen extends ScreenAdapter {
         String targetMapStr = trigger.getMapObject().getProperties().get("targetMap", String.class);
         if (targetMapStr == null) return;
 
+        if (targetMapStr.equalsIgnoreCase("JUNGLEMAP1")) {
+            Inventory inventory = Inventory.MAPPER.get(player);
+            int jungleMapKeys = inventory != null ? inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0;
+            if (jungleMapKeys <= 0) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[RED]Yeu cau: Ban do da de (Jungle Map Key)![]",
+                        transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+                return;
+            }
+        }
+
         Float targetX = trigger.getMapObject().getProperties().get("targetX", Float.class);
         Float targetY = trigger.getMapObject().getProperties().get("targetY", Float.class);
 
@@ -367,6 +390,8 @@ public class GameScreen extends ScreenAdapter {
         int keys       = inventory != null ? inventory.getItemCount(Item.Type.KEY) : 0;
         int goldKeys   = inventory != null ? inventory.getItemCount(Item.Type.GOLD_KEY) : 0;
         int silverKeys = inventory != null ? inventory.getItemCount(Item.Type.SILVER_KEY) : 0;
+        int soothingHerbs = inventory != null ? inventory.getItemCount(Item.Type.SOOTHING_HERB) : 0;
+        int jungleMapKeys = inventory != null ? inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0;
 
         // Lưu lại trạng thái CombatState trước khi chuyển map
         CombatState cs = CombatState.MAPPER.get(player);
@@ -399,6 +424,7 @@ public class GameScreen extends ScreenAdapter {
             ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
             if (players.size() > 0) {
                 Entity newPlayer = players.first();
+                io.github.com.group31.quest.QuestManager.INSTANCE.setPlayer(newPlayer);
 
                 // Check map transition for quest progress
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkMapEnter(targetMapAsset.name(), newPlayer);
@@ -426,7 +452,9 @@ public class GameScreen extends ScreenAdapter {
                     newInventory.setItemCount(Item.Type.KEY, keys);
                     newInventory.setItemCount(Item.Type.GOLD_KEY, goldKeys);
                     newInventory.setItemCount(Item.Type.SILVER_KEY, silverKeys);
-                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys);
+                    newInventory.setItemCount(Item.Type.SOOTHING_HERB, soothingHerbs);
+                    newInventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, jungleMapKeys);
+                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys);
                 }
 
                 // Khôi phục CombatState

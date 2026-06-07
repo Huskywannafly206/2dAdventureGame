@@ -82,6 +82,15 @@ public class ItemSystem extends IteratingSystem {
             inventory.addItem(type, 1);
             if (type == Item.Type.POTION_HEALTH) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
+            } else if (type == Item.Type.SOOTHING_HERB) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkHerbPickup(collector);
+            } else if (type == Item.Type.JUNGLE_MAP_KEY) {
+                Transform t = Transform.MAPPER.get(collector);
+                if (t != null) {
+                    float x = t.getPosition().x + t.getSize().x * 0.5f;
+                    float y = t.getPosition().y + t.getSize().y;
+                    viewModel.showFloatingText("[GOLD]Nhan: Ban do da de![]", x, y);
+                }
             }
         }
 
@@ -93,7 +102,11 @@ public class ItemSystem extends IteratingSystem {
             viewModel.updateInventory(
                 inventory.getItemCount(Item.Type.POTION_HEALTH),
                 inventory.getItemCount(Item.Type.COIN),
-                inventory.getItemCount(Item.Type.KEY)
+                inventory.getItemCount(Item.Type.KEY),
+                inventory.getItemCount(Item.Type.GOLD_KEY),
+                inventory.getItemCount(Item.Type.SILVER_KEY),
+                inventory.getItemCount(Item.Type.SOOTHING_HERB),
+                inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
             );
         }
 
@@ -106,6 +119,7 @@ public class ItemSystem extends IteratingSystem {
             case WEAPON_SWORD      -> Weapon.SWORD;
             case WEAPON_BOW        -> Weapon.BOW;
             case WEAPON_MAGIC_WAND -> Weapon.MAGIC_WAND;
+            case WEAPON_RUSTY_SWORD -> Weapon.RUSTY_SWORD;
             default                -> null;
         };
     }

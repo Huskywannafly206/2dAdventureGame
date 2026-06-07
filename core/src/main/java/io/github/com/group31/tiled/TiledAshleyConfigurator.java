@@ -341,6 +341,53 @@ public class TiledAshleyConfigurator {
         this.engine.addEntity(itemEntity);
     }
 
+    public void spawnRustySword(float x, float y) {
+        spawnTestWeapon(Item.Type.WEAPON_RUSTY_SWORD, x, y, "weapon_rusty_sword/weapon_rusty_sword");
+    }
+
+    public void spawnJungleMapKey(float x, float y) {
+        Entity itemEntity = this.engine.createEntity();
+
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion("jungle_map_key/jungle_map_key");
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.WHITE.cpy()));
+        } else {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Failed to find atlas region: jungle_map_key/jungle_map_key");
+        }
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+        itemEntity.add(new Item(Item.Type.JUNGLE_MAP_KEY, 1f, SoundAsset.PICKUP));
+
+        this.engine.addEntity(itemEntity);
+    }
+
     private void spawnTestWeapon(Item.Type type, float x, float y, String atlasRegionName) {
         Entity itemEntity = this.engine.createEntity();
 
@@ -411,9 +458,12 @@ public class TiledAshleyConfigurator {
             case KEY           -> SoundAsset.PICKUP;
             case GOLD_KEY      -> SoundAsset.PICKUP;
             case SILVER_KEY    -> SoundAsset.PICKUP;
+            case SOOTHING_HERB -> SoundAsset.PICKUP;
             case WEAPON_SWORD  -> SoundAsset.PICKUP;
             case WEAPON_BOW    -> SoundAsset.PICKUP;
             case WEAPON_MAGIC_WAND -> SoundAsset.PICKUP;
+            case WEAPON_RUSTY_SWORD -> SoundAsset.PICKUP;
+            case JUNGLE_MAP_KEY -> SoundAsset.PICKUP;
         };
 
         entity.add(new Item(type, 1f, sound));

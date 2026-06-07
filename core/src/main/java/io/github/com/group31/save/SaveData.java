@@ -13,6 +13,8 @@ public class SaveData {
     public int playerKeys;
     public int playerGoldKeys;
     public int playerSilverKeys;
+    public int playerSoothingHerbs;
+    public int playerJungleMapKeys;
     public int questStage;
     public java.util.List<String> unlockedWeapons;
     public int currentWeaponIndex;

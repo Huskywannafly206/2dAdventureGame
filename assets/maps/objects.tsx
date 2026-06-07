@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="23" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="27" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -415,6 +415,87 @@
   <image source="objects/weapon_sword.png" width="6" height="15"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="6" height="15">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="26" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="truong_lang"/>
+   <property name="dialogue" value="Chào cậu bé! Ta là Trưởng Làng.|Có biến lớn ở ngoài kia đấy, hãy cẩn thận!"/>
+  </properties>
+  <image source="objects/truong_lang.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="27" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="SOOTHING_HERB"/>
+  </properties>
+  <image source="objects/soothing_herb.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="28" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="tho_san"/>
+  </properties>
+  <image source="objects/tho_san.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="29" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="WEAPON_RUSTY_SWORD"/>
+  </properties>
+  <image source="objects/weapon_rusty_sword.png" width="3" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="3" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="30" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="JUNGLE_MAP_KEY"/>
+  </properties>
+  <image source="objects/jungle_map_key.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="31" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="POTION_HEALTH"/>
+  </properties>
+  <image source="objects/potion_health.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
     <properties>
      <property name="sensor" type="bool" value="true"/>
     </properties>

@@ -57,13 +57,14 @@ public class MapHazardSystem extends IteratingSystem {
                     TiledMapTile tile = cell.getTile();
                     if (tile instanceof AnimatedTiledMapTile) {
                         AnimatedTiledMapTile animatedTile = (AnimatedTiledMapTile) tile;
+                        AnimatedTiledMapTile.updateAnimationBaseTime();
                         TiledMapTile currentFrame = animatedTile.getCurrentFrame();
                         if (currentFrame.getProperties().containsKey("damage")) {
                             float damage = currentFrame.getProperties().get("damage", 1f, Float.class);
                             if (damage > 0f) {
                                 player.add(new Damaged(damage, null));
                                 audioService.playSound(SoundAsset.TRAP);
-                                hazardCooldown = 1.0f;
+                                hazardCooldown = 0.5f;
                                 return; // Apply damage once per tick
                             }
                         }

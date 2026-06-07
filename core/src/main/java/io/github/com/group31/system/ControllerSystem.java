@@ -369,7 +369,11 @@ public class ControllerSystem extends IteratingSystem {
         viewModel.updateInventory(
             inventory.getItemCount(Item.Type.POTION_HEALTH),
             inventory.getItemCount(Item.Type.COIN),
-            inventory.getItemCount(Item.Type.KEY)
+            inventory.getItemCount(Item.Type.KEY),
+            inventory.getItemCount(Item.Type.GOLD_KEY),
+            inventory.getItemCount(Item.Type.SILVER_KEY),
+            inventory.getItemCount(Item.Type.SOOTHING_HERB),
+            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
         );
     }
 
@@ -387,6 +391,10 @@ public class ControllerSystem extends IteratingSystem {
 
     private void interactWithNpc(Entity player) {
         if (activeNpcEntity != null) {
+            if (viewModel.isDialogueTyping()) {
+                viewModel.skipDialogueTyping();
+                return;
+            }
             Npc npc = Npc.MAPPER.get(activeNpcEntity);
             npc.advanceDialogue();
             if (npc.hasMoreDialogue()) {
@@ -454,7 +462,9 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.getItemCount(Item.Type.COIN),
                         inventory.getItemCount(Item.Type.KEY),
                         inventory.getItemCount(Item.Type.GOLD_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_KEY)
+                        inventory.getItemCount(Item.Type.SILVER_KEY),
+                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
+                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
                     );
                 }
                 getEngine().removeEntity(closestNpc);
@@ -472,6 +482,8 @@ public class ControllerSystem extends IteratingSystem {
                         unlocked = io.github.com.group31.combat.Weapon.BOW;
                     } else if (npc.getName().endsWith("MAGIC_WAND")) {
                         unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
+                    } else if (npc.getName().endsWith("RUSTY_SWORD")) {
+                        unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
                     }
 
                     if (unlocked != null) {

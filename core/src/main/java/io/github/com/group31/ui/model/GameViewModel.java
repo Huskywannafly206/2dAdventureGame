@@ -42,6 +42,8 @@ public class GameViewModel extends ViewModel {
     private int keys;
     private int goldKeys;
     private int silverKeys;
+    private int soothingHerbs;
+    private int jungleMapKeys;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -66,6 +68,7 @@ public class GameViewModel extends ViewModel {
         this.keys = 0;
         this.goldKeys = 0;
         this.silverKeys = 0;
+        this.soothingHerbs = 0;
     }
 
     public void setMaxLife(int maxLife) {
@@ -123,22 +126,34 @@ public class GameViewModel extends ViewModel {
     public int getKeys()    { return keys; }
     public int getGoldKeys() { return goldKeys; }
     public int getSilverKeys() { return silverKeys; }
+    public int getSoothingHerbs() { return soothingHerbs; }
+    public int getJungleMapKeys() { return jungleMapKeys; }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
     public void updateInventory(int potions, int coins, int keys) {
-        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys);
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
         this.goldKeys = goldKeys;
         this.silverKeys = silverKeys;
+        this.soothingHerbs = soothingHerbs;
+        this.jungleMapKeys = jungleMapKeys;
         // Gửi các số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys});
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys});
     }
 
     /** Called by LifeSystem when player life reaches 0. */
@@ -178,7 +193,24 @@ public class GameViewModel extends ViewModel {
         game.getViewport().project(tmpVec2);
         return tmpVec2;
     }
+    public static final String SKIP_DIALOGUE_TYPING = "skipDialogueTyping";
+    private boolean dialogueTyping = false;
+
+    public boolean isDialogueTyping() {
+        return dialogueTyping;
+    }
+
+    public void setDialogueTyping(boolean typing) {
+        this.dialogueTyping = typing;
+    }
+
+    public void skipDialogueTyping() {
+        this.propertyChangeSupport.firePropertyChange(SKIP_DIALOGUE_TYPING, false, true);
+        this.dialogueTyping = false;
+    }
+
     public void showDialogue(String npcName, String line, String facesetPath) {
+        setDialogueTyping(true);
         String[] prev = this.activeDialogue;
         // activeDialogue[0] = npcName, [1] = line, [2] = facesetPath (có thể rỗng)
         this.activeDialogue = new String[]{npcName, line, facesetPath != null ? facesetPath : ""};
@@ -191,6 +223,7 @@ public class GameViewModel extends ViewModel {
     }
 
     public void hideDialogue() {
+        setDialogueTyping(false);
         String[] prev = this.activeDialogue;
         this.activeDialogue = null;
         this.propertyChangeSupport.firePropertyChange(DIALOGUE_CHANGED, prev, null);

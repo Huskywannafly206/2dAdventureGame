@@ -617,7 +617,7 @@ public class ControllerSystem extends IteratingSystem {
                 return;
             }
 
-            if (npc != null && ("Gold Key".equalsIgnoreCase(npc.getName()) || "Silver Key".equalsIgnoreCase(npc.getName()))) {
+            if (npc != null && ("Gold Key".equalsIgnoreCase(npc.getName()) || "Silver Key".equalsIgnoreCase(npc.getName()) || "Ice Map Key".equalsIgnoreCase(npc.getName()))) {
                 audioService.playSound(SoundAsset.PICKUP);
                 Inventory inventory = Inventory.MAPPER.get(player);
                 if (inventory != null) {
@@ -626,6 +626,10 @@ public class ControllerSystem extends IteratingSystem {
                         viewModel.showFloatingText("[GOLD]+1 Gold Key![]", 
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                         io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(player);
+                    } else if ("Ice Map Key".equalsIgnoreCase(npc.getName())) {
+                        inventory.addItem(Item.Type.ICE_MAP_KEY, 1);
+                        viewModel.showFloatingText("[GREEN]+1 Ice Map Key![]", 
+                            playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                     } else {
                         inventory.addItem(Item.Type.SILVER_KEY, 1);
                         viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 

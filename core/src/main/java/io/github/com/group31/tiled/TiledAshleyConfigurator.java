@@ -802,6 +802,7 @@ public class TiledAshleyConfigurator {
 
         itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
         itemEntity.add(new Item(Item.Type.ICE_MAP_KEY, 1f, SoundAsset.PICKUP));
+        itemEntity.add(new Npc("Ice Map Key", new String[0]));
 
         this.engine.addEntity(itemEntity);
     }
@@ -939,6 +940,9 @@ public class TiledAshleyConfigurator {
         entity.add(new Item(type, 1f, sound));
         if (type == Item.Type.BOMB) {
             entity.add(new BombComponent());
+        }
+        if (type == Item.Type.ICE_MAP_KEY) {
+            entity.add(new Npc("Ice Map Key", new String[0]));
         }
     }
 

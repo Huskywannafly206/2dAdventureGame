@@ -159,7 +159,7 @@
   </object>
   <object id="7" name="FighterWhite" gid="2902" x="257.833" y="213.167" width="28.5" height="30.5">
    <properties>
-    <property name="dialogue" value="Hello! I am a fighter.|I am so tired...|Let's go train!"/>
+    <property name="dialogue" value="Legendary? Hah, just an old man who likes pounding iron. A human brat managed to withstand the cold to get here... What do you want?"/>
     <property name="faceset" value="ui/npc_faceset/FighterWhite_faceset.png"/>
     <property name="npcName" value="FighterWhite"/>
    </properties>

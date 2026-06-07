@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="23" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="28" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -185,7 +185,6 @@
    <property name="animation" value="IDLE"/>
    <property name="animationSpeed" type="float" value="1"/>
    <property name="bodyType" value="StaticBody"/>
-   <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
    <property name="faceset" value="ui/fighter_white_faceset.png"/>
    <property name="npcName" value="fighter_white"/>
   </properties>
@@ -420,5 +419,34 @@
     </properties>
    </object>
   </objectgroup>
+ </tile>
+ <tile id="26" type="Object">
+  <properties>
+   <property name="dialogue" value="The Chief told me about your plan. You intend to venture into the Ancient Forest all by yourself? That place has become treacherous lately. One careless mistake, and it'll cost you your life."/>
+   <property name="faceset" value="ui/npc_faceset/hunter_Faceset.png"/>
+   <property name="npcName" value="Hunter"/>
+  </properties>
+  <image source="objects/hunter.png" width="16" height="16"/>
+ </tile>
+ <tile id="27" type="Object">
+  <properties>
+   <property name="npcName" value="Stone Table"/>
+  </properties>
+  <image source="objects/stonetable.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="7.8125" y="7.8125"/>
+  </objectgroup>
+ </tile>
+ <tile id="28" type="Object">
+  <image source="objects/SilverCoin.png" width="6" height="6"/>
+ </tile>
+ <tile id="29">
+  <image source="objects/SilverCup.png" width="9" height="11"/>
+ </tile>
+ <tile id="30" type="Object">
+  <properties>
+   <property name="npcName" value="Chest"/>
+  </properties>
+  <image source="objects/red_chest.png" width="16" height="14"/>
  </tile>
 </tileset>

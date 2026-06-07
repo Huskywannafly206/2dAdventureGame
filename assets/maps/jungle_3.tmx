@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="5">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="11">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="object1.tsx"/>
@@ -31,6 +31,26 @@
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="5" gid="847" x="191.941" y="47.7497" width="16" height="16">
+   <properties>
+    <property name="dialogue" value="Eyes can deceive, ears can mistake, but the heart never lies. The key is only granted to those who listen to the sound of truth."/>
+   </properties>
+  </object>
+  <object id="8" gid="850" x="201.674" y="176.731" width="32" height="28">
+   <properties>
+    <property name="dialogue" value="Wah! Wah! / Waaah!"/>
+   </properties>
+  </object>
+  <object id="9" type="Object" gid="850" x="157.309" y="127.509" width="32" height="28">
+   <properties>
+    <property name="dialogue" value="Grrrrrr"/>
+   </properties>
+  </object>
+  <object id="10" gid="850" x="243.566" y="127.907" width="32" height="28">
+   <properties>
+    <property name="dialogue" value="Clink! Clank!"/>
    </properties>
   </object>
  </objectgroup>

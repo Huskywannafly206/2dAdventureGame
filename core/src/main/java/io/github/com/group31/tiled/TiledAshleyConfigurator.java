@@ -150,7 +150,8 @@ public class TiledAshleyConfigurator {
         
         io.github.com.group31.asset.MapAsset mapAsset = currentMap.getProperties().get("mapAsset", io.github.com.group31.asset.MapAsset.class);
         String mapName = mapAsset != null ? mapAsset.name() : "UNKNOWN";
-        String uniqueId = mapName + "_" + tileMapObject.getId();
+        Integer objId = tileMapObject.getProperties().get("id", Integer.class);
+        String uniqueId = mapName + "_" + (objId != null ? objId : tileMapObject.hashCode());
         
         float respawnTime = respawnTimeObj != null ? respawnTimeObj : -1f;
         entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));

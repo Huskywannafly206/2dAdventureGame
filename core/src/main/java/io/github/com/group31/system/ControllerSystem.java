@@ -630,6 +630,7 @@ public class ControllerSystem extends IteratingSystem {
                         inventory.addItem(Item.Type.ICE_MAP_KEY, 1);
                         viewModel.showFloatingText("[GREEN]+1 Ice Map Key![]", 
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                        io.github.com.group31.quest.QuestManager.INSTANCE.checkIceMapKeyPickup(player);
                     } else {
                         inventory.addItem(Item.Type.SILVER_KEY, 1);
                         viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 

@@ -61,6 +61,8 @@ public class QuestManager {
         if (currentStage == 8) return "The Three Relics";
         if (currentStage == 9) return "The Golden Key";
         if (currentStage == 10) return "Report to the Chief";
+        if (currentStage == 11) return "Pick up Ice Map Key";
+        if (currentStage == 12) return "Enter the Ice Land";
         return "All Quests Completed";
     }
 
@@ -86,6 +88,8 @@ public class QuestManager {
             case 8 -> "Find all 3 objects: coin, silver cup, and silver key following the 3 stone tablets.";
             case 9 -> "Pick up the golden key to the right of the Forest Spirit.";
             case 10 -> "Return to the Village Chief to report and receive further instructions.";
+            case 11 -> "Pick up the Ice Map Key next to the Chief.";
+            case 12 -> "Enter the Ice Land through the northern portal.";
             default -> "No active quests.";
         };
     }
@@ -115,6 +119,30 @@ public class QuestManager {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
                     viewModel.showFloatingText("[YELLOW]Quest: Meet the Forest Spirit![]", 
+                        transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+            }
+        }
+        if (currentStage == 12 && "ICEMAP1".equalsIgnoreCase(mapName)) {
+            setStage(13);
+            if (viewModel != null) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[YELLOW]All Quests Completed![]", 
+                        transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+            }
+        }
+    }
+
+    public void checkIceMapKeyPickup(Entity player) {
+        this.player = player;
+        if (currentStage == 11) {
+            setStage(12);
+            if (viewModel != null) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[YELLOW]Quest: Enter the Ice Land![]", 
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -303,9 +331,9 @@ public class QuestManager {
             } else {
                 Inventory inv = Inventory.MAPPER.get(player);
                 int iceKeyCount = inv != null ? inv.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
-                if (currentStage >= 11 && iceKeyCount <= 0) {
+                if (currentStage == 11 && iceKeyCount <= 0) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Did you lose the Ice Map Key? I will leave another one here for you."
+                        "[IDLE]Pick up the Ice Map Key next to me and head to the Ice Land."
                     });
                     Transform npcT = Transform.MAPPER.get(npcEntity);
                     float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
@@ -313,11 +341,31 @@ public class QuestManager {
                     if (configurator != null) {
                         configurator.spawnIceMapKey(spawnX, spawnY);
                     }
-                } else {
+                } else if (currentStage == 11) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Prepare yourself well to enter the Dark Dungeon.",
-                        "[IDLE]I believe in your strength."
+                        "[IDLE]Pick up the Ice Map Key next to me and head to the Ice Land."
                     });
+                } else if (currentStage == 12) {
+                    npc.setDialogue(new String[]{
+                        "[IDLE]Use the Ice Map Key to pass through the northern portal."
+                    });
+                } else {
+                    if (iceKeyCount <= 0) {
+                        npc.setDialogue(new String[]{
+                            "[IDLE]Did you lose the Ice Map Key? I will leave another one here for you."
+                        });
+                        Transform npcT = Transform.MAPPER.get(npcEntity);
+                        float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
+                        float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
+                        if (configurator != null) {
+                            configurator.spawnIceMapKey(spawnX, spawnY);
+                        }
+                    } else {
+                        npc.setDialogue(new String[]{
+                            "[IDLE]Prepare yourself well to enter the Dark Dungeon.",
+                            "[IDLE]I believe in your strength."
+                        });
+                    }
                 }
             }
         } else if ("tho_san".equalsIgnoreCase(npc.getName())) {

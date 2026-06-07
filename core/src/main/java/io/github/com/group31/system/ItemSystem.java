@@ -104,6 +104,7 @@ public class ItemSystem extends IteratingSystem {
                     float y = t.getPosition().y + t.getSize().y;
                     viewModel.showFloatingText("[GREEN]+1 Ice Map Key![]", x, y);
                 }
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkIceMapKeyPickup(collector);
             } else if (type == Item.Type.JUNGLE_MAP_KEY) {
                 Transform t = Transform.MAPPER.get(collector);
                 if (t != null) {

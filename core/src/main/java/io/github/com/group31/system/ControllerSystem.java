@@ -452,6 +452,12 @@ public class ControllerSystem extends IteratingSystem {
                 graphic.setRegion(chest.getOpenRegion());
             }
             audioService.playSound(SoundAsset.PICKUP);
+
+            io.github.com.group31.component.Tiled tiled = io.github.com.group31.component.Tiled.MAPPER.get(closestChest);
+            if (tiled != null && tiled.getMapObjectRef() != null && "chest2".equalsIgnoreCase(tiled.getMapObjectRef().getName())) {
+                configurator.spawnChest2Skulls();
+            }
+
             Transform chestTransform = Transform.MAPPER.get(closestChest);
             String lootType = chest.getLootType();
             

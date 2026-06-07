@@ -74,6 +74,7 @@ public class TiledAshleyConfigurator {
     }
 
     private final java.util.List<Vector2> coin2SlimePositions = new java.util.ArrayList<>();
+    private final java.util.List<Vector2> chest2SkullPositions = new java.util.ArrayList<>();
 
     private int getGlobalGidForObjectsTile(int localTileId) {
         if (currentMap == null) return localTileId;
@@ -91,11 +92,21 @@ public class TiledAshleyConfigurator {
         for (Vector2 pos : coin2SlimePositions) {
             spawnMob(slimeGid, pos.x, pos.y);
         }
+        this.coin2SlimePositions.clear();
+    }
+
+    public void spawnChest2Skulls() {
+        int skullGid = getGlobalGidForObjectsTile(20);
+        for (Vector2 pos : chest2SkullPositions) {
+            spawnMob(skullGid, pos.x, pos.y);
+        }
+        this.chest2SkullPositions.clear();
     }
 
     public void setCurrentMap(TiledMap map) {
         this.currentMap = map;
         this.coin2SlimePositions.clear();
+        this.chest2SkullPositions.clear();
     }
 
     public void onLoadTile(TiledMapTile tile, float x, float y) {
@@ -162,10 +173,28 @@ public class TiledAshleyConfigurator {
             }
         }
 
+        boolean isJungleMap3 = mapAsset == MapAsset.JUNGLEMAP3;
+        boolean isChest2Skull = false;
+        if (isJungleMap3 && objTileId == 20) {
+            float dx = tileMapObject.getX() - 368.333f;
+            float dy = tileMapObject.getY() - 97.0f;
+            float dist = (float) Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150f || "chest2_skull".equalsIgnoreCase(tileMapObject.getName())) {
+                isChest2Skull = true;
+            }
+        }
+
         if (isCoin2Slime) {
             float worldCenterX = (tileMapObject.getX() + textureRegion.getRegionWidth() * 0.5f) * GdxGame.UNIT_SCALE;
             float worldCenterY = (tileMapObject.getY() + textureRegion.getRegionHeight() * 0.5f) * GdxGame.UNIT_SCALE;
             coin2SlimePositions.add(new Vector2(worldCenterX, worldCenterY));
+            return;
+        }
+
+        if (isChest2Skull) {
+            float worldCenterX = (tileMapObject.getX() + textureRegion.getRegionWidth() * 0.5f) * GdxGame.UNIT_SCALE;
+            float worldCenterY = (tileMapObject.getY() + textureRegion.getRegionHeight() * 0.5f) * GdxGame.UNIT_SCALE;
+            chest2SkullPositions.add(new Vector2(worldCenterX, worldCenterY));
             return;
         }
 

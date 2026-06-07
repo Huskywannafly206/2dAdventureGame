@@ -25,6 +25,7 @@ import io.github.com.group31.component.Animation2D.AnimationType;
 import io.github.com.group31.component.Attack;
 import io.github.com.group31.component.CombatState;
 import io.github.com.group31.component.Controller;
+import io.github.com.group31.component.Damaged;
 import io.github.com.group31.component.Facing;
 import io.github.com.group31.component.Facing.FacingDirection;
 import io.github.com.group31.component.Graphic;
@@ -428,6 +429,90 @@ public class ControllerSystem extends IteratingSystem {
                 minDistance = dist;
                 closestNpc = npcEntity;
             }
+        }
+
+        Entity closestChest = null;
+        float minChestDistance = 1.5f;
+        for (Entity chestEntity : getEngine().getEntitiesFor(Family.all(io.github.com.group31.component.Chest.class, Transform.class).get())) {
+            io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(chestEntity);
+            if (chest.isOpen()) continue;
+            Transform chestTransform = Transform.MAPPER.get(chestEntity);
+            float dist = playerTransform.getPosition().dst(chestTransform.getPosition());
+            if (dist < minChestDistance) {
+                minChestDistance = dist;
+                closestChest = chestEntity;
+            }
+        }
+
+        if (closestChest != null) {
+            io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(closestChest);
+            chest.setOpen(true);
+            Graphic graphic = Graphic.MAPPER.get(closestChest);
+            if (graphic != null && chest.getOpenRegion() != null) {
+                graphic.setRegion(chest.getOpenRegion());
+            }
+            audioService.playSound(SoundAsset.PICKUP);
+            Transform chestTransform = Transform.MAPPER.get(closestChest);
+            String lootType = chest.getLootType();
+            
+            if (lootType.startsWith("WEAPON_")) {
+                CombatState combatState = CombatState.MAPPER.get(player);
+                if (combatState != null) {
+                    io.github.com.group31.combat.Weapon unlocked = null;
+                    if (lootType.endsWith("SWORD")) unlocked = io.github.com.group31.combat.Weapon.SWORD;
+                    else if (lootType.endsWith("BOW")) unlocked = io.github.com.group31.combat.Weapon.BOW;
+                    else if (lootType.endsWith("MAGIC_WAND")) unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
+                    else if (lootType.endsWith("RUSTY_SWORD")) unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
+                    
+                    if (unlocked != null) {
+                        boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
+                        if (newlyUnlocked) {
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]", 
+                                chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        } else {
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!", 
+                                chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        }
+                        java.util.List<String> wNames = new java.util.ArrayList<>();
+                        for (io.github.com.group31.combat.Weapon w : combatState.getUnlockedWeapons()) {
+                            wNames.add(w.name());
+                        }
+                        viewModel.updateUnlockedWeapons(wNames);
+                    }
+                }
+            } else if ("EXPLOSION".equalsIgnoreCase(lootType) || "BOMB".equalsIgnoreCase(lootType) || "TRAP".equalsIgnoreCase(lootType)) {
+                audioService.playSound(SoundAsset.TRAP);
+                float dmg = chest.getTrapDamage();
+                viewModel.showFloatingText("[RED]It's a trap! -" + (int)dmg + " HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                
+                Damaged currentDamage = Damaged.MAPPER.get(player);
+                if (currentDamage != null) {
+                    currentDamage.addDamage(dmg);
+                } else {
+                    player.add(new Damaged(dmg, closestChest));
+                }
+            } else {
+                try {
+                    Item.Type type = Item.Type.valueOf(lootType);
+                    Inventory inventory = Inventory.MAPPER.get(player);
+                    if (inventory != null) {
+                        inventory.addItem(type, 1);
+                        viewModel.showFloatingText("+1 " + type.name(), chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        viewModel.updateInventory(
+                            inventory.getItemCount(Item.Type.POTION_HEALTH),
+                            inventory.getItemCount(Item.Type.COIN),
+                            inventory.getItemCount(Item.Type.KEY),
+                            inventory.getItemCount(Item.Type.GOLD_KEY),
+                            inventory.getItemCount(Item.Type.SILVER_KEY),
+                            inventory.getItemCount(Item.Type.SOOTHING_HERB),
+                            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
+                        );
+                    }
+                } catch (Exception e) {
+                    com.badlogic.gdx.Gdx.app.error("ControllerSystem", "Invalid loot type in chest: " + lootType);
+                }
+            }
+            return;
         }
 
         if (closestNpc != null) {

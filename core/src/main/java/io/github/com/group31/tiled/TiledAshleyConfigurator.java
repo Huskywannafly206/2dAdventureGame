@@ -46,6 +46,7 @@ import io.github.com.group31.component.Move;
 import io.github.com.group31.component.Npc;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Door;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
@@ -124,6 +125,7 @@ public class TiledAshleyConfigurator {
                 rect.getX(), rect.getY(), 0,
                 rect.getWidth(), rect.getHeight(),
                 1f, 1f,
+                0f,
                 0,
                 entity);
             addEntityPhysic(
@@ -177,6 +179,7 @@ public class TiledAshleyConfigurator {
             tileMapObject.getX(), tileMapObject.getY(), z,
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
+            -tileMapObject.getRotation(), // LibGDX RenderSystem rotation is CCW, Tiled is CW
             sortOffsetY,
             entity);
 
@@ -333,6 +336,8 @@ public class TiledAshleyConfigurator {
         addEntityAttack(tile, entity);
         addEntityAi(tile, entity);
         addEntityExperience(tile, entity);
+        addEntityDoor(tile, tileMapObject, entity);
+        addEntityChest(tile, tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         Color graphicColor = Color.WHITE.cpy();
@@ -347,6 +352,95 @@ public class TiledAshleyConfigurator {
         entity.add(new Tiled(tileMapObject, localTileId));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityDoor(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"door".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        float openRotation = tileMapObject.getProperties().get("openRotation", 0f, Float.class);
+        if (openRotation == 0f) {
+            openRotation = tile.getProperties().get("openRotation", 0f, Float.class);
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    entity.add(new Door(getTextureRegion(tile), getTextureRegion(openTile), openRotation));
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door tile missing openTileId property!");
+        }
+    }
+
+    private void addEntityChest(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"chest".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        String lootType = tileMapObject.getProperties().get("lootType", "COIN", String.class);
+        if (lootType.equals("COIN")) {
+            lootType = tile.getProperties().get("lootType", "COIN", String.class);
+        }
+
+        float trapDamage = 2f;
+        Object trapDmgObj = tileMapObject.getProperties().get("trapDamage");
+        if (trapDmgObj == null) trapDmgObj = tile.getProperties().get("trapDamage");
+        if (trapDmgObj != null) {
+            try { trapDamage = Float.parseFloat(trapDmgObj.toString()); } catch (Exception ignored) {}
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage));
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest tile missing openTileId property!");
+        }
     }
 
     private BodyType getObjectBodyType(TiledMapTile tile) {
@@ -830,6 +924,7 @@ public class TiledAshleyConfigurator {
         float x, float y, int z,
         float w, float h,
         float scaleX, float scaleY,
+        float rotation,
         float sortOffsetY,
         Entity entity
     ) {
@@ -840,7 +935,7 @@ public class TiledAshleyConfigurator {
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, z, size, scaling, 0f, sortOffsetY));
+        entity.add(new Transform(position, z, size, scaling, rotation, sortOffsetY));
     }
 
     /**
@@ -889,7 +984,7 @@ public class TiledAshleyConfigurator {
         float pixelY = worldY / GdxGame.UNIT_SCALE - tileH * 0.5f;
 
         Entity entity = this.engine.createEntity();
-        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, sortOffsetY, entity);
+        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, 0f, sortOffsetY, entity);
 
         BodyType bodyType = getObjectBodyType(tile);
         addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);

@@ -18,6 +18,7 @@ public class SaveData {
     public int questStage;
     public java.util.List<String> unlockedWeapons;
     public int currentWeaponIndex;
+    public java.util.Map<String, Long> respawnTimes = new java.util.HashMap<>();
 
     public SaveData() {
         // Default constructor for libGDX JSON

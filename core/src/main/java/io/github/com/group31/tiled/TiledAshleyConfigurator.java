@@ -140,6 +140,30 @@ public class TiledAshleyConfigurator {
             sortOffsetY,
             entity);
 
+        Float respawnTimeObj = tileMapObject.getProperties().get("respawnTime", Float.class);
+        if (respawnTimeObj == null) {
+            Object prop = tile.getProperties().get("respawnTime");
+            if (prop != null) {
+                try { respawnTimeObj = Float.parseFloat(prop.toString()); } catch(Exception ignored){}
+            }
+        }
+        
+        io.github.com.group31.asset.MapAsset mapAsset = currentMap.getProperties().get("mapAsset", io.github.com.group31.asset.MapAsset.class);
+        String mapName = mapAsset != null ? mapAsset.name() : "UNKNOWN";
+        String uniqueId = mapName + "_" + tileMapObject.getId();
+        
+        float respawnTime = respawnTimeObj != null ? respawnTimeObj : -1f;
+        entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));
+        
+        boolean isRespawning = io.github.com.group31.save.RespawnState.getInstance().isRespawning(uniqueId);
+        
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) classType = tile.getProperties().get("type", "", String.class);
+        
+        if (isRespawning && !"chest".equals(classType)) {
+            return; // Entity is still dead/looted, do not spawn
+        }
+
         // ── Rẽ nhánh riêng cho Item tile (không cần Fsm / Facing / Move / AI) ──
         String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
         if (itemTypeStr != null && !itemTypeStr.isBlank()) {
@@ -301,7 +325,19 @@ public class TiledAshleyConfigurator {
             if (tileset != null) {
                 TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
                 if (openTile != null) {
-                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage));
+                    io.github.com.group31.component.Chest chest = new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage);
+                    io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+                    if (respawnable != null && io.github.com.group31.save.RespawnState.getInstance().isRespawning(respawnable.getEntityId())) {
+                        chest.setOpen(true);
+                    }
+                    entity.add(chest);
+                    
+                    if (chest.isOpen()) {
+                        io.github.com.group31.component.Graphic graphic = entity.getComponent(io.github.com.group31.component.Graphic.class);
+                        if (graphic != null) {
+                            graphic.setRegion(chest.getOpenRegion());
+                        }
+                    }
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
                 }

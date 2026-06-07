@@ -153,11 +153,14 @@ public class GameScreen extends ScreenAdapter {
         SaveData data = null;
         if(saveService != null && saveService.hasSaveFile()){
             data = saveService.load();
-            if(data != null && data.mapName != null){
-                try{
-                    startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
-                } catch(IllegalArgumentException e){
-                    startMapAsset = MapAsset.ICEMAP1;
+            if(data != null) {
+                io.github.com.group31.save.RespawnState.getInstance().setEntityRespawnTimes(data.respawnTimes);
+                if (data.mapName != null){
+                    try{
+                        startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
+                    } catch(IllegalArgumentException e){
+                        startMapAsset = MapAsset.ICEMAP1;
+                    }
                 }
             }
         }
@@ -310,6 +313,7 @@ public class GameScreen extends ScreenAdapter {
                         data.currentWeaponIndex = cs.getCurrentIndex();
                     }
 
+                    data.respawnTimes = io.github.com.group31.save.RespawnState.getInstance().getEntityRespawnTimes();
                     saveService.save(data);
                 }
             }

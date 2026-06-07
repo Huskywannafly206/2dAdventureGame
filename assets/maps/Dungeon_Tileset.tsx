@@ -106,4 +106,28 @@
    <object id="2" x="8.625" y="0" width="7.375" height="16.125"/>
   </objectgroup>
  </tile>
+ <tile id="36">
+  <properties>
+   <property name="openTileId" type="int" value="47"/>
+   <property name="type" value="door"/>
+  </properties>
+ </tile>
+ <tile id="37">
+  <properties>
+   <property name="openTileId" type="int" value="48"/>
+   <property name="type" value="door"/>
+  </properties>
+ </tile>
+ <tile id="66">
+  <properties>
+   <property name="openTileId" type="int" value="47"/>
+   <property name="type" value="door"/>
+  </properties>
+ </tile>
+ <tile id="67">
+  <properties>
+   <property name="openTileId" type="int" value="48"/>
+   <property name="type" value="door"/>
+  </properties>
+ </tile>
 </tileset>

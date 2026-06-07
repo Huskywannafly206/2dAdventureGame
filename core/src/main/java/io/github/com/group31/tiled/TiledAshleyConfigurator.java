@@ -280,6 +280,13 @@ public class TiledAshleyConfigurator {
             lootType = tile.getProperties().get("lootType", "COIN", String.class);
         }
 
+        float trapDamage = 2f;
+        Object trapDmgObj = tileMapObject.getProperties().get("trapDamage");
+        if (trapDmgObj == null) trapDmgObj = tile.getProperties().get("trapDamage");
+        if (trapDmgObj != null) {
+            try { trapDamage = Float.parseFloat(trapDmgObj.toString()); } catch (Exception ignored) {}
+        }
+
         if (openTileLocalId != -1) {
             com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
             int firstGid = -1;
@@ -294,7 +301,7 @@ public class TiledAshleyConfigurator {
             if (tileset != null) {
                 TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
                 if (openTile != null) {
-                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType));
+                    entity.add(new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage));
                 } else {
                     com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
                 }

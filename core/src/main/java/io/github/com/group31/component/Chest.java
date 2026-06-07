@@ -11,12 +11,14 @@ public class Chest implements Component {
     private final TextureRegion openRegion;
     private final TextureRegion closedRegion;
     private final String lootType;
+    private final float trapDamage;
 
-    public Chest(TextureRegion closedRegion, TextureRegion openRegion, String lootType) {
+    public Chest(TextureRegion closedRegion, TextureRegion openRegion, String lootType, float trapDamage) {
         this.isOpen = false;
         this.closedRegion = closedRegion;
         this.openRegion = openRegion;
         this.lootType = lootType;
+        this.trapDamage = trapDamage;
     }
 
     public boolean isOpen() {
@@ -37,5 +39,9 @@ public class Chest implements Component {
 
     public String getLootType() {
         return lootType;
+    }
+
+    public float getTrapDamage() {
+        return trapDamage;
     }
 }

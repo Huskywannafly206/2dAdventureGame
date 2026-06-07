@@ -478,13 +478,14 @@ public class ControllerSystem extends IteratingSystem {
                 }
             } else if ("EXPLOSION".equalsIgnoreCase(lootType) || "BOMB".equalsIgnoreCase(lootType) || "TRAP".equalsIgnoreCase(lootType)) {
                 audioService.playSound(SoundAsset.TRAP);
-                viewModel.showFloatingText("[RED]It's a trap! -2 HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                float dmg = chest.getTrapDamage();
+                viewModel.showFloatingText("[RED]It's a trap! -" + (int)dmg + " HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
                 
                 Damaged currentDamage = Damaged.MAPPER.get(player);
                 if (currentDamage != null) {
-                    currentDamage.addDamage(2f);
+                    currentDamage.addDamage(dmg);
                 } else {
-                    player.add(new Damaged(2f, closestChest));
+                    player.add(new Damaged(dmg, closestChest));
                 }
             } else {
                 try {

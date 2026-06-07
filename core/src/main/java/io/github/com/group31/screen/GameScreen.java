@@ -36,6 +36,7 @@ import io.github.com.group31.system.CameraSystem;
 import io.github.com.group31.system.ControllerSystem;
 import io.github.com.group31.system.DamagedSystem;
 import io.github.com.group31.system.DeadSystem;
+import io.github.com.group31.system.DoorSystem;
 import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
 import io.github.com.group31.system.ItemSystem;
@@ -98,6 +99,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
+        this.engine.addSystem(new DoorSystem());
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
         this.engine.addSystem(new LifeSystem(this.viewModel));
         this.engine.addSystem(new DeadSystem(this.viewModel));

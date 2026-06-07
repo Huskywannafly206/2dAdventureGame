@@ -45,6 +45,7 @@ import io.github.com.group31.component.Move;
 import io.github.com.group31.component.Npc;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Door;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
@@ -201,6 +202,7 @@ public class TiledAshleyConfigurator {
         addEntityAttack(tile, entity);
         addEntityAi(tile, entity);
         addEntityExperience(tile, entity);
+        addEntityDoor(tile, tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         Color graphicColor = Color.WHITE.cpy();
@@ -215,6 +217,42 @@ public class TiledAshleyConfigurator {
         entity.add(new Tiled(tileMapObject, localTileId));
 
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityDoor(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"door".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    entity.add(new Door(getTextureRegion(openTile)));
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door tile missing openTileId property!");
+        }
     }
 
     private BodyType getObjectBodyType(TiledMapTile tile) {

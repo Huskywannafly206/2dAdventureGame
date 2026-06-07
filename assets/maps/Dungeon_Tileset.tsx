@@ -106,28 +106,4 @@
    <object id="2" x="8.625" y="0" width="7.375" height="16.125"/>
   </objectgroup>
  </tile>
- <tile id="36">
-  <animation>
-   <frame tileid="36" duration="1000"/>
-   <frame tileid="47" duration="1000"/>
-  </animation>
- </tile>
- <tile id="37">
-  <animation>
-   <frame tileid="37" duration="1000"/>
-   <frame tileid="48" duration="1000"/>
-  </animation>
- </tile>
- <tile id="66">
-  <animation>
-   <frame tileid="66" duration="1000"/>
-   <frame tileid="47" duration="1000"/>
-  </animation>
- </tile>
- <tile id="67">
-  <animation>
-   <frame tileid="67" duration="1000"/>
-   <frame tileid="48" duration="1000"/>
-  </animation>
- </tile>
 </tileset>

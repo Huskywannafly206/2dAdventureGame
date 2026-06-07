@@ -372,6 +372,7 @@
  <tile id="22" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody" />
+   <property name="itemType" value="SILVER_KEY" />
    <property name="npcName" value="Silver Key" />
   </properties>
   <image source="objects/silver_key.png" width="16" height="16" />

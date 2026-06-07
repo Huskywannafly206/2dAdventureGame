@@ -138,6 +138,16 @@ public class DialogueBox extends Table implements Disposable {
         show(npcName, text, null);
     }
 
+    public TypingLabel getDialogueLabel() {
+        return dialogueLabel;
+    }
+
+    public void skipToTheEnd() {
+        if (dialogueLabel != null) {
+            dialogueLabel.skipToTheEnd();
+        }
+    }
+
     @Override
     public void dispose() {
         dialogBgTexture.dispose();

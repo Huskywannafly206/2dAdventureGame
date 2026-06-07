@@ -87,6 +87,11 @@ public class GameView extends View<GameViewModel> implements Disposable {
             }
         });
         viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
+        viewModel.onPropertyChange(GameViewModel.SKIP_DIALOGUE_TYPING, Boolean.class, skip -> {
+            if (skip != null && skip && dialogueBox != null) {
+                dialogueBox.skipToTheEnd();
+            }
+        });
         viewModel.onPropertyChange(GameViewModel.WEAPON_CHANGED, String.class, this::updateWeaponLabel);
         viewModel.onPropertyChange(GameViewModel.QUEST_CHANGED, String[].class, questInfo -> {
             if (menuContainer != null && menuContainer.isVisible()) {
@@ -115,6 +120,14 @@ public class GameView extends View<GameViewModel> implements Disposable {
             String facesetPath = (data.length > 2 && !data[2].isBlank()) ? data[2] : null;
             Texture faceset = loadFaceset(facesetPath);
             dialogueBox.show(data[0], data[1], faceset);
+            if (dialogueBox.getDialogueLabel() != null) {
+                dialogueBox.getDialogueLabel().setTypingListener(new com.github.tommyettinger.textra.TypingAdapter() {
+                    @Override
+                    public void end() {
+                        viewModel.setDialogueTyping(false);
+                    }
+                });
+            }
         } else {
             dialogueBox.remove();
         }
@@ -378,6 +391,12 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (viewModel.getSilverKeys() > 0) {
                 items.add(new InvItem(atlas.findRegion("silver_key/silver_key"), viewModel.getSilverKeys()));
             }
+            if (viewModel.getSoothingHerbs() > 0) {
+                items.add(new InvItem(atlas.findRegion("soothing_herb/soothing_herb"), viewModel.getSoothingHerbs()));
+            }
+            if (viewModel.getJungleMapKeys() > 0) {
+                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys()));
+            }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
                     items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));
@@ -385,6 +404,8 @@ public class GameView extends View<GameViewModel> implements Disposable {
                     items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1));
                 } else if ("MAGIC_WAND".equalsIgnoreCase(wName)) {
                     items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1));
+                } else if ("RUSTY_SWORD".equalsIgnoreCase(wName)) {
+                    items.add(new InvItem(atlas.findRegion("weapon_rusty_sword/weapon_rusty_sword"), 1));
                 }
             }
         }

@@ -19,10 +19,13 @@ public class Item implements Component {
         KEY,
         GOLD_KEY,
         SILVER_KEY,
+        SOOTHING_HERB,
         // Vũ khí nhặt được — mở khóa vũ khí tương ứng trong CombatState
         WEAPON_SWORD,
         WEAPON_BOW,
-        WEAPON_MAGIC_WAND
+        WEAPON_MAGIC_WAND,
+        WEAPON_RUSTY_SWORD,
+        JUNGLE_MAP_KEY
     }
 
     private final Type type;

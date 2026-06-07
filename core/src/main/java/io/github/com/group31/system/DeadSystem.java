@@ -69,6 +69,9 @@ public class DeadSystem extends IteratingSystem {
                     removeStoneBlockGates();
                 }
             }
+            if (tiled != null && tiled.getTileId() == 9) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.onSlimeDefeated();
+            }
 
             getEngine().removeEntity(entity);
         }

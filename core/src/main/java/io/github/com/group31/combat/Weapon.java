@@ -21,6 +21,13 @@ public enum Weapon {
         "weapon_sword/sprite_in_hand",
         null
     ),
+    RUSTY_SWORD(
+        "Kiếm gỉ sét", Style.MELEE,
+        1.5f, 0.45f,
+        "weapon_rusty_sword/weapon_rusty_sword",
+        "weapon_rusty_sword/sprite_in_hand",
+        null
+    ),
 
     // -- Đánh xa (Ranged) --
     BOW(

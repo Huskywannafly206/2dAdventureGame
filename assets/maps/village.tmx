@@ -76,18 +76,6 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="82" name="monk" gid="2467" x="761.333" y="120" width="32" height="32">
-   <properties>
-    <property name="dialogue" value="[ITEM]Hello! I am a fighter.|[DEAD]I am so tired...|[IDLE]Let's go train!"/>
-    <property name="faceset" value="ui/npc_faceset/Monk_faceset.png"/>
-    <property name="npcName" value="Monk"/>
-   </properties>
-  </object>
-  <object id="83" gid="2466" x="651" y="116.5" width="32" height="32">
-   <properties>
-    <property name="npcName" value="MinhBeo"/>
-   </properties>
-  </object>
   <object id="96" gid="2486" x="431.25" y="589.5" width="16" height="16"/>
   <object id="97" gid="2486" x="480.333" y="508" width="16" height="16"/>
   <object id="98" gid="2486" x="766" y="580.5" width="16" height="16"/>

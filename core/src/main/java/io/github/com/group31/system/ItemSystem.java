@@ -114,6 +114,11 @@ public class ItemSystem extends IteratingSystem {
             );
         }
 
+        io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+        if (respawnable != null) {
+            io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
+        }
+
         toRemove.add(entity);
     }
 

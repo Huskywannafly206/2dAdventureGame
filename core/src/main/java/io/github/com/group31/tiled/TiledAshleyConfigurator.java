@@ -228,14 +228,18 @@ public class TiledAshleyConfigurator {
         }
         if (!"door".equals(classType)) return;
 
-        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
-        if (openTileLocalId == -1) {
-            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        int openTileLocalId = -1;
+        Object openTileIdObj = tileMapObject.getProperties().get("openTileId");
+        if (openTileIdObj == null) openTileIdObj = tile.getProperties().get("openTileId");
+        if (openTileIdObj != null) {
+            try { openTileLocalId = (int)Float.parseFloat(openTileIdObj.toString()); } catch (Exception ignored) {}
         }
 
-        float openRotation = tileMapObject.getProperties().get("openRotation", 0f, Float.class);
-        if (openRotation == 0f) {
-            openRotation = tile.getProperties().get("openRotation", 0f, Float.class);
+        float openRotation = 0f;
+        Object openRotObj = tileMapObject.getProperties().get("openRotation");
+        if (openRotObj == null) openRotObj = tile.getProperties().get("openRotation");
+        if (openRotObj != null) {
+            try { openRotation = Float.parseFloat(openRotObj.toString()); } catch (Exception ignored) {}
         }
 
         if (openTileLocalId != -1) {

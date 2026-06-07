@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="16">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="25">
  <tileset firstgid="1" source="fields.tsx"/>
  <tileset firstgid="15" source="Dungeon_Tileset.tsx"/>
  <tileset firstgid="115" source="TilesetHouse.tsx"/>
@@ -85,10 +85,10 @@
 0,0,167,168,169,170,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,200,201,202,203,0,0,0,0,0,2147484675,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,532,565,0,598,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1027,0,0,0,0,0,0,
-0,0,562,529,0,561,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,63,0,0,0,0,0,0,0,
-0,0,1027,0,0,0,0,0,0,0,0,0,72,0,0,0,0,0,0,0,0,0,73,0,0,0,0,0,0,0,
+0,0,562,529,0,561,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1027,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1027,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,1074,81,82,1074,0,0,0,0,0,1114,1114,1114,1114,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,1074,0,0,1074,0,0,0,0,0,1114,1114,1114,1114,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,0,0,110,0,0,0,0,0,1114,1114,98,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1114,1114,1114,1114,1114,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,106,0,0,98,0,0,0,2147483754,0,0,0,0,0,0,0,0,0,0,
@@ -131,6 +131,36 @@
   <object id="11" gid="1139" x="389.5" y="110.25" width="32" height="32"/>
   <object id="12" gid="1150" x="412" y="128.333" width="16" height="16"/>
   <object id="13" gid="1149" x="427" y="82" width="16" height="16"/>
+  <object id="19" gid="82" x="256.25" y="224.5" width="16" height="16"/>
+  <object id="20" gid="81" x="239.75" y="224.5" width="16" height="16"/>
+  <object id="21" gid="62" x="351.25" y="175.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" value="90"/>
+    <property name="openTileId" value="48"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="22" gid="72" x="351.25" y="192.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" value="-90"/>
+    <property name="openTileId" value="47"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="23" gid="63" x="192.75" y="175.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" value="-90"/>
+    <property name="openTileId" value="58"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="24" gid="73" x="192.75" y="192.5" width="16" height="16">
+   <properties>
+    <property name="openRotation" value="90"/>
+    <property name="openTileId" value="57"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="11" name="fore1" width="30" height="20">
   <data encoding="csv">

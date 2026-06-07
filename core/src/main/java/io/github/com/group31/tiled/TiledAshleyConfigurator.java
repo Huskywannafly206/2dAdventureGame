@@ -64,6 +64,7 @@ public class TiledAshleyConfigurator {
     private final Vector2 tmpVec2;
     private final AssetService assetService;
     private TiledMap currentMap;
+    private final java.util.Map<String, TiledMapTileMapObject> currentMapObjects = new java.util.HashMap<>();
 
     public TiledAshleyConfigurator(Engine engine, World physicWorld, AssetService assetService) {
         this.engine = engine;
@@ -71,6 +72,12 @@ public class TiledAshleyConfigurator {
         this.tmpMapObjects = new MapObjects();
         this.tmpVec2 = new Vector2();
         this.assetService = assetService;
+        this.coin2SlimePositions.clear();
+        this.chest2SkullPositions.clear();
+    }
+
+    public java.util.Map<String, TiledMapTileMapObject> getCurrentMapObjects() {
+        return currentMapObjects;
     }
 
     private final java.util.List<Vector2> coin2SlimePositions = new java.util.ArrayList<>();
@@ -107,6 +114,7 @@ public class TiledAshleyConfigurator {
         this.currentMap = map;
         this.coin2SlimePositions.clear();
         this.chest2SkullPositions.clear();
+        this.currentMapObjects.clear();
     }
 
     public void onLoadTile(TiledMapTile tile, float x, float y) {
@@ -240,6 +248,8 @@ public class TiledAshleyConfigurator {
         String mapName = mapAsset != null ? mapAsset.name() : "UNKNOWN";
         Integer objId = tileMapObject.getProperties().get("id", Integer.class);
         String uniqueId = mapName + "_" + (objId != null ? objId : tileMapObject.hashCode());
+        
+        currentMapObjects.put(uniqueId, tileMapObject);
         
         float respawnTime = respawnTimeObj != null ? respawnTimeObj : -1f;
         entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));

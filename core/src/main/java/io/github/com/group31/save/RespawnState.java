@@ -51,4 +51,8 @@ public class RespawnState {
         }
         return TimeUtils.millis() < respawnTimeMillis;
     }
+
+    public void clearRespawn(String entityId) {
+        entityRespawnTimes.remove(entityId);
+    }
 }

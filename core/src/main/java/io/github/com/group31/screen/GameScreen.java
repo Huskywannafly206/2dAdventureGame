@@ -47,6 +47,7 @@ import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
 import io.github.com.group31.system.PhysicSystem;
 import io.github.com.group31.system.ProjectileSystem;
+import io.github.com.group31.system.RespawnSystem;
 import io.github.com.group31.system.RenderSystem;
 import io.github.com.group31.system.SpawnSystem;
 import io.github.com.group31.system.TriggerSystem;
@@ -115,6 +116,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), weaponHandSystem));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
         this.engine.addSystem(new ProjectileSystem());
+        this.engine.addSystem(new RespawnSystem(this.tiledAshleyConfigurator, this.audioService));
         this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,
             physicWorld, game.getAssetService(), tiledAshleyConfigurator));
     }

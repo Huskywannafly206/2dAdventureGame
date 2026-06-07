@@ -856,6 +856,7 @@ public class TiledAshleyConfigurator {
             case JUNGLE_MAP_KEY -> SoundAsset.PICKUP;
             case BOMB          -> SoundAsset.TRAP;
             case SILVER_CUP    -> SoundAsset.PICKUP;
+            case HEART_CONTAINER -> SoundAsset.HEAL;
         };
 
         entity.add(new Item(type, 1f, sound));

@@ -263,10 +263,10 @@
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
- <tile id="18" type="Object">
+ <tile id="18" type="item">
   <properties>
    <property name="bodyType" value="StaticBody"/>
-   <property name="npcName" value="Heart Container"/>
+   <property name="itemType" value="HEART_CONTAINER"/>
   </properties>
   <image source="objects/heart_container.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">

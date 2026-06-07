@@ -592,21 +592,7 @@ public class ControllerSystem extends IteratingSystem {
                 return;
             }
 
-            if (npc != null && "Heart Container".equalsIgnoreCase(npc.getName())) {
-                audioService.playSound(SoundAsset.HEAL);
-                Life life = Life.MAPPER.get(player);
-                if (life != null) {
-                    life.setMaxLife(life.getMaxLife() + 4);
-                    life.addLife(4);
-                    viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
-                }
-                viewModel.showFloatingText("[RED]+4 Max HP![]", 
-                    playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
 
-
-                getEngine().removeEntity(closestNpc);
-                return;
-            }
 
             if (npc != null && ("Gold Key".equalsIgnoreCase(npc.getName()) || "Silver Key".equalsIgnoreCase(npc.getName()))) {
                 audioService.playSound(SoundAsset.PICKUP);

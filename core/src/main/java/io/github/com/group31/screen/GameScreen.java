@@ -258,12 +258,24 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private long lastCheckpointTime = 0;
+    private long lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
+    private com.badlogic.gdx.math.Rectangle lastCheckpointRect = null;
 
     private void checkpointTrigger(Trigger trigger, Entity player) {
         if (com.badlogic.gdx.utils.TimeUtils.timeSinceMillis(lastCheckpointTime) < 5000) {
             return; // 5-second cooldown on checkpoints
         }
+
+        com.badlogic.gdx.math.Rectangle currentRect = null;
+        if (trigger.getMapObject() instanceof com.badlogic.gdx.maps.objects.RectangleMapObject rectObj) {
+            currentRect = rectObj.getRectangle();
+        }
+
+        if (lastCheckpointRect != null && currentRect != null && lastCheckpointRect.equals(currentRect)) {
+            return; // Already at this checkpoint
+        }
+
+        lastCheckpointRect = currentRect;
         lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
 
         saveGame(true);

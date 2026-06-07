@@ -188,9 +188,10 @@ public class QuestManager {
         if ("truong_lang".equalsIgnoreCase(npc.getName())) {
             if (currentStage == 0) {
                 npc.setDialogue(new String[]{
-                    "[IDLE]Ah, you're finally here... Look at them, this strange disease is consuming our village day by day. The only antidote lies deep within the Dark Dungeon, but that place has been sealed away for centuries.",
-                    "[IDLE]Ah, you're finally here... Look at them, this strange disease is consuming our village day by day. The only antidote lies deep within the Dark Dungeon, but that place has been sealed away for centuries.",
-                    "[IDLE]Before you leave, there is a small favor I must ask. Please help me gather 5 Soothing Herbs from the south so I can brew some medicine to help the sick hold on."
+                    "[IDLE]Ah, you're finally here... Look at them, this strange disease is consuming our village day by day.",
+                    "[IDLE]The only antidote lies deep within the Dark Dungeon, but that place has been sealed away for centuries.",
+                    "[IDLE]Before you leave, there is a small favor I must ask.",
+                    "[IDLE]Please help me gather 5 Soothing Herbs from the south so I can brew some medicine to help the sick hold on."
                 });
                 setStage(1);
                 if (viewModel != null) {

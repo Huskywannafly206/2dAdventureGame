@@ -537,11 +537,7 @@ public class TiledAshleyConfigurator {
                 float py = transform.getPosition().y;
                 
                 MapAsset asset = currentMap != null ? currentMap.getProperties().get("mapAsset", MapAsset.class) : null;
-                if (asset == MapAsset.VILLAGE) {
-                    spawnTestWeapon(Item.Type.WEAPON_SWORD, px + 1f, py, "weapon_sword/weapon_sword");
-                    spawnTestWeapon(Item.Type.WEAPON_BOW, px + 2f, py, "weapon_bow/weapon_bow");
-                    spawnTestWeapon(Item.Type.WEAPON_MAGIC_WAND, px + 3f, py, "weapon_magicWand/weapon_magicWand");
-                } else if (asset == MapAsset.VILLAGE_HOUSE) {
+                if (asset == MapAsset.VILLAGE_HOUSE) {
                     spawnPotion(px + 2f, py);
                 }
             }

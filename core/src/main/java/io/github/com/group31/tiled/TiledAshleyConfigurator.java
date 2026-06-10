@@ -639,8 +639,123 @@ public class TiledAshleyConfigurator {
         this.engine.addEntity(itemEntity);
     }
 
+    public Entity findNpcByName(String name) {
+        for (Entity entity : engine.getEntities()) {
+            Npc npc = Npc.MAPPER.get(entity);
+            if (npc != null && name.equalsIgnoreCase(npc.getName())) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public Entity findEntityByObjectId(int id) {
+        for (Entity entity : engine.getEntities()) {
+            Tiled tiled = Tiled.MAPPER.get(entity);
+            if (tiled != null && tiled.getId() == id) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
     public void spawnRustySword(float x, float y) {
         spawnTestWeapon(Item.Type.WEAPON_RUSTY_SWORD, x, y, "weapon_rusty_sword/weapon_rusty_sword");
+    }
+
+    /**
+     * Spawn một cái cần câu di truyền (HEIRLOOM_FISHING_ROD) tại (x, y).
+     * Được gọi bởi QuestManager khi Fisherman kích hoạt quest tìm cần câu.
+     */
+    public void spawnFishingRod(float x, float y) {
+        spawnQuestItem(Item.Type.HEIRLOOM_FISHING_ROD, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn Sacred Spring Water item (phần thưởng từ Fisherman) tại vị trí player.
+     */
+    public void spawnSacredSpringWater(float x, float y) {
+        spawnQuestItem(Item.Type.SACRED_SPRING_WATER, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn Frozen Heart item (từ Snow Sprite) tại (x, y).
+     */
+    public void spawnFrozenHeart(float x, float y) {
+        spawnQuestItem(Item.Type.FROZEN_HEART, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn một cục quặng Frost-Iron Ore tại (x, y).
+     */
+    public void spawnFrostOre(float x, float y) {
+        spawnQuestItem(Item.Type.FROST_IRON_ORE, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn một cụm 5 cục quặng Frost-Iron Ore rải rác quanh vị trí (centerX, centerY).
+     * Được gọi từ QuestManager khi Blacksmith kích hoạt quest stage 12.
+     */
+    public void spawnFrostOreCluster(float centerX, float centerY) {
+        float[][] offsets = {
+            { 0f,    0f  },
+            { 1.5f,  0.5f},
+            {-1.5f,  1f  },
+            { 0.5f, -1.5f},
+            {-0.5f,  2f  }
+        };
+        for (float[] offset : offsets) {
+            spawnQuestItem(Item.Type.FROST_IRON_ORE,
+                centerX + offset[0],
+                centerY + offset[1],
+                "jungle_map_key/jungle_map_key");
+        }
+    }
+
+
+    private void spawnQuestItem(Item.Type type, float x, float y, String atlasRegion) {
+        Entity itemEntity = this.engine.createEntity();
+
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion(atlasRegion);
+        if (region == null) {
+            // fallback: dùng region đầu tiên có trong atlas
+            region = atlas.findRegion("potion_health/potion_health");
+        }
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.CYAN.cpy()));
+        }
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+        itemEntity.add(new Item(type, 1f, SoundAsset.PICKUP));
+
+        this.engine.addEntity(itemEntity);
     }
 
     public void spawnJungleMapKey(float x, float y) {
@@ -857,6 +972,10 @@ public class TiledAshleyConfigurator {
             case BOMB          -> SoundAsset.TRAP;
             case SILVER_CUP    -> SoundAsset.PICKUP;
             case HEART_CONTAINER -> SoundAsset.HEAL;
+            case FROST_IRON_ORE -> SoundAsset.PICKUP;
+            case HEIRLOOM_FISHING_ROD -> SoundAsset.PICKUP;
+            case SACRED_SPRING_WATER -> SoundAsset.PICKUP;
+            case FROZEN_HEART -> SoundAsset.PICKUP;
         };
 
         entity.add(new Item(type, 1f, sound));

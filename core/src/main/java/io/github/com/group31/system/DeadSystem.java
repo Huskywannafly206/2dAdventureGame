@@ -11,6 +11,7 @@ import io.github.com.group31.component.Player;
 import io.github.com.group31.tiled.TiledAshleyConfigurator;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Tiled;
+import io.github.com.group31.component.Transform;
 import io.github.com.group31.ui.model.GameViewModel;
 
 /**
@@ -79,6 +80,15 @@ public class DeadSystem extends IteratingSystem {
             }
             if (tiled != null && tiled.getTileId() == 9) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.onSlimeDefeated();
+            }
+            if (tiled != null && tiled.getTileId() == 19) {
+                Transform transform = Transform.MAPPER.get(entity);
+                if (transform != null) {
+                    io.github.com.group31.quest.QuestManager.INSTANCE.onSnowSpriteDefeated(
+                        transform.getPosition().x,
+                        transform.getPosition().y
+                    );
+                }
             }
 
             io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);

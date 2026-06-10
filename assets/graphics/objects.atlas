@@ -3100,6 +3100,13 @@ size: 512, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+black_smith/idle_down
+  rotate: false
+  xy: 454, 278
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 fighter_white/walk_right
   rotate: false
   xy: 218, 190
@@ -3114,11 +3121,25 @@ fighter_white/walk_up
   orig: 32, 32
   offset: 0, 0
   index: 0
+fisher_man/ilde_down
+  rotate: false
+  xy: 354, 54
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
 forest_spirit/forest_spirit
   rotate: false
   xy: 362, 186
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+frost_iron_ore_block/frost_iron_ore_block
+  rotate: false
+  xy: 398, 223
+  size: 16, 15
+  orig: 16, 15
   offset: 0, 0
   index: -1
 gold_key/gold_key
@@ -3130,35 +3151,35 @@ gold_key/gold_key
   index: -1
 heart_container/heart_container
   rotate: false
-  xy: 382, 206
+  xy: 418, 242
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ice_map_key/ice_map_key
   rotate: false
-  xy: 382, 186
+  xy: 418, 222
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 jungle_map_key/jungle_map_key
   rotate: false
-  xy: 370, 86
+  xy: 318, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 laurel_leaf/laurel_leaf
   rotate: false
-  xy: 390, 86
+  xy: 338, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 monk/idle_down
   rotate: false
-  xy: 238, 26
+  xy: 310, 98
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -3683,42 +3704,42 @@ player/walk_up
   index: 3
 potion_health/potion_health
   rotate: false
-  xy: 406, 162
+  xy: 318, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shaman/idle_down
   rotate: false
-  xy: 382, 166
+  xy: 490, 314
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shaman/idle_left
   rotate: false
-  xy: 386, 126
+  xy: 474, 294
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shaman/idle_right
   rotate: false
-  xy: 258, 22
+  xy: 278, 22
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shaman/idle_up
   rotate: false
-  xy: 350, 106
+  xy: 294, 58
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 silver_key/silver_key
   rotate: false
-  xy: 406, 142
+  xy: 338, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -3991,231 +4012,231 @@ skull/dead_up
   index: 3
 skull/idle_down
   rotate: false
-  xy: 418, 242
+  xy: 218, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
-skull/idle_down
-  rotate: false
-  xy: 238, 6
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
 skull/idle_down
   rotate: false
   xy: 346, 134
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 1
+skull/idle_down
+  rotate: false
+  xy: 438, 218
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 2
 skull/idle_down
   rotate: false
-  xy: 386, 146
+  xy: 382, 183
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/idle_left
   rotate: false
-  xy: 438, 258
+  xy: 474, 274
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/idle_left
   rotate: false
-  xy: 474, 294
+  xy: 494, 254
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/idle_left
   rotate: false
-  xy: 494, 274
+  xy: 258, 42
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/idle_left
-  rotate: false
-  xy: 474, 254
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 3
-skull/idle_right
   rotate: false
   xy: 258, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 3
+skull/idle_right
+  rotate: false
+  xy: 330, 114
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 0
-skull/idle_right
-  rotate: false
-  xy: 278, 22
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
-skull/idle_right
-  rotate: false
-  xy: 330, 94
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 2
 skull/idle_right
   rotate: false
   xy: 402, 202
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 3
-skull/idle_up
-  rotate: false
-  xy: 370, 106
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 0
-skull/idle_up
-  rotate: false
-  xy: 294, 78
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
   index: 1
-skull/idle_up
+skull/idle_right
   rotate: false
-  xy: 422, 218
+  xy: 478, 234
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
+skull/idle_right
+  rotate: false
+  xy: 478, 214
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 skull/idle_up
   rotate: false
   xy: 314, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 0
+skull/idle_up
+  rotate: false
+  xy: 350, 94
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+skull/idle_up
+  rotate: false
+  xy: 422, 198
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+skull/idle_up
+  rotate: false
+  xy: 298, 18
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 3
 skull/walk_down
   rotate: false
-  xy: 334, 54
+  xy: 442, 194
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_down
   rotate: false
-  xy: 374, 66
+  xy: 482, 194
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_down
   rotate: false
-  xy: 318, 34
+  xy: 422, 158
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_down
   rotate: false
-  xy: 338, 34
+  xy: 482, 174
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_left
   rotate: false
-  xy: 426, 162
+  xy: 462, 154
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_left
   rotate: false
-  xy: 410, 122
+  xy: 366, 134
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_left
   rotate: false
-  xy: 462, 198
+  xy: 386, 123
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_left
   rotate: false
-  xy: 446, 158
+  xy: 370, 94
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_right
   rotate: false
-  xy: 466, 158
+  xy: 374, 54
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_right
   rotate: false
-  xy: 466, 138
+  xy: 390, 103
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_right
   rotate: false
-  xy: 394, 46
+  xy: 394, 63
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_right
   rotate: false
-  xy: 378, 26
+  xy: 398, 23
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 skull/walk_up
   rotate: false
-  xy: 358, 6
+  xy: 406, 138
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 skull/walk_up
   rotate: false
-  xy: 398, 6
+  xy: 410, 118
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 skull/walk_up
   rotate: false
-  xy: 414, 82
+  xy: 414, 78
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 skull/walk_up
   rotate: false
-  xy: 450, 118
+  xy: 418, 38
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 soothing_herb/soothing_herb
   rotate: false
-  xy: 298, 38
+  xy: 358, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4250,259 +4271,259 @@ spirit/dead_up
   index: 3
 spirit/idle_down
   rotate: false
-  xy: 454, 278
+  xy: 238, 26
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/idle_down
   rotate: false
-  xy: 274, 62
+  xy: 438, 258
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/idle_down
   rotate: false
-  xy: 366, 146
+  xy: 382, 203
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/idle_down
   rotate: false
-  xy: 366, 126
+  xy: 382, 163
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/idle_left
   rotate: false
-  xy: 438, 238
+  xy: 494, 274
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/idle_left
   rotate: false
-  xy: 474, 274
+  xy: 474, 254
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/idle_left
   rotate: false
-  xy: 494, 254
+  xy: 258, 22
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/idle_left
-  rotate: false
-  xy: 258, 42
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 3
-spirit/idle_right
   rotate: false
   xy: 278, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 3
+spirit/idle_right
+  rotate: false
+  xy: 330, 94
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 0
 spirit/idle_right
   rotate: false
-  xy: 330, 114
+  xy: 458, 234
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/idle_right
   rotate: false
-  xy: 402, 222
+  xy: 458, 214
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/idle_right
   rotate: false
-  xy: 402, 182
+  xy: 294, 78
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
-spirit/idle_up
-  rotate: false
-  xy: 390, 106
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 0
-spirit/idle_up
-  rotate: false
-  xy: 294, 58
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
-spirit/idle_up
-  rotate: false
-  xy: 442, 218
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 2
 spirit/idle_up
   rotate: false
   xy: 334, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 0
+spirit/idle_up
+  rotate: false
+  xy: 354, 74
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+spirit/idle_up
+  rotate: false
+  xy: 298, 38
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+spirit/idle_up
+  rotate: false
+  xy: 334, 54
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 3
 spirit/walk_down
   rotate: false
-  xy: 354, 66
+  xy: 462, 194
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_down
   rotate: false
-  xy: 394, 66
+  xy: 378, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_down
   rotate: false
-  xy: 318, 14
+  xy: 462, 174
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_down
   rotate: false
-  xy: 338, 14
+  xy: 442, 158
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_left
   rotate: false
-  xy: 426, 142
+  xy: 482, 154
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_left
   rotate: false
-  xy: 410, 102
+  xy: 386, 143
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_left
   rotate: false
-  xy: 446, 178
+  xy: 366, 114
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_left
   rotate: false
-  xy: 466, 178
+  xy: 374, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_right
   rotate: false
-  xy: 446, 138
+  xy: 378, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_right
   rotate: false
-  xy: 374, 46
+  xy: 394, 83
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_right
   rotate: false
-  xy: 358, 26
+  xy: 398, 43
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_right
   rotate: false
-  xy: 398, 26
+  xy: 398, 3
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 spirit/walk_up
   rotate: false
-  xy: 378, 6
+  xy: 426, 138
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spirit/walk_up
   rotate: false
-  xy: 430, 102
+  xy: 414, 98
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 spirit/walk_up
   rotate: false
-  xy: 414, 62
+  xy: 418, 58
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 spirit/walk_up
   rotate: false
-  xy: 450, 98
+  xy: 418, 18
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 stone_block/idle_down
   rotate: false
-  xy: 490, 314
+  xy: 238, 6
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 tho_san/tho_san
   rotate: false
-  xy: 298, 18
+  xy: 358, 14
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 trap/idle_down
   rotate: false
-  xy: 218, 6
+  xy: 274, 62
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 trap/idle_down
   rotate: false
-  xy: 310, 98
+  xy: 438, 238
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 truong_lang/truong_lang
   rotate: false
-  xy: 442, 198
+  xy: 422, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

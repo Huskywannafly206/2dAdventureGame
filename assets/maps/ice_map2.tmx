@@ -1,17 +1,17 @@
-<?xml version='1.0' encoding='utf-8'?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="14">
- <tileset firstgid="1" source="TilesetFloorB.tsx" />
- <tileset firstgid="78" source="TilesetWater.tsx" />
- <tileset firstgid="554" source="TilesetFloor.tsx" />
- <tileset firstgid="1126" source="TilesetHouse.tsx" />
- <tileset firstgid="1885" source="TilesetElement.tsx" />
- <tileset firstgid="2125" source="TilesetRelief.tsx" />
- <tileset firstgid="2365" source="TilesetNature.tsx" />
- <tileset firstgid="2869" source="TilesetReliefDetail.tsx" />
- <tileset firstgid="3013" source="tileset_camp.tsx" />
- <tileset firstgid="3220" source="TilesetField.tsx" />
- <tileset firstgid="3295" source="objects.tsx" />
- <tileset firstgid="3316" source="Combined.tsx" />
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="15">
+ <tileset firstgid="1" source="TilesetFloorB.tsx"/>
+ <tileset firstgid="78" source="TilesetWater.tsx"/>
+ <tileset firstgid="554" source="TilesetFloor.tsx"/>
+ <tileset firstgid="1126" source="TilesetHouse.tsx"/>
+ <tileset firstgid="1885" source="TilesetElement.tsx"/>
+ <tileset firstgid="2125" source="TilesetRelief.tsx"/>
+ <tileset firstgid="2365" source="TilesetNature.tsx"/>
+ <tileset firstgid="2869" source="TilesetReliefDetail.tsx"/>
+ <tileset firstgid="3013" source="tileset_camp.tsx"/>
+ <tileset firstgid="3220" source="TilesetField.tsx"/>
+ <tileset firstgid="3295" source="objects.tsx"/>
+ <tileset firstgid="3330" source="Combined.tsx"/>
  <layer id="7" name="floor1" width="30" height="20">
   <data encoding="csv">
 896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,896,
@@ -63,16 +63,16 @@
  <objectgroup id="9" name="trigger">
   <object id="1" name="portal_trigger" x="416.666" y="307.334" width="31.3333" height="10">
    <properties>
-    <property name="targetMap" value="ICEMAP1" />
-    <property name="targetX" type="float" value="423" />
-    <property name="targetY" type="float" value="32.666666667" />
+    <property name="targetMap" value="ICEMAP1"/>
+    <property name="targetX" type="float" value="423"/>
+    <property name="targetY" type="float" value="32.666666667"/>
    </properties>
   </object>
   <object id="6" name="portal_trigger" x="257.166" y="5.6667" width="46.6667" height="6">
    <properties>
-    <property name="targetMap" value="ICEMAP3" />
-    <property name="targetX" type="float" value="249.6" />
-    <property name="targetY" type="float" value="302.652631579" />
+    <property name="targetMap" value="ICEMAP3"/>
+    <property name="targetX" type="float" value="249.6"/>
+    <property name="targetY" type="float" value="302.652631579"/>
    </properties>
   </object>
  </objectgroup>
@@ -97,7 +97,7 @@
 0,0,0,2583,2584,0,1794,1794,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,2421,2422,2423,2424,0,0,0,0,0,0,0,0,2686,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,2445,2446,2447,2448,0,0,0,0,0,0,0,0,2686,0,2886,145,117,145,117,145,145,2886,0,0,0,1763,1765,0,0,
-0,2469,2470,2471,2472,0,0,0,0,0,0,0,0,0,0,2898,3327,3327,3327,3327,3327,3327,2898,0,0,0,1796,1798,0,0
+0,2469,2470,2471,2472,0,0,0,0,0,0,0,0,0,0,2898,3341,3341,3341,3341,3341,3341,2898,0,0,0,1796,1798,0,0
 </data>
  </layer>
  <layer id="5" name="back2" width="30" height="20">
@@ -109,7 +109,7 @@
 0,0,0,0,0,0,0,0,0,0,1928,1929,1929,1929,1929,1930,0,0,0,0,0,0,2399,2400,0,0,0,0,1789,1790,
 0,0,0,0,0,0,0,0,0,0,1944,1945,1945,1945,1945,1946,0,0,0,0,0,0,2375,2376,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2399,2400,0,0,0,0,0,0,
-0,0,0,0,0,0,1937,1938,2147485604,2147485603,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1937,1938,2147485598,2147485597,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 1901,0,0,0,0,0,1953,1954,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,2399,2400,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -151,8 +151,14 @@
  <objectgroup id="10" name="objects">
   <object id="4" name="Player" gid="3296" x="417.516" y="278.189" width="32" height="32">
    <properties>
-    <property name="camFollow" type="bool" value="true" />
-    <property name="controller" type="bool" value="true" />
+    <property name="camFollow" type="bool" value="true"/>
+    <property name="controller" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="14" name="fisher_man" gid="3337" x="208.246" y="206.699" width="16" height="16">
+   <properties>
+    <property name="npcName" value="fisher_man"/>
+    <property name="dialogue" value="Hmm? You don't look like you're from around here, kid."/>
    </properties>
   </object>
  </objectgroup>
@@ -164,7 +170,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,2399,2400,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,2147485588,2147485587,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,2147485582,2147485581,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,1935,1936,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,2373,2374,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -22,6 +22,12 @@ public class SaveData {
     public int currentWeaponIndex;
     public java.util.Map<String, Long> respawnTimes = new java.util.HashMap<>();
 
+    // Ice World quest tracking fields
+    public int frostOreCount;
+    public boolean hasSacredSpringWater;
+    public boolean hasFrozenHeart;
+    public boolean fishingRodSpawned;
+
     public SaveData() {
         // Default constructor for libGDX JSON
     }

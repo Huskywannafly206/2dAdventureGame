@@ -689,7 +689,46 @@ public class ControllerSystem extends IteratingSystem {
             animation2D.setType(animType);
         }
 
-        viewModel.showDialogue(npc.getName(), cleanLine, npc.getFacesetPath());
+        // Phân tích người nói từ tiền tố (ví dụ "Player: ..." hoặc "Youth: ...")
+        String displayName = npc.getName();
+        String facesetPath = npc.getFacesetPath();
+
+        if (cleanLine.startsWith("Player:") || cleanLine.startsWith("Player :")) {
+            displayName = "Player";
+            facesetPath = "ui/player_faceset.png";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Youth:") || cleanLine.startsWith("Youth :")) {
+            displayName = "Player";
+            facesetPath = "ui/player_faceset.png";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Blacksmith:") || cleanLine.startsWith("Blacksmith :")) {
+            displayName = "Blacksmith";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Fisherman:") || cleanLine.startsWith("Fisherman :")) {
+            displayName = "Fisherman";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        }
+
+        // Normalize display name for UI
+        if ("black_smith".equalsIgnoreCase(displayName)) {
+            displayName = "Blacksmith";
+        } else if ("fisher_man".equalsIgnoreCase(displayName)) {
+            displayName = "Fisherman";
+        } else if ("tho_san".equalsIgnoreCase(displayName)) {
+            displayName = "Thợ Săn";
+        } else if ("truong_lang".equalsIgnoreCase(displayName)) {
+            displayName = "Trưởng Làng";
+        } else if ("monk".equalsIgnoreCase(displayName)) {
+            displayName = "Monk";
+        } else if ("old man".equalsIgnoreCase(displayName)) {
+            displayName = "Old Man";
+        }
+
+        viewModel.showDialogue(displayName, cleanLine, facesetPath);
     }
 
     // =========================================================================

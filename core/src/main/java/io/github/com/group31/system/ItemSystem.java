@@ -97,6 +97,14 @@ public class ItemSystem extends IteratingSystem {
                     float y = t.getPosition().y + t.getSize().y;
                     viewModel.showFloatingText("[GOLD]Nhan: Ban do da de![]", x, y);
                 }
+            } else if (type == Item.Type.FROST_IRON_ORE) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFrostOrePickup(collector);
+            } else if (type == Item.Type.HEIRLOOM_FISHING_ROD) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFishingRodPickup(collector);
+            } else if (type == Item.Type.SACRED_SPRING_WATER) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkSacredWaterPickup(collector);
+            } else if (type == Item.Type.FROZEN_HEART) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFrozenHeartPickup(collector);
             }
         }
 

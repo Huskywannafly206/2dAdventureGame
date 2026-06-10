@@ -28,7 +28,12 @@ public class Item implements Component {
         JUNGLE_MAP_KEY,
         BOMB,
         SILVER_CUP,
-        HEART_CONTAINER
+        HEART_CONTAINER,
+        // Ice World quest items
+        FROST_IRON_ORE,
+        HEIRLOOM_FISHING_ROD,
+        SACRED_SPRING_WATER,
+        FROZEN_HEART
     }
 
     private final Type type;

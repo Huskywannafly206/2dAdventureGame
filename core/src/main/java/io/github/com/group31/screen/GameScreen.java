@@ -105,8 +105,8 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new TriggerSystem(audioService));
         this.engine.addSystem(new DoorSystem());
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
-        this.engine.addSystem(new LifeSystem(this.viewModel));
-        this.engine.addSystem(new DeadSystem(this.viewModel));
+        this.engine.addSystem(new InteractionSystem(this.viewModel, io.github.com.group31.quest.QuestManager.INSTANCE, this.tiledAshleyConfigurator, game.getAssetService()));
+        this.engine.addSystem(new DeadSystem(this.viewModel, this.tiledAshleyConfigurator));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new SlashFxLifetimeSystem());

@@ -270,7 +270,11 @@
   </properties>
   <image source="objects/heart_container.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="19" type="Object">
@@ -362,11 +366,16 @@
  <tile id="21" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="GOLD_KEY"/>
    <property name="npcName" value="Gold Key"/>
   </properties>
   <image source="objects/gold_key.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="22" type="Object">
@@ -377,7 +386,11 @@
   </properties>
   <image source="objects/silver_key.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="23" type="Object">

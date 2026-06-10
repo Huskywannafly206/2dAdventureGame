@@ -12,6 +12,16 @@ import io.github.com.group31.ui.model.GameViewModel;
 public class QuestManager {
     public static final QuestManager INSTANCE = new QuestManager();
 
+    public int getFrostOreCount() { return frostOreCount; }
+    public void setFrostOreCount(int frostOreCount) { this.frostOreCount = frostOreCount; }
+    public boolean isHasSacredSpringWater() { return hasSacredSpringWater; }
+    public void setHasSacredSpringWater(boolean hasSacredSpringWater) { this.hasSacredSpringWater = hasSacredSpringWater; }
+    public boolean isHasFrozenHeart() { return hasFrozenHeart; }
+    public void setHasFrozenHeart(boolean hasFrozenHeart) { this.hasFrozenHeart = hasFrozenHeart; }
+    public boolean isFishingRodSpawned() { return fishingRodSpawned; }
+    public void setFishingRodSpawned(boolean fishingRodSpawned) { this.fishingRodSpawned = fishingRodSpawned; }
+
+
     private int currentStage = 0;
     private GameViewModel viewModel;
     private Entity player;

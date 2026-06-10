@@ -758,6 +758,14 @@ public class TiledAshleyConfigurator {
         this.engine.addEntity(itemEntity);
     }
 
+    
+    public void spawnIceMapKey(float x, float y) {
+        spawnQuestItem(Item.Type.ICE_MAP_KEY, x, y, "ice_map_key/ice_map_key");
+    }
+    public void spawnLaurelLeaf(float x, float y) {
+        spawnQuestItem(Item.Type.LAUREL_LEAF, x, y, "laurel_leaf/laurel_leaf");
+    }
+
     public void spawnJungleMapKey(float x, float y) {
         Entity itemEntity = this.engine.createEntity();
 

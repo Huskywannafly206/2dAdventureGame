@@ -49,6 +49,9 @@ public class GameViewModel extends ViewModel {
     private int jungleMapKeys;
     private int silverCups;
     private int heartContainers;
+    private int laurelLeaves;
+    private int iceMapKeys;
+
 
     private io.github.com.group31.component.Item.Type selectedItemType = null;
 
@@ -137,6 +140,9 @@ public class GameViewModel extends ViewModel {
     public int getJungleMapKeys() { return jungleMapKeys; }
     public int getSilverCups() { return silverCups; }
     public int getHeartContainers() { return heartContainers; }
+    public int getLaurelLeaves() { return laurelLeaves; }
+    public int getIceMapKeys() { return iceMapKeys; }
+
 
     public io.github.com.group31.component.Item.Type getSelectedItemType() {
         return selectedItemType;
@@ -166,27 +172,30 @@ public class GameViewModel extends ViewModel {
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
+    
     public void updateInventory(int potions, int coins, int keys) {
-        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers);
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups, this.heartContainers);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.heartContainers);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys);
     }
 
-    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers) {
+    
+    
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves, int iceMapKeys) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -196,9 +205,20 @@ public class GameViewModel extends ViewModel {
         this.jungleMapKeys = jungleMapKeys;
         this.silverCups = silverCups;
         this.heartContainers = heartContainers;
+        this.laurelLeaves = laurelLeaves;
+        this.iceMapKeys = iceMapKeys;
         this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{
-            this.potions, this.coins, this.keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers
+            this.potions, this.coins, this.keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys
         });
+    }
+
+    
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, this.laurelLeaves, this.iceMapKeys);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, this.iceMapKeys);
     }
 
     public void updateInventory(io.github.com.group31.component.Inventory inventory) {
@@ -212,7 +232,9 @@ public class GameViewModel extends ViewModel {
             inventory.getItemCount(io.github.com.group31.component.Item.Type.SOOTHING_HERB),
             inventory.getItemCount(io.github.com.group31.component.Item.Type.JUNGLE_MAP_KEY),
             inventory.getItemCount(io.github.com.group31.component.Item.Type.SILVER_CUP),
-            inventory.getItemCount(io.github.com.group31.component.Item.Type.HEART_CONTAINER)
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.HEART_CONTAINER),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.LAUREL_LEAF),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.ICE_MAP_KEY)
         );
     }
 

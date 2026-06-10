@@ -972,6 +972,8 @@ public class TiledAshleyConfigurator {
             case BOMB          -> SoundAsset.TRAP;
             case SILVER_CUP    -> SoundAsset.PICKUP;
             case HEART_CONTAINER -> SoundAsset.HEAL;
+            case LAUREL_LEAF   -> SoundAsset.PICKUP;
+            case ICE_MAP_KEY   -> SoundAsset.PICKUP;
             case FROST_IRON_ORE -> SoundAsset.PICKUP;
             case HEIRLOOM_FISHING_ROD -> SoundAsset.PICKUP;
             case SACRED_SPRING_WATER -> SoundAsset.PICKUP;

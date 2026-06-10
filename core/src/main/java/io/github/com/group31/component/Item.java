@@ -29,6 +29,8 @@ public class Item implements Component {
         BOMB,
         SILVER_CUP,
         HEART_CONTAINER,
+        LAUREL_LEAF,
+        ICE_MAP_KEY,
         // Ice World quest items
         FROST_IRON_ORE,
         HEIRLOOM_FISHING_ROD,

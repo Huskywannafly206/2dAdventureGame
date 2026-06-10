@@ -223,7 +223,9 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, data.playerJungleMapKeys);
                     inventory.setItemCount(Item.Type.SILVER_CUP, data.playerSilverCups);
                     inventory.setItemCount(Item.Type.HEART_CONTAINER, data.playerHeartContainers);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups, data.playerHeartContainers);
+                    inventory.setItemCount(Item.Type.LAUREL_LEAF, data.playerLaurelLeaves);
+                    inventory.setItemCount(Item.Type.ICE_MAP_KEY, data.playerIceMapKeys);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups, data.playerHeartContainers, data.playerLaurelLeaves, data.playerIceMapKeys);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -354,6 +356,8 @@ public class GameScreen extends ScreenAdapter {
                         data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
                         data.playerSilverCups = inventory.getItemCount(Item.Type.SILVER_CUP);
                         data.playerHeartContainers = inventory.getItemCount(Item.Type.HEART_CONTAINER);
+                        data.playerLaurelLeaves = inventory.getItemCount(Item.Type.LAUREL_LEAF);
+                        data.playerIceMapKeys = inventory.getItemCount(Item.Type.ICE_MAP_KEY);
                     }
 
                     CombatState cs = CombatState.MAPPER.get(player);
@@ -455,6 +459,9 @@ public class GameScreen extends ScreenAdapter {
         int soothingHerbs = inventory != null ? inventory.getItemCount(Item.Type.SOOTHING_HERB) : 0;
         int jungleMapKeys = inventory != null ? inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0;
         int silverCups = inventory != null ? inventory.getItemCount(Item.Type.SILVER_CUP) : 0;
+        int heartContainers = inventory != null ? inventory.getItemCount(Item.Type.HEART_CONTAINER) : 0;
+        int laurelLeaves = inventory != null ? inventory.getItemCount(Item.Type.LAUREL_LEAF) : 0;
+        int iceMapKeys = inventory != null ? inventory.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
 
         // Lưu lại trạng thái CombatState trước khi chuyển map
         CombatState cs = CombatState.MAPPER.get(player);
@@ -519,7 +526,10 @@ public class GameScreen extends ScreenAdapter {
                     newInventory.setItemCount(Item.Type.SOOTHING_HERB, soothingHerbs);
                     newInventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, jungleMapKeys);
                     newInventory.setItemCount(Item.Type.SILVER_CUP, silverCups);
-                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups);
+                    newInventory.setItemCount(Item.Type.HEART_CONTAINER, heartContainers);
+                    newInventory.setItemCount(Item.Type.LAUREL_LEAF, laurelLeaves);
+                    newInventory.setItemCount(Item.Type.ICE_MAP_KEY, iceMapKeys);
+                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, iceMapKeys);
                 }
 
                 // Khôi phục CombatState

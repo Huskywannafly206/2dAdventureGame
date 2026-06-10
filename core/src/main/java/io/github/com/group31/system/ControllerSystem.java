@@ -620,14 +620,14 @@ public class ControllerSystem extends IteratingSystem {
                 CombatState combatState = CombatState.MAPPER.get(player);
                 if (combatState != null) {
                     io.github.com.group31.combat.Weapon unlocked = null;
-                    if (npc.getName().endsWith("SWORD")) {
+                    if (npc.getName().endsWith("RUSTY_SWORD")) {
+                        unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
+                    } else if (npc.getName().endsWith("SWORD")) {
                         unlocked = io.github.com.group31.combat.Weapon.SWORD;
                     } else if (npc.getName().endsWith("BOW")) {
                         unlocked = io.github.com.group31.combat.Weapon.BOW;
                     } else if (npc.getName().endsWith("MAGIC_WAND")) {
                         unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
-                    } else if (npc.getName().endsWith("RUSTY_SWORD")) {
-                        unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
                     }
 
                     if (unlocked != null) {

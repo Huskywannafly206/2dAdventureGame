@@ -77,6 +77,14 @@ public class QuestManager {
         if (currentStage == 10) return "Report to the Chief";
         if (currentStage == 11) return "Pick up Ice Map Key";
         if (currentStage == 12) return "Enter the Ice Land";
+        if (currentStage == 13) return "The Legendary Blacksmith";
+        if (currentStage == 14) return "Mine Frost-Iron Ore";
+        if (currentStage == 15) return "Help the Fisherman";
+        if (currentStage == 16) return "Find the Fishing Rod";
+        if (currentStage == 17) return "Return the Fishing Rod";
+        if (currentStage == 18) return "Find the Frozen Heart";
+        if (currentStage == 19) return "All Materials Gathered";
+        if (currentStage == 20) return "The Glacial Blade";
         return "All Quests Completed";
     }
 
@@ -104,7 +112,15 @@ public class QuestManager {
             case 10 -> "Return to the Village Chief to report and receive further instructions.";
             case 11 -> "Pick up the Ice Map Key next to the Chief.";
             case 12 -> "Enter the Ice Land through the northern portal.";
-            default -> "No active quests.";
+            case 13 -> "Find the Legendary Blacksmith in the frozen highlands (ice_map3).";
+            case 14 -> "Mine 5 Frost-Iron Ore blocks at the Northern Quarry (near the dungeon gate) (collected: " + frostOreCount + "/5).";
+            case 15 -> "Help the Fisherman to obtain the Sacred Spring Water.";
+            case 16 -> "Find the Heirloom Fishing Rod hidden somewhere on the map!";
+            case 17 -> "Return the Fishing Rod to the Fisherman.";
+            case 18 -> "Find the Frozen Heart near where the Snow Sprite rests.";
+            case 19 -> "Return to the Blacksmith — you have all the materials!";
+            case 20 -> "The Glacial Blade is forged! Head to the Dark Dungeon.";
+            default -> "No active quest.";
         };
     }
 
@@ -142,8 +158,45 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]All Quests Completed![]", 
+                    viewModel.showFloatingText("[YELLOW]Quest: Find the Legendary Blacksmith![]", 
                         transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+            }
+        }
+
+        // Ice World map transitions: respawn dynamic quest items if needed
+        if ("ICEMAP2".equalsIgnoreCase(mapName)) {
+            if (currentStage == 16 && configurator != null) {
+                // Find fisher_man to spawn the rod relative to him
+                Entity fisherman = configurator.findNpcByName("fisher_man");
+                if (fisherman != null) {
+                    Transform npcT = Transform.MAPPER.get(fisherman);
+                    if (npcT != null) {
+                        configurator.spawnFishingRod(
+                            npcT.getPosition().x + 4.5f,
+                            npcT.getPosition().y - 3f
+                        );
+                    }
+                }
+            }
+        } else if ("ICEMAP1".equalsIgnoreCase(mapName)) {
+            if (currentStage == 18 && configurator != null) {
+                // Spawn Frozen Heart near the Snow Sprite (object ID 33) in ice_map.tmx
+                Entity snowSprite = configurator.findEntityByObjectId(33);
+                if (snowSprite != null) {
+                    Transform spriteT = Transform.MAPPER.get(snowSprite);
+                    if (spriteT != null) {
+                        float sx = spriteT.getPosition().x;
+                        float sy = spriteT.getPosition().y;
+                        if (!hasFrozenHeart) {
+                            configurator.spawnFrozenHeart(sx + 1f, sy);
+                        }
+                    }
+                } else {
+                    // Fallback to hardcoded coordinates if Snow Sprite entity not found
+                    if (!hasFrozenHeart) {
+                        configurator.spawnFrozenHeart(12f + 1f, 18f); // roughly near the sprite center
+                    }
                 }
             }
         }
@@ -232,12 +285,12 @@ public class QuestManager {
 
     public void checkFrostOrePickup(Entity player) {
         this.player = player;
-        if (currentStage == 12) {
+        if (currentStage == 14) {
             frostOreCount++;
             updateQuestHUD();
             showFloating("[CYAN]Frost-Iron Ore: " + frostOreCount + "/5[]");
             if (frostOreCount >= 5) {
-                setStage(13);
+                setStage(15);
                 showFloating("[YELLOW]Ores collected! Go meet the Fisherman![]");
             }
         }
@@ -245,15 +298,15 @@ public class QuestManager {
 
     public void checkFishingRodPickup(Entity player) {
         this.player = player;
-        if (currentStage == 14) {
-            setStage(15);
+        if (currentStage == 16) {
+            setStage(17);
             showFloating("[YELLOW]Found the Fishing Rod! Return it to the Fisherman![]");
         }
     }
 
     public void checkSacredWaterPickup(Entity player) {
         this.player = player;
-        if (currentStage == 15) {
+        if (currentStage == 17) {
             hasSacredSpringWater = true;
             setStage(18);
             showFloating("[AQUA]Obtained Sacred Spring Water! Find the Frozen Heart![]");
@@ -264,7 +317,7 @@ public class QuestManager {
         this.player = player;
         if (currentStage == 18) {
             hasFrozenHeart = true;
-            setStage(16);
+            setStage(19);
             showFloating("[CYAN]Obtained the Frozen Heart! Return to the Blacksmith![]");
         }
     }
@@ -304,18 +357,7 @@ public class QuestManager {
                     setStage(2);
                     if (viewModel != null) {
                         if (inv != null) {
-                            viewModel.updateInventory(
-                                inv.getItemCount(Item.Type.POTION_HEALTH),
-                                inv.getItemCount(Item.Type.COIN),
-                                inv.getItemCount(Item.Type.KEY),
-                                inv.getItemCount(Item.Type.GOLD_KEY),
-                                inv.getItemCount(Item.Type.SILVER_KEY),
-                                inv.getItemCount(Item.Type.SOOTHING_HERB),
-                                inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                                inv.getItemCount(Item.Type.SILVER_CUP),
-                                inv.getItemCount(Item.Type.LAUREL_LEAF),
-                                inv.getItemCount(Item.Type.ICE_MAP_KEY)
-                            );
+                            viewModel.updateInventory(inv);
                         }
                         Transform transform = Transform.MAPPER.get(player);
                         if (transform != null) {
@@ -370,18 +412,7 @@ public class QuestManager {
 
                 if (viewModel != null) {
                     if (inv != null) {
-                        viewModel.updateInventory(
-                            inv.getItemCount(Item.Type.POTION_HEALTH),
-                            inv.getItemCount(Item.Type.COIN),
-                            inv.getItemCount(Item.Type.KEY),
-                            inv.getItemCount(Item.Type.GOLD_KEY),
-                            inv.getItemCount(Item.Type.SILVER_KEY),
-                            inv.getItemCount(Item.Type.SOOTHING_HERB),
-                            inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                            inv.getItemCount(Item.Type.SILVER_CUP),
-                            inv.getItemCount(Item.Type.LAUREL_LEAF),
-                            inv.getItemCount(Item.Type.ICE_MAP_KEY)
-                        );
+                        viewModel.updateInventory(inv);
                     }
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
@@ -473,18 +504,7 @@ public class QuestManager {
                 if (inv != null) {
                     inv.addItem(Item.Type.POTION_HEALTH, 2);
                     if (viewModel != null) {
-                        viewModel.updateInventory(
-                            inv.getItemCount(Item.Type.POTION_HEALTH),
-                            inv.getItemCount(Item.Type.COIN),
-                            inv.getItemCount(Item.Type.KEY),
-                            inv.getItemCount(Item.Type.GOLD_KEY),
-                            inv.getItemCount(Item.Type.SILVER_KEY),
-                            inv.getItemCount(Item.Type.SOOTHING_HERB),
-                            inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                            inv.getItemCount(Item.Type.SILVER_CUP),
-                            inv.getItemCount(Item.Type.LAUREL_LEAF),
-                            inv.getItemCount(Item.Type.ICE_MAP_KEY)
-                        );
+                        viewModel.updateInventory(inv);
                     }
                 }
                 
@@ -530,18 +550,7 @@ public class QuestManager {
                     setStage(9);
                     if (viewModel != null) {
                         if (inv != null) {
-                            viewModel.updateInventory(
-                                inv.getItemCount(Item.Type.POTION_HEALTH),
-                                inv.getItemCount(Item.Type.COIN),
-                                inv.getItemCount(Item.Type.KEY),
-                                inv.getItemCount(Item.Type.GOLD_KEY),
-                                inv.getItemCount(Item.Type.SILVER_KEY),
-                                inv.getItemCount(Item.Type.SOOTHING_HERB),
-                                inv.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                                inv.getItemCount(Item.Type.SILVER_CUP),
-                                inv.getItemCount(Item.Type.LAUREL_LEAF),
-                                inv.getItemCount(Item.Type.ICE_MAP_KEY)
-                            );
+                            viewModel.updateInventory(inv);
                         }
                         Transform transform = Transform.MAPPER.get(player);
                         if (transform != null) {
@@ -568,7 +577,7 @@ public class QuestManager {
     }
 
     private void handleBlacksmith(Npc npc, Entity npcEntity, Entity player) {
-        if (currentStage < 11) {
+        if (currentStage < 13) {
             // Chưa tới Ice World quest
             npc.setDialogue(new String[]{
                 "[IDLE]Who are you? This is no place for the weak. Come back when you're stronger."
@@ -576,7 +585,7 @@ public class QuestManager {
             return;
         }
 
-        if (currentStage == 11) {
+        if (currentStage == 13) {
             // Lần đầu gặp Blacksmith
             npc.setDialogue(new String[]{
                 "[IDLE]Player: Excuse me... are you the Legendary Blacksmith?",
@@ -596,12 +605,12 @@ public class QuestManager {
             hasSacredSpringWater = false;
             hasFrozenHeart = false;
             fishingRodSpawned = false;
-            setStage(12);
+            setStage(14);
             showFloating("[YELLOW]Quest: Mine Frost-Iron Ore![]");
             return;
         }
 
-        if (currentStage == 12) {
+        if (currentStage == 14) {
             // Đang đào quặng
             npc.setDialogue(new String[]{
                 "[IDLE]Blacksmith: Still gathering?",
@@ -612,7 +621,7 @@ public class QuestManager {
             return;
         }
 
-        if (currentStage == 13 || currentStage == 14 || currentStage == 15) {
+        if (currentStage == 15 || currentStage == 16 || currentStage == 17) {
             // Đã đào đủ quặng, cần đi gặp Fisherman
             npc.setDialogue(new String[]{
                 "[IDLE]Blacksmith: Have you met the Fisherman yet?",
@@ -632,7 +641,7 @@ public class QuestManager {
             return;
         }
 
-        if (currentStage == 16) {
+        if (currentStage == 19) {
             // Đủ nguyên liệu — rèn Glacial Blade
             npc.setDialogue(new String[]{
                 "[IDLE]Blacksmith: You actually found everything? I'm genuinely impressed.",
@@ -657,15 +666,7 @@ public class QuestManager {
                 xp.addXp(200f); // Thưởng 200 XP cho việc hoàn thành thu thập nguyên liệu
             }
             if (viewModel != null && inv != null) {
-                viewModel.updateInventory(
-                    inv.getItemCount(Item.Type.POTION_HEALTH),
-                    inv.getItemCount(Item.Type.COIN),
-                    inv.getItemCount(Item.Type.KEY),
-                    inv.getItemCount(Item.Type.GOLD_KEY),
-                    inv.getItemCount(Item.Type.SILVER_KEY),
-                    inv.getItemCount(Item.Type.SOOTHING_HERB),
-                    inv.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-                );
+                viewModel.updateInventory(inv);
                 showFloating("[GOLD]+200 XP! The Glacial Blade is yours![]");
             }
 
@@ -677,11 +678,11 @@ public class QuestManager {
                 }
             }
 
-            setStage(17);
+            setStage(20);
             return;
         }
 
-        if (currentStage == 17) {
+        if (currentStage == 20) {
             npc.setDialogue(new String[]{
                 "[IDLE]Blacksmith: You carry the Glacial Blade now.",
                 "[IDLE]Blacksmith: The Dark Dungeon awaits.",
@@ -691,14 +692,14 @@ public class QuestManager {
             return;
         }
 
-        // Stage > 17 hoặc < 11
+        // Stage > 20 hoặc < 13
         npc.setDialogue(new String[]{
             "[IDLE]Blacksmith: Go. Your village needs you. Don't keep them waiting."
         });
     }
 
     private void handleFisherman(Npc npc, Entity npcEntity, Entity player) {
-        if (currentStage < 13) {
+        if (currentStage < 15) {
             npc.setDialogue(new String[]{
                 "[IDLE]Fisherman: Hmm? You don't look like you're from around here, kid.",
                 "[IDLE]Fisherman: Be careful out here — blizzards come without warning in these parts."
@@ -706,7 +707,7 @@ public class QuestManager {
             return;
         }
 
-        if (currentStage == 13) {
+        if (currentStage == 15) {
             // Lần đầu gặp Fisherman khi đã có đủ quặng
             npc.setDialogue(new String[]{
                 "[IDLE]Player: Hello, sir.",
@@ -736,12 +737,12 @@ public class QuestManager {
                     fishingRodSpawned = true;
                 }
             }
-            setStage(14);
+            setStage(16);
             showFloating("[YELLOW]Quest: Find the Heirloom Fishing Rod![]");
             return;
         }
 
-        if (currentStage == 14) {
+        if (currentStage == 16) {
             // Đang tìm cần câu
             npc.setDialogue(new String[]{
                 "[IDLE]Fisherman: Have you found my rod yet? Please hurry...",
@@ -751,7 +752,7 @@ public class QuestManager {
             return;
         }
 
-        if (currentStage == 15) {
+        if (currentStage == 17) {
             // Đã tìm được cần câu, trả lại
             npc.setDialogue(new String[]{
                 "[IDLE]Player: Here is your fishing rod, sir!",
@@ -777,18 +778,11 @@ public class QuestManager {
             if (inv != null) {
                 inv.removeItem(Item.Type.HEIRLOOM_FISHING_ROD, 1);
                 if (viewModel != null) {
-                    viewModel.updateInventory(
-                        inv.getItemCount(Item.Type.POTION_HEALTH),
-                        inv.getItemCount(Item.Type.COIN),
-                        inv.getItemCount(Item.Type.KEY),
-                        inv.getItemCount(Item.Type.GOLD_KEY),
-                        inv.getItemCount(Item.Type.SILVER_KEY),
-                        inv.getItemCount(Item.Type.SOOTHING_HERB),
-                        inv.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-                    );
+                    viewModel.updateInventory(inv);
                 }
             }
 
+            setStage(18);
             showFloating("[YELLOW]Quest: Get Sacred Spring Water![]");
             return;
         }

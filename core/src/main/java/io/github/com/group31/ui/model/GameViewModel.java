@@ -51,6 +51,10 @@ public class GameViewModel extends ViewModel {
     private int heartContainers;
     private int laurelLeaves;
     private int iceMapKeys;
+    private int frostOres;
+    private int fishingRods;
+    private int sacredWaters;
+    private int frozenHearts;
 
 
     private io.github.com.group31.component.Item.Type selectedItemType = null;
@@ -142,6 +146,10 @@ public class GameViewModel extends ViewModel {
     public int getHeartContainers() { return heartContainers; }
     public int getLaurelLeaves() { return laurelLeaves; }
     public int getIceMapKeys() { return iceMapKeys; }
+    public int getFrostOres() { return frostOres; }
+    public int getFishingRods() { return fishingRods; }
+    public int getSacredWaters() { return sacredWaters; }
+    public int getFrozenHearts() { return frozenHearts; }
 
 
     public io.github.com.group31.component.Item.Type getSelectedItemType() {
@@ -196,6 +204,10 @@ public class GameViewModel extends ViewModel {
     
     
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves, int iceMapKeys) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, iceMapKeys, this.frostOres, this.fishingRods, this.sacredWaters, this.frozenHearts);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves, int iceMapKeys, int frostOres, int fishingRods, int sacredWaters, int frozenHearts) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -207,8 +219,12 @@ public class GameViewModel extends ViewModel {
         this.heartContainers = heartContainers;
         this.laurelLeaves = laurelLeaves;
         this.iceMapKeys = iceMapKeys;
+        this.frostOres = frostOres;
+        this.fishingRods = fishingRods;
+        this.sacredWaters = sacredWaters;
+        this.frozenHearts = frozenHearts;
         this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{
-            this.potions, this.coins, this.keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys
+            this.potions, this.coins, this.keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.iceMapKeys, this.frostOres, this.fishingRods, this.sacredWaters, this.frozenHearts
         });
     }
 
@@ -234,7 +250,11 @@ public class GameViewModel extends ViewModel {
             inventory.getItemCount(io.github.com.group31.component.Item.Type.SILVER_CUP),
             inventory.getItemCount(io.github.com.group31.component.Item.Type.HEART_CONTAINER),
             inventory.getItemCount(io.github.com.group31.component.Item.Type.LAUREL_LEAF),
-            inventory.getItemCount(io.github.com.group31.component.Item.Type.ICE_MAP_KEY)
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.ICE_MAP_KEY),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.FROST_IRON_ORE),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.HEIRLOOM_FISHING_ROD),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.SACRED_SPRING_WATER),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.FROZEN_HEART)
         );
     }
 

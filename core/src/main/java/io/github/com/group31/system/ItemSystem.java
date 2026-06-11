@@ -105,6 +105,8 @@ public class ItemSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkSacredWaterPickup(collector);
             } else if (type == Item.Type.FROZEN_HEART) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkFrozenHeartPickup(collector);
+            } else if (type == Item.Type.ICE_MAP_KEY) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkIceMapKeyPickup(collector);
             }
         }
 
@@ -113,19 +115,7 @@ public class ItemSystem extends IteratingSystem {
 
         // Cập nhật HUD
         if (inventory != null) {
-            viewModel.updateInventory(
-                inventory.getItemCount(Item.Type.POTION_HEALTH),
-                inventory.getItemCount(Item.Type.COIN),
-                inventory.getItemCount(Item.Type.KEY),
-                inventory.getItemCount(Item.Type.GOLD_KEY),
-                inventory.getItemCount(Item.Type.SILVER_KEY),
-                inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY),
-                inventory.getItemCount(Item.Type.SILVER_CUP),
-                inventory.getItemCount(Item.Type.HEART_CONTAINER),
-                inventory.getItemCount(Item.Type.LAUREL_LEAF),
-                inventory.getItemCount(Item.Type.ICE_MAP_KEY)
-            );
+            viewModel.updateInventory(inventory);
         }
 
         io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);

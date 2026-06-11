@@ -147,14 +147,14 @@ public class GameScreen extends ScreenAdapter {
         this.tiledService.setLoadObjectConsumer(tiledAshleyConfigurator::onLoadObject);
         this.tiledService.setLoadTileConsumer(tiledAshleyConfigurator::onLoadTile);
 
-//        TiledMap startMap = this.tiledService.loadMap(MapAsset.ICEMAP1);
+//        TiledMap startMap = this.tiledService.loadMap(MapAsset.VILLAGE);
 //        this.tiledService.setMap(startMap);
 
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
         this.engine.getSystem(TriggerSystem.class).registerTrigger("checkpoint_trigger", this::checkpointTrigger);
-        MapAsset startMapAsset = MapAsset.ICEMAP1;
+        MapAsset startMapAsset = MapAsset.VILLAGE;
         SaveService saveService = game.getSaveService();
         SaveData data = null;
         if(saveService != null && saveService.hasSaveFile()){
@@ -165,7 +165,7 @@ public class GameScreen extends ScreenAdapter {
                     try{
                         startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
                     } catch(IllegalArgumentException e){
-                        startMapAsset = MapAsset.ICEMAP1;
+                        startMapAsset = MapAsset.VILLAGE;
                     }
                 }
             }
@@ -431,6 +431,19 @@ public class GameScreen extends ScreenAdapter {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
                     viewModel.showFloatingText("[RED]Yeu cau: Ban do da de (Jungle Map Key)![]",
+                        transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+                return;
+            }
+        }
+
+        if (targetMapStr.equalsIgnoreCase("ICEMAP1")) {
+            Inventory inventory = Inventory.MAPPER.get(player);
+            int iceMapKeys = inventory != null ? inventory.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
+            if (iceMapKeys <= 0) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[RED]Yeu cau: Ban do tuyet (Ice Map Key)![]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
                 return;

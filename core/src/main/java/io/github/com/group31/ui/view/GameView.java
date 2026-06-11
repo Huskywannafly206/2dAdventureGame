@@ -433,6 +433,18 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (viewModel.getIceMapKeys() > 0) {
                 items.add(new InvItem(atlas.findRegion("ice_map_key/ice_map_key"), viewModel.getIceMapKeys(), io.github.com.group31.component.Item.Type.ICE_MAP_KEY));
             }
+            if (viewModel.getFrostOres() > 0) {
+                items.add(new InvItem(atlas.findRegion("frost_iron_ore_block/frost_iron_ore_block"), viewModel.getFrostOres(), io.github.com.group31.component.Item.Type.FROST_IRON_ORE));
+            }
+            if (viewModel.getFishingRods() > 0) {
+                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getFishingRods(), io.github.com.group31.component.Item.Type.HEIRLOOM_FISHING_ROD));
+            }
+            if (viewModel.getSacredWaters() > 0) {
+                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getSacredWaters(), io.github.com.group31.component.Item.Type.SACRED_SPRING_WATER));
+            }
+            if (viewModel.getFrozenHearts() > 0) {
+                items.add(new InvItem(atlas.findRegion("heart_container/heart_container"), viewModel.getFrozenHearts(), io.github.com.group31.component.Item.Type.FROZEN_HEART));
+            }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
                     items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1, io.github.com.group31.component.Item.Type.WEAPON_SWORD));

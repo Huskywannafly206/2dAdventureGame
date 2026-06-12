@@ -3102,7 +3102,7 @@ filter: Nearest, Nearest
 repeat: none
 black_smith/idle_down
   rotate: false
-  xy: 454, 278
+  xy: 418, 222
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -3121,9 +3121,9 @@ fighter_white/walk_up
   orig: 32, 32
   offset: 0, 0
   index: 0
-fisher_man/ilde_down
+fisher_man/idle_down
   rotate: false
-  xy: 354, 54
+  xy: 490, 314
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -3156,21 +3156,21 @@ heart_container/heart_container
   orig: 16, 16
   offset: 0, 0
   index: -1
-ice_map_key/ice_map_key
+jungle_map_key/jungle_map_key
   rotate: false
-  xy: 418, 222
+  xy: 354, 54
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-jungle_map_key/jungle_map_key
+laurel_leaf/laurel_leaf
   rotate: false
   xy: 318, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-laurel_leaf/laurel_leaf
+magic_shard/magic_shard
   rotate: false
   xy: 338, 34
   size: 16, 16
@@ -3711,7 +3711,7 @@ potion_health/potion_health
   index: -1
 shaman/idle_down
   rotate: false
-  xy: 490, 314
+  xy: 454, 278
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

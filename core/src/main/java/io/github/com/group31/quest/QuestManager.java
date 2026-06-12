@@ -75,7 +75,7 @@ public class QuestManager {
         if (currentStage == 8) return "The Three Relics";
         if (currentStage == 9) return "The Golden Key";
         if (currentStage == 10) return "Report to the Chief";
-        if (currentStage == 11) return "Pick up Ice Map Key";
+        if (currentStage == 11) return "Pick up Magic Shard";
         if (currentStage == 12) return "Enter the Ice Land";
         if (currentStage == 13) return "The Legendary Blacksmith";
         if (currentStage == 14) return "Mine Frost-Iron Ore";
@@ -107,10 +107,21 @@ public class QuestManager {
             case 5 -> "Pick up the rusty sword near the Hunter.";
             case 6 -> "Enter the Ancient Forest to investigate its secrets.";
             case 7 -> "Meet the Forest Spirit to talk.";
-            case 8 -> "Find all 3 objects: coin, silver cup, and silver key following the 3 stone tablets.";
+            case 8 -> {
+                int count = 0;
+                if (player != null) {
+                    Inventory inv = Inventory.MAPPER.get(player);
+                    if (inv != null) {
+                        if (inv.getItemCount(Item.Type.COIN) >= 1) count++;
+                        if (inv.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                        if (inv.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                    }
+                }
+                yield "Find all 3 objects: coin, silver cup, and silver key (collected: " + count + "/3).";
+            }
             case 9 -> "Pick up the golden key to the right of the Forest Spirit.";
             case 10 -> "Return to the Village Chief to report and receive further instructions.";
-            case 11 -> "Pick up the Ice Map Key next to the Chief.";
+            case 11 -> "Pick up the Magic Shard next to the Chief.";
             case 12 -> "Enter the Ice Land through the northern portal.";
             case 13 -> "Find the Legendary Blacksmith in the frozen highlands (ice_map3).";
             case 14 -> "Mine 5 Frost-Iron Ore blocks at the Northern Quarry (near the dungeon gate) (collected: " + frostOreCount + "/5).";
@@ -133,7 +144,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Quest: Enter the Ancient Forest![]", 
+                        viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -148,7 +159,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Quest: Meet the Forest Spirit![]", 
+                    viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -158,7 +169,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Quest: Find the Legendary Blacksmith![]", 
+                    viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -202,14 +213,14 @@ public class QuestManager {
         }
     }
 
-    public void checkIceMapKeyPickup(Entity player) {
+    public void checkMagicShardPickup(Entity player) {
         this.player = player;
         if (currentStage == 11) {
             setStage(12);
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Quest: Enter the Ice Land![]", 
+                    viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -227,7 +238,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[YELLOW]Quest: Return to the Chief![]", 
+                    viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -243,7 +254,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Got 5 herbs, return to the Chief![]", 
+                        viewModel.showFloatingText("[RAINBOW]Got 5 herbs![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -258,7 +269,7 @@ public class QuestManager {
             if (viewModel != null) {
                 Transform transform = Transform.MAPPER.get(player);
                 if (transform != null) {
-                    viewModel.showFloatingText("[RED]Slime: " + slimesDefeated + "/4[]", 
+                    viewModel.showFloatingText("[RAINBOW]Slime: " + slimesDefeated + "/4[]",
                         transform.getPosition().x, transform.getPosition().y + 1f);
                 }
             }
@@ -267,7 +278,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Defeated 4 Slimes, return to the Hunter![]", 
+                        viewModel.showFloatingText("[RAINBOW]Defeated 4 Slimes![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -279,7 +290,7 @@ public class QuestManager {
     public void onSnowSpriteDefeated(float x, float y) {
         if (currentStage == 18 && !hasFrozenHeart && configurator != null) {
             configurator.spawnFrozenHeart(x, y);
-            showFloating("[YELLOW]The Snow Sprite dropped the Frozen Heart![]");
+            showFloating("[RAINBOW]The Snow Sprite dropped the Frozen Heart![]");
         }
     }
 
@@ -288,10 +299,10 @@ public class QuestManager {
         if (currentStage == 14) {
             frostOreCount++;
             updateQuestHUD();
-            showFloating("[CYAN]Frost-Iron Ore: " + frostOreCount + "/5[]");
+            showFloating("[RAINBOW]Frost-Iron Ore: " + frostOreCount + "/5[]");
             if (frostOreCount >= 5) {
                 setStage(15);
-                showFloating("[YELLOW]Ores collected! Go meet the Fisherman![]");
+                showFloating("[RAINBOW]Ores collected![]");
             }
         }
     }
@@ -300,7 +311,7 @@ public class QuestManager {
         this.player = player;
         if (currentStage == 16) {
             setStage(17);
-            showFloating("[YELLOW]Found the Fishing Rod! Return it to the Fisherman![]");
+            showFloating("[RAINBOW]Found the Fishing Rod![]");
         }
     }
 
@@ -309,7 +320,7 @@ public class QuestManager {
         if (currentStage == 17) {
             hasSacredSpringWater = true;
             setStage(18);
-            showFloating("[AQUA]Obtained Sacred Spring Water! Find the Frozen Heart![]");
+            showFloating("[RAINBOW]Obtained Sacred Spring Water! Find the Frozen Heart![]");
         }
     }
 
@@ -318,7 +329,7 @@ public class QuestManager {
         if (currentStage == 18) {
             hasFrozenHeart = true;
             setStage(19);
-            showFloating("[CYAN]Obtained the Frozen Heart! Return to the Blacksmith![]");
+            showFloating("[RAINBOW]Obtained the Frozen Heart! Return to the Blacksmith![]");
         }
     }
 
@@ -339,7 +350,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Thu thap 5 Thao Duoc Lam Diu![]", 
+                        viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -361,15 +372,28 @@ public class QuestManager {
                         }
                         Transform transform = Transform.MAPPER.get(player);
                         if (transform != null) {
-                            viewModel.showFloatingText("[YELLOW]Quest: Meet the Hunter![]", 
+                            viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                                 transform.getPosition().x, transform.getPosition().y + 1f);
                         }
                     }
                 } else {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Before you leave, there is a small favor I must ask. Please help me gather 5 Soothing Herbs from the south so I can brew some medicine to help the sick hold on."
+                        "[IDLE]Before you leave, there is a small favor I must ask.",
+                        "[IDLE]Please help me gather 5 Soothing Herbs from the south so I can brew some medicine to help the sick hold on."
                     });
                 }
+            } else if (currentStage == 2) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Head to the cabin at the edge of the village and meet the Hunter. I've already asked him to prepare a Parchment Map for you."
+                });
+            } else if (currentStage == 3) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Help the Hunter by defeating the slimes in the forest so he can trust your strength."
+                });
+            } else if (currentStage == 4 || currentStage == 5) {
+                npc.setDialogue(new String[]{
+                    "[IDLE]Now that you have the map, prepare yourself and enter the Ancient Forest to investigate its secrets."
+                });
             } else if (currentStage == 6) {
                 npc.setDialogue(new String[]{
                     "[IDLE]Enter the forest to investigate its secrets."
@@ -393,7 +417,7 @@ public class QuestManager {
                     "[IDLE]Prepare yourself well, then proceed to the dungeon."
                 });
                 setStage(11);
-                
+
                 Inventory inv = Inventory.MAPPER.get(player);
                 if (inv != null) {
                     inv.addItem(Item.Type.COIN, 30);
@@ -407,7 +431,7 @@ public class QuestManager {
                 float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
                 float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
                 if (configurator != null) {
-                    configurator.spawnIceMapKey(spawnX, spawnY);
+                    configurator.spawnMagicShard(spawnX, spawnY);
                 }
 
                 if (viewModel != null) {
@@ -422,44 +446,50 @@ public class QuestManager {
                 }
             } else {
                 Inventory inv = Inventory.MAPPER.get(player);
-                int iceKeyCount = inv != null ? inv.getItemCount(Item.Type.ICE_MAP_KEY) : 0;
-                if (currentStage == 11 && iceKeyCount <= 0) {
+                int magicShardCount = inv != null ? inv.getItemCount(Item.Type.MAGIC_SHARD) : 0;
+                if (currentStage == 11 && magicShardCount <= 0) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Pick up the Ice Map Key next to me and head to the Ice Land."
+                        "[IDLE]Pick up the Magic Shard next to me and head to the Ice Land."
                     });
                     Transform npcT = Transform.MAPPER.get(npcEntity);
                     float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
                     float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
                     if (configurator != null) {
-                        configurator.spawnIceMapKey(spawnX, spawnY);
+                        configurator.spawnMagicShard(spawnX, spawnY);
                     }
                 } else if (currentStage == 11) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Pick up the Ice Map Key next to me and head to the Ice Land."
+                        "[IDLE]Pick up the Magic Shard next to me and head to the Ice Land."
                     });
                 } else if (currentStage == 12) {
                     npc.setDialogue(new String[]{
-                        "[IDLE]Use the Ice Map Key to pass through the northern portal."
+                        "[IDLE]Use the Magic Shard to pass through the northern portal."
                     });
                 } else {
-                    if (iceKeyCount <= 0) {
+                    if (currentStage >= 11 && magicShardCount <= 0) {
                         npc.setDialogue(new String[]{
-                            "[IDLE]Did you lose the Ice Map Key? I will leave another one here for you."
+                            "[IDLE]Did you lose the Magic Shard? I will leave another one here for you."
                         });
                         Transform npcT = Transform.MAPPER.get(npcEntity);
                         float spawnX = npcT != null ? npcT.getPosition().x + 1f : player.getComponent(Transform.class).getPosition().x;
                         float spawnY = npcT != null ? npcT.getPosition().y : player.getComponent(Transform.class).getPosition().y;
                         if (configurator != null) {
-                            configurator.spawnIceMapKey(spawnX, spawnY);
+                            configurator.spawnMagicShard(spawnX, spawnY);
                         }
-                    } else {
+                    } else if (currentStage >= 11) {
                         npc.setDialogue(new String[]{
                             "[IDLE]Prepare yourself well to enter the Dark Dungeon.",
                             "[IDLE]I believe in your strength."
                         });
+                    } else {
+                        // Fallback dialogue for stages < 11
+                        npc.setDialogue(new String[]{
+                            "[IDLE]Be careful. The village is counting on you."
+                        });
                     }
                 }
             }
+
         } else if ("tho_san".equalsIgnoreCase(npc.getName())) {
             if (currentStage < 2) {
                 npc.setDialogue(new String[]{
@@ -475,7 +505,7 @@ public class QuestManager {
                 if (viewModel != null) {
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhiem vu: Tieu diet 4 Slime![]", 
+                        viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -489,7 +519,7 @@ public class QuestManager {
                     "[IDLE]This is a rusty sword I used in my youth. It’s old, but it still gets the job done. Take it, along with these wound ointments.",
                     "[IDLE]Keep your wits about you, young man."
                 });
-                
+
                 // Spawn rusty sword next to player
                 if (configurator != null) {
                     Transform npcT = Transform.MAPPER.get(npcEntity);
@@ -498,7 +528,7 @@ public class QuestManager {
                         configurator.spawnJungleMapKey(npcT.getPosition().x + 1f, npcT.getPosition().y);
                     }
                 }
-                
+
                 // Give wound ointments (represented by 2 health potions)
                 Inventory inv = Inventory.MAPPER.get(player);
                 if (inv != null) {
@@ -507,7 +537,7 @@ public class QuestManager {
                         viewModel.updateInventory(inv);
                     }
                 }
-                
+
                 setStage(5);
             } else {
                 npc.setDialogue(new String[]{
@@ -554,14 +584,18 @@ public class QuestManager {
                         }
                         Transform transform = Transform.MAPPER.get(player);
                         if (transform != null) {
-                            viewModel.showFloatingText("[YELLOW]Nhiem vu: Nhat Golden Key![]", 
+                            viewModel.showFloatingText("[RAINBOW]Got new quest![]",
                                 transform.getPosition().x, transform.getPosition().y + 1f);
                         }
                     }
                 } else {
+                    int count = 0;
+                    if (hasCoin) count++;
+                    if (hasCup) count++;
+                    if (hasKey) count++;
                     npc.setDialogue(new String[]{
-                        "[IDLE]If you wish to claim the Key, the Chalice, and the Coin, you must overcome three trials representing the three virtues of a hero: Courage, Wisdom, and Character.",
-                        "[IDLE]Venture deeper inside, the mist shall guide your way."
+                        "[IDLE]You have gathered " + count + "/3 relics.",
+                        "[IDLE]Go search the forest for the remaining relics to prove your worth."
                     });
                 }
             } else if (currentStage == 9) {
@@ -606,7 +640,7 @@ public class QuestManager {
             hasFrozenHeart = false;
             fishingRodSpawned = false;
             setStage(14);
-            showFloating("[YELLOW]Quest: Mine Frost-Iron Ore![]");
+            showFloating("[RAINBOW]Got new quest![]");
             return;
         }
 
@@ -667,7 +701,7 @@ public class QuestManager {
             }
             if (viewModel != null && inv != null) {
                 viewModel.updateInventory(inv);
-                showFloating("[GOLD]+200 XP! The Glacial Blade is yours![]");
+                showFloating("[RAINBOW]+200 XP! The Glacial Blade is yours![]");
             }
 
             // Spawn Glacial Blade (dùng WEAPON_SWORD làm đại diện)
@@ -738,7 +772,7 @@ public class QuestManager {
                 }
             }
             setStage(16);
-            showFloating("[YELLOW]Quest: Find the Heirloom Fishing Rod![]");
+            showFloating("[RAINBOW]Got new quest![]");
             return;
         }
 
@@ -783,7 +817,7 @@ public class QuestManager {
             }
 
             setStage(18);
-            showFloating("[YELLOW]Quest: Get Sacred Spring Water![]");
+            showFloating("[RAINBOW]Got new quest![]");
             return;
         }
 

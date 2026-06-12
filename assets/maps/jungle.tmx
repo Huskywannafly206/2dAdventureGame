@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="35">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="36">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
  <tileset firstgid="817" source="objects.tsx"/>
- <tileset firstgid="856" source="TilesetElement.tsx"/>
+ <tileset firstgid="861" source="TilesetElement.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJzjZGRg4ETCGxkYGDYh4c0MqPKkYmTz8MnR2q7jQLETSPgkDe2iNh61a9SuwWDXcTraBcK47JoNFJsDxHOB+AGV3EJMGUVp+TSY7EKOS0rLQnS7AB0JPv0=
@@ -36,6 +36,7 @@
   <object id="18" x="95.5134" y="211.993">
    <point/>
   </object>
+  <object id="35" name="checkpoint_trigger" x="85.5" y="26.5" width="37.5" height="25.25"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="14" name="Player" gid="818" x="90.2295" y="49.5462" width="32" height="32">

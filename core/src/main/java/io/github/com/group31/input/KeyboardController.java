@@ -22,7 +22,8 @@ public class KeyboardController extends InputAdapter {
         Map.entry(Input.Keys.SHIFT_LEFT, Command.DASH),
         Map.entry(Input.Keys.V, Command.SWITCH_WEAPON),
         Map.entry(Input.Keys.TAB, Command.TOGGLE_MENU),
-        Map.entry(Input.Keys.I, Command.TOGGLE_MENU)
+        Map.entry(Input.Keys.I, Command.OPEN_INVENTORY),
+        Map.entry(Input.Keys.Q, Command.OPEN_QUEST)
     );
 
     private final boolean[] commandState;
@@ -81,5 +82,9 @@ public class KeyboardController extends InputAdapter {
         this.commandState[command.ordinal()] = false;
         this.activeState.keyUp(command);
         return true;
+    }
+
+    public boolean isCommandPressed(Command command) {
+        return this.commandState[command.ordinal()];
     }
 }

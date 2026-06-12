@@ -334,6 +334,18 @@ public class TiledAshleyConfigurator {
             if (facesetPath == null || facesetPath.isBlank()) {
                 facesetPath = tile.getProperties().get("faceset", null, String.class);
             }
+            if (facesetPath == null || facesetPath.isBlank()) {
+                String candidatePath1 = "ui/npc_faceset/" + npcName.toLowerCase() + ".png";
+                String candidatePath2 = "ui/npc_faceset/" + npcName + ".png";
+                String candidatePath3 = "ui/npc_faceset/" + npcName + "_faceset.png";
+                if (com.badlogic.gdx.Gdx.files.internal(candidatePath1).exists()) {
+                    facesetPath = candidatePath1;
+                } else if (com.badlogic.gdx.Gdx.files.internal(candidatePath2).exists()) {
+                    facesetPath = candidatePath2;
+                } else if (com.badlogic.gdx.Gdx.files.internal(candidatePath3).exists()) {
+                    facesetPath = candidatePath3;
+                }
+            }
             if (facesetPath != null && facesetPath.isBlank()) {
                 facesetPath = null; // chuẩn hóa chuỗi rỗng → null
             }
@@ -759,8 +771,8 @@ public class TiledAshleyConfigurator {
     }
 
     
-    public void spawnIceMapKey(float x, float y) {
-        spawnQuestItem(Item.Type.ICE_MAP_KEY, x, y, "ice_map_key/ice_map_key");
+    public void spawnMagicShard(float x, float y) {
+        spawnQuestItem(Item.Type.MAGIC_SHARD, x, y, "magic_shard/magic_shard");
     }
     public void spawnLaurelLeaf(float x, float y) {
         spawnQuestItem(Item.Type.LAUREL_LEAF, x, y, "laurel_leaf/laurel_leaf");
@@ -981,7 +993,7 @@ public class TiledAshleyConfigurator {
             case SILVER_CUP    -> SoundAsset.PICKUP;
             case HEART_CONTAINER -> SoundAsset.HEAL;
             case LAUREL_LEAF   -> SoundAsset.PICKUP;
-            case ICE_MAP_KEY   -> SoundAsset.PICKUP;
+            case MAGIC_SHARD   -> SoundAsset.PICKUP;
             case FROST_IRON_ORE -> SoundAsset.PICKUP;
             case HEIRLOOM_FISHING_ROD -> SoundAsset.PICKUP;
             case SACRED_SPRING_WATER -> SoundAsset.PICKUP;

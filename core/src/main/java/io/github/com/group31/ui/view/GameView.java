@@ -430,8 +430,8 @@ public class GameView extends View<GameViewModel> implements Disposable {
             if (viewModel.getLaurelLeaves() > 0) {
                 items.add(new InvItem(atlas.findRegion("laurel_leaf/laurel_leaf"), viewModel.getLaurelLeaves(), io.github.com.group31.component.Item.Type.LAUREL_LEAF));
             }
-            if (viewModel.getIceMapKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("ice_map_key/ice_map_key"), viewModel.getIceMapKeys(), io.github.com.group31.component.Item.Type.ICE_MAP_KEY));
+            if (viewModel.getMagicShards() > 0) {
+                items.add(new InvItem(atlas.findRegion("magic_shard/magic_shard"), viewModel.getMagicShards(), io.github.com.group31.component.Item.Type.MAGIC_SHARD));
             }
             if (viewModel.getFrostOres() > 0) {
                 items.add(new InvItem(atlas.findRegion("frost_iron_ore_block/frost_iron_ore_block"), viewModel.getFrostOres(), io.github.com.group31.component.Item.Type.FROST_IRON_ORE));
@@ -615,12 +615,21 @@ public class GameView extends View<GameViewModel> implements Disposable {
         final Vector2 position = textAndPos.getKey();
         String text = textAndPos.getValue();
 
-        TextraLabel textraLabel = new TypingLabel("[%75]{JUMP=1.5;0.4;0.8}" + text, skin, "small");
+        boolean hasRainbow = false;
+        if (text.toUpperCase().contains("[RAINBOW]")) {
+            hasRainbow = true;
+            text = text.replaceAll("(?i)\\[RAINBOW\\]", "");
+        }
+
+        float duration = 3.0f;
+        String formatting = hasRainbow ? "[%75]{JUMP=1.5;0.4;0.8}{RAINBOW}" : "[%75]{JUMP=1.5;0.4;0.8}";
+
+        TextraLabel textraLabel = new TypingLabel(formatting + text, skin, "small");
         stage.addActor(textraLabel);
 
         textraLabel.addAction(
             Actions.parallel(
-                Actions.sequence(Actions.delay(1.0f), Actions.removeActor()),
+                Actions.sequence(Actions.delay(duration), Actions.removeActor()),
                 Actions.forever(Actions.run(() -> {
                     Vector2 stageCoords = toStageCoords(position);
                     textraLabel.setPosition(stageCoords.x, stageCoords.y);

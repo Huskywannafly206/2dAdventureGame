@@ -60,7 +60,7 @@ public class ItemSystem extends IteratingSystem {
                     float x = t.getPosition().x + t.getSize().x * 0.5f;
                     float y = t.getPosition().y + t.getSize().y;
                     viewModel.showFloatingText(
-                        "[YELLOW]Nhận: " + unlocked.displayName + "![]", x, y);
+                        "[RAINBOW]Nhận: " + unlocked.displayName + "![]", x, y);
                 }
                 audioService.playSound(item.getPickupSound());
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(collector);
@@ -95,7 +95,7 @@ public class ItemSystem extends IteratingSystem {
                 if (t != null) {
                     float x = t.getPosition().x + t.getSize().x * 0.5f;
                     float y = t.getPosition().y + t.getSize().y;
-                    viewModel.showFloatingText("[GOLD]Nhan: Ban do da de![]", x, y);
+                    viewModel.showFloatingText("[RAINBOW]Nhan: Ban do da de![]", x, y);
                 }
             } else if (type == Item.Type.FROST_IRON_ORE) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkFrostOrePickup(collector);
@@ -105,13 +105,17 @@ public class ItemSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkSacredWaterPickup(collector);
             } else if (type == Item.Type.FROZEN_HEART) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkFrozenHeartPickup(collector);
-            } else if (type == Item.Type.ICE_MAP_KEY) {
-                io.github.com.group31.quest.QuestManager.INSTANCE.checkIceMapKeyPickup(collector);
+            } else if (type == Item.Type.MAGIC_SHARD) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkMagicShardPickup(collector);
             }
         }
 
         // Phát âm thanh
-        audioService.playSound(item.getPickupSound());
+        if (type == Item.Type.SOOTHING_HERB) {
+            audioService.playSound(io.github.com.group31.asset.SoundAsset.PICKUP);
+        } else {
+            audioService.playSound(item.getPickupSound());
+        }
 
         // Cập nhật HUD
         if (inventory != null) {

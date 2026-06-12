@@ -30,7 +30,7 @@ public class Item implements Component {
         SILVER_CUP,
         HEART_CONTAINER,
         LAUREL_LEAF,
-        ICE_MAP_KEY,
+        MAGIC_SHARD,
         // Ice World quest items
         FROST_IRON_ORE,
         HEIRLOOM_FISHING_ROD,

@@ -589,9 +589,9 @@
  <tile id="40" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
-   <property name="itemType" value="ICE_MAP_KEY"/>
+   <property name="itemType" value="MAGIC_SHARD"/>
   </properties>
-  <image source="objects/ice_map_key.png" width="16" height="16"/>
+  <image source="objects/magic_shard.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="16" height="16">
     <properties>

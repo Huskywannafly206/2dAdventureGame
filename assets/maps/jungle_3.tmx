@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="19">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="20">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="object1.tsx"/>
  <tileset firstgid="820" source="objects.tsx"/>
- <tileset firstgid="861" source="Dungeon_Tileset.tsx"/>
+ <tileset firstgid="864" source="Dungeon_Tileset.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJy1VDsWgCAMiyP3H9VDKIdAL+SsPh/vdegHsB2yQGlIUkgTkAwUAMeDE/z+9qzvAlbhzCiKwpWduTQ+yQtvvl6eq7Ney3YJyE9CVH4cqF7OrxYPrZoZn38eeVk19f1R3qjc6rxQ3tbcXh0VLd5RDdyc9s665l127stpt/7R0b4R9/2DG5U+R5c=
@@ -26,6 +26,7 @@
   <object id="2" x="167.5" y="37">
    <point/>
   </object>
+  <object id="19" name="checkpoint_trigger" x="144.727" y="32.5455" width="46" height="17.0909"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="4" name="Player" gid="821" x="151.5" y="53.5" width="32" height="32">
@@ -39,21 +40,21 @@
     <property name="dialogue" value="Eyes can deceive, ears can mistake, but the heart never lies. The key is only granted to those who listen to the sound of truth."/>
    </properties>
   </object>
-  <object id="12" name="chest3" gid="945" x="367" y="209.333" width="16" height="16">
+  <object id="12" name="chest3" gid="948" x="367" y="209.333" width="16" height="16">
    <properties>
     <property name="lootType" value="TRAP"/>
     <property name="openTileId" type="int" value="104"/>
     <property name="type" value="chest"/>
    </properties>
   </object>
-  <object id="13" name="chest1" gid="945" x="81" y="209" width="16" height="16">
+  <object id="13" name="chest1" gid="948" x="81" y="209" width="16" height="16">
    <properties>
     <property name="lootType" value="SILVER_KEY"/>
     <property name="openTileId" type="int" value="104"/>
     <property name="type" value="chest"/>
    </properties>
   </object>
-  <object id="14" name="chest2" gid="945" x="368.333" y="97" width="16" height="16">
+  <object id="14" name="chest2" gid="948" x="368.333" y="97" width="16" height="16">
    <properties>
     <property name="lootType" value="TRAP"/>
     <property name="openTileId" type="int" value="104"/>

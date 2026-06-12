@@ -39,6 +39,7 @@ import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Projectile;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.input.Command;
+import io.github.com.group31.input.KeyboardController;
 import io.github.com.group31.screen.MenuScreen;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.tiled.TiledAshleyConfigurator;
@@ -60,6 +61,7 @@ public class ControllerSystem extends IteratingSystem {
     private final World physicWorld;
     private final AssetService assetService;
     private final TiledAshleyConfigurator configurator;
+    private final KeyboardController keyboardController;
     private Entity activeNpcEntity = null;
 
     // --- Dash state (per-player, gắn trên system vì chỉ có 1 player) ---
@@ -69,14 +71,16 @@ public class ControllerSystem extends IteratingSystem {
 
     public ControllerSystem(GdxGame game, AudioService audioService,
                             GameViewModel viewModel, World physicWorld,
-                            AssetService assetService, TiledAshleyConfigurator configurator) {
+                            AssetService assetService, TiledAshleyConfigurator configurator,
+                            KeyboardController keyboardController) {
         super(Family.all(Controller.class).get());
-        this.game         = game;
-        this.audioService = audioService;
-        this.viewModel    = viewModel;
-        this.physicWorld  = physicWorld;
-        this.assetService = assetService;
-        this.configurator = configurator;
+        this.game               = game;
+        this.audioService       = audioService;
+        this.viewModel          = viewModel;
+        this.physicWorld        = physicWorld;
+        this.assetService       = assetService;
+        this.configurator       = configurator;
+        this.keyboardController = keyboardController;
     }
 
     /**
@@ -109,6 +113,21 @@ public class ControllerSystem extends IteratingSystem {
             if (controller.getPressedCommands().contains(Command.TOGGLE_MENU) ||
                 controller.getPressedCommands().contains(Command.CANCEL)) {
                 viewModel.toggleMenu();
+                keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+            } else if (controller.getPressedCommands().contains(Command.OPEN_QUEST)) {
+                if (viewModel.getCurrentTab() == 1) {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                } else {
+                    viewModel.setCurrentTab(1);
+                }
+            } else if (controller.getPressedCommands().contains(Command.OPEN_INVENTORY)) {
+                if (viewModel.getCurrentTab() == 0) {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                } else {
+                    viewModel.setCurrentTab(0);
+                }
             } else if (controller.getPressedCommands().contains(Command.LEFT)) {
                 viewModel.prevTab();
             } else if (controller.getPressedCommands().contains(Command.RIGHT)) {
@@ -140,7 +159,20 @@ public class ControllerSystem extends IteratingSystem {
                 case INTERACT      -> interactWithNpc(entity);
                 case DASH          -> startDash(entity);
                 case SWITCH_WEAPON -> switchWeapon(entity);
-                case TOGGLE_MENU   -> viewModel.toggleMenu();
+                case TOGGLE_MENU   -> {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
+                case OPEN_QUEST    -> {
+                    viewModel.toggleMenu();
+                    viewModel.setCurrentTab(1);
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
+                case OPEN_INVENTORY -> {
+                    viewModel.toggleMenu();
+                    viewModel.setCurrentTab(0);
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
             }
         }
         controller.getPressedCommands().clear();
@@ -381,7 +413,7 @@ public class ControllerSystem extends IteratingSystem {
             life.addLife(POTION_HEAL_AMOUNT);
             inventory.removeItem(Item.Type.POTION_HEALTH, 1);
             audioService.playSound(SoundAsset.HEAL);
-            
+
             Transform transform = Transform.MAPPER.get(entity);
             if (transform != null) {
                 float x = transform.getPosition().x + transform.getSize().x * 0.5f;
@@ -439,6 +471,16 @@ public class ControllerSystem extends IteratingSystem {
                 }
                 npc.resetDialogue();
                 activeNpcEntity = null;
+                Move move = Move.MAPPER.get(player);
+                if (move != null) {
+                    float dx = 0f;
+                    float dy = 0f;
+                    if (keyboardController.isCommandPressed(Command.UP)) dy += 1f;
+                    if (keyboardController.isCommandPressed(Command.DOWN)) dy -= 1f;
+                    if (keyboardController.isCommandPressed(Command.LEFT)) dx -= 1f;
+                    if (keyboardController.isCommandPressed(Command.RIGHT)) dx += 1f;
+                    move.getDirection().set(dx, dy);
+                }
             }
             return;
         }
@@ -474,7 +516,7 @@ public class ControllerSystem extends IteratingSystem {
         if (closestChest != null) {
             io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(closestChest);
             chest.setOpen(true);
-            
+
             io.github.com.group31.component.Respawnable respawnable = closestChest.getComponent(io.github.com.group31.component.Respawnable.class);
             if (respawnable != null) {
                 io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
@@ -493,7 +535,7 @@ public class ControllerSystem extends IteratingSystem {
 
             Transform chestTransform = Transform.MAPPER.get(closestChest);
             String lootType = chest.getLootType();
-            
+
             if (lootType.startsWith("WEAPON_")) {
                 CombatState combatState = CombatState.MAPPER.get(player);
                 if (combatState != null) {
@@ -502,14 +544,14 @@ public class ControllerSystem extends IteratingSystem {
                     else if (lootType.endsWith("BOW")) unlocked = io.github.com.group31.combat.Weapon.BOW;
                     else if (lootType.endsWith("MAGIC_WAND")) unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
                     else if (lootType.endsWith("RUSTY_SWORD")) unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
-                    
+
                     if (unlocked != null) {
                         boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
                         if (newlyUnlocked) {
-                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]", 
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]",
                                 chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
                         } else {
-                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!", 
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!",
                                 chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
                         }
                         java.util.List<String> wNames = new java.util.ArrayList<>();
@@ -523,7 +565,7 @@ public class ControllerSystem extends IteratingSystem {
                 audioService.playSound(SoundAsset.TRAP);
                 float dmg = chest.getTrapDamage();
                 viewModel.showFloatingText("[RED]It's a trap! -" + (int)dmg + " HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
-                
+
                 Damaged currentDamage = Damaged.MAPPER.get(player);
                 if (currentDamage != null) {
                     currentDamage.addDamage(dmg);
@@ -567,11 +609,20 @@ public class ControllerSystem extends IteratingSystem {
             }
 
             if (npc != null && "coin3".equalsIgnoreCase(npc.getName())) {
-                audioService.playSound(SoundAsset.COIN);
+                audioService.playSound(SoundAsset.PICKUP);
                 Inventory inventory = Inventory.MAPPER.get(player);
                 if (inventory != null) {
                     inventory.addItem(Item.Type.COIN, 1);
                     viewModel.updateInventory(inventory);
+                    int count = 0;
+                    if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                    Transform transform = Transform.MAPPER.get(player);
+                    if (transform != null) {
+                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Coin (" + count + "/3)![]",
+                            transform.getPosition().x, transform.getPosition().y + 1f);
+                    }
                 }
                 getEngine().removeEntity(closestNpc);
                 return;
@@ -583,9 +634,13 @@ public class ControllerSystem extends IteratingSystem {
                 if (inventory != null) {
                     inventory.addItem(Item.Type.SILVER_CUP, 1);
                     viewModel.updateInventory(inventory);
+                    int count = 0;
+                    if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
                     Transform transform = Transform.MAPPER.get(player);
                     if (transform != null) {
-                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Cup![]", 
+                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Cup (" + count + "/3)![]",
                             transform.getPosition().x, transform.getPosition().y + 1f);
                     }
                 }
@@ -601,12 +656,16 @@ public class ControllerSystem extends IteratingSystem {
                 if (inventory != null) {
                     if ("Gold Key".equalsIgnoreCase(npc.getName())) {
                         inventory.addItem(Item.Type.GOLD_KEY, 1);
-                        viewModel.showFloatingText("[GOLD]+1 Gold Key![]", 
+                        viewModel.showFloatingText("[GOLD]+1 Gold Key![]",
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                         io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(player);
                     } else {
                         inventory.addItem(Item.Type.SILVER_KEY, 1);
-                        viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 
+                        int count = 0;
+                        if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                        if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                        if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                        viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key (" + count + "/3)![]",
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                     }
                     viewModel.updateInventory(inventory);
@@ -633,14 +692,14 @@ public class ControllerSystem extends IteratingSystem {
                     if (unlocked != null) {
                         boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
                         if (newlyUnlocked) {
-                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]", 
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]",
                                 playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                             io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(player);
                         } else {
-                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!", 
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!",
                                 playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                         }
-                        
+
                         // Sync to viewModel
                         java.util.List<String> wNames = new java.util.ArrayList<>();
                         for (io.github.com.group31.combat.Weapon w : combatState.getUnlockedWeapons()) {
@@ -657,6 +716,10 @@ public class ControllerSystem extends IteratingSystem {
             Move move = Move.MAPPER.get(player);
             if (move != null) {
                 move.getDirection().setZero();
+            }
+            Physic physic = Physic.MAPPER.get(player);
+            if (physic != null) {
+                physic.getBody().setLinearVelocity(0f, 0f);
             }
 
             // Cập nhật dialogue của NPC dựa trên tiến trình Quest trước khi hiển thị
@@ -719,9 +782,9 @@ public class ControllerSystem extends IteratingSystem {
         } else if ("fisher_man".equalsIgnoreCase(displayName)) {
             displayName = "Fisherman";
         } else if ("tho_san".equalsIgnoreCase(displayName)) {
-            displayName = "Thợ Săn";
+            displayName = "Hunter";
         } else if ("truong_lang".equalsIgnoreCase(displayName)) {
-            displayName = "Trưởng Làng";
+            displayName = "Village Chief";
         } else if ("monk".equalsIgnoreCase(displayName)) {
             displayName = "Monk";
         } else if ("old man".equalsIgnoreCase(displayName)) {

@@ -17,25 +17,13 @@ import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.textra.TypingLabel;
 
 /**
- * Hộp thoại NPC dùng DialogBoxFaceset.png (Ninja Adventure Pack) làm nền 9-patch.
- * Layout: [Faceset 38×38] | [Tên NPC / Nội dung thoại]
- *
- * BUG FIX: TypingLabel.setWrap(true) yêu cầu cell có width xác định TRƯỚC khi layout.
- * Giải pháp: thêm TypingLabel trực tiếp vào right column với width=0 grow,
- * và gọi invalidateHierarchy() sau khi add để buộc Table tính lại layout.
+ * NPC dialogue box with layout matching classic RPG design:
+ * - Uses DialogBoxFaceset.png as the main dialog content frame (with faceset slot on left, dialogue on right).
+ * - Leaves faceset slot empty if NPC has no faceset.
+ * - Displays character name inside DialogInfo.png nameplate, placed directly above the dialog frame.
  */
 public class DialogueBox extends Table implements Disposable {
 
-    // DialogBoxFaceset.png = 300×58 px
-    // Ô faceset đen nằm ở góc trái, chiếm khoảng 50×50 px (tính theo tỉ lệ ảnh gốc)
-    // Sau khi scale xuống UI world 320×180: chiều cao box ~48px → scale = 48/58 ≈ 0.83
-    // → faceset slot thực tế ≈ 50 * 0.83 ≈ 41px → dùng 38px (khớp monk_faceset 38×38)
-    private static final int   PATCH_LEFT   = 6;
-    private static final int   PATCH_RIGHT  = 6;
-    private static final int   PATCH_TOP    = 6;
-    private static final int   PATCH_BOTTOM = 6;
-
-    // Kích thước slot faceset trong hộp thoại (pixel UI)
     private static final float FACESET_W = 38f;
     private static final float FACESET_H = 38f;
 
@@ -51,67 +39,70 @@ public class DialogueBox extends Table implements Disposable {
         super(skin);
         this.skin = skin;
 
-        // ── Nền 9-patch từ DialogBoxFaceset.png ───────────────────────────
+        // Load background texture
         dialogBgTexture = new Texture(Gdx.files.internal("ui/DialogBoxFaceset.png"));
         dialogBgTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        NinePatch patch = new NinePatch(
-            new TextureRegion(dialogBgTexture),
-            PATCH_LEFT, PATCH_RIGHT, PATCH_TOP, PATCH_BOTTOM
-        );
-        setBackground(new NinePatchDrawable(patch));
+        // Set background of DialogueBox to DialogBoxFaceset.png directly
+        setBackground(new TextureRegionDrawable(new TextureRegion(dialogBgTexture)));
 
-        // Do not use outer pad because we want the faceset Container to touch the edges exactly
-        pad(0);
+        // Name plate label: aligned inside the brown rectangle of DialogBoxFaceset.png
+        // Brown rectangle is x=3 to x=70 (width 67), y=48 to y=58 (height 10) in LibGDX layout
+        nameLabel = new Label("", skin, "tiny"); // Using tiny (size 8 font) to fit in 10px height
+        nameLabel.setColor(skin.getColor("sand") != null ? skin.getColor("sand") : Color.YELLOW);
+        nameLabel.setAlignment(Align.center);
 
-        // ── Cột trái: ảnh faceset ──────────────────────────────────────────
+        // Faceset Image
         facesetImage = new Image();
         facesetImage.setScaling(com.badlogic.gdx.utils.Scaling.stretch);
 
-        // facesetContainer centered horizontally and vertically to fit exactly inside the printed 50px slot
         Table facesetContainer = new Table();
         facesetContainer.add(facesetImage).size(FACESET_W, FACESET_H).center();
 
-        // ── Cột phải: table chứa tên + text ───────────────────────────────
+        // Dialogue text area
         Table rightCol = new Table();
         rightCol.align(Align.topLeft);
-        rightCol.pad(6f, 6f, 6f, 6f); // inner padding to prevent text touching borders
+        rightCol.pad(6f, 6f, 6f, 6f); // inner pad to prevent text touching borders
 
-        // Tên NPC
-        nameLabel = new Label("", skin, "small");
-        nameLabel.setColor(skin.getColor("sand") != null ? skin.getColor("sand") : Color.YELLOW);
-        rightCol.add(nameLabel).left().padTop(2f).padBottom(1f).row();
-
-        // Placeholder cho TypingLabel – sẽ được thêm vào trong show()
-        // (dùng Label rỗng để giữ row)
         dialogueLabel = new TypingLabel("", skin, "tiny");
         dialogueLabel.setWrap(true);
         dialogueLabel.setAlignment(Align.topLeft);
         dialogueLabelCell = rightCol.add(dialogueLabel).growX().left().top();
 
-        // ── Ghép layout chính ─────────────────────────────────────────────
-        add(facesetContainer).width(50f).fillY().left().top();
-        add(rightCol).grow().left().top();
+        // Construct layout inside DialogueBox
+        // Row 1: Name Label (spans both columns, aligned to the brown rectangle at top-left)
+        add(nameLabel).width(68f).height(10f).left().padLeft(4f).padTop(1f).fill().colspan(2).row();
 
-        // ── Kích thước tổng của hộp thoại (UI world 320×180) ──────────────
-        // width: hầu hết màn hình, để lại lề 2 bên
-        // height: 58px để khớp tỉ lệ gốc 300x58 của DialogBoxFaceset.png
+        // Row 2: Faceset (left) and Dialogue text (right)
+        add(facesetContainer).width(50f).height(48f).left().bottom();
+        add(rightCol).width(250f).height(48f).left().top();
+
+        // Total layout size and positioning in 320x180 world coords
         setSize(300f, 58f);
         setPosition(10f, 4f);
     }
 
     /**
-     * Hiển thị dialogue với faceset tùy chọn.
-     *
-     * @param npcName        Tên NPC.
-     * @param text           Nội dung thoại.
-     * @param facesetTexture Texture avatar NPC, hoặc null nếu không có.
+     * Show dialogue box with name, text, and faceset.
      */
     public void show(String npcName, String text, Texture facesetTexture) {
-        // Cập nhật tên
-        nameLabel.setText(npcName);
+        // Update name
+        // Update name with dynamic scaling if it exceeds the brown rectangle width
+        nameLabel.setFontScale(1f);
+        nameLabel.setText(npcName != null ? npcName : "");
+        if (npcName == null || npcName.isBlank()) {
+            nameLabel.setVisible(false);
+        } else {
+            nameLabel.setVisible(true);
+            float prefWidth = nameLabel.getPrefWidth();
+            float maxWidth = 64f; // Fit inside the 68f cell with padding
+            if (prefWidth > maxWidth) {
+                float scale = maxWidth / prefWidth;
+                nameLabel.setFontScale(scale);
+            }
+        }
 
-        // Cập nhật avatar
+        // Update faceset
         if (facesetTexture != null) {
             facesetImage.setDrawable(new TextureRegionDrawable(new TextureRegion(facesetTexture)));
             facesetImage.setVisible(true);
@@ -120,20 +111,17 @@ public class DialogueBox extends Table implements Disposable {
             facesetImage.setVisible(false);
         }
 
-        // Tạo TypingLabel mới (để reset hiệu ứng gõ chữ từ đầu)
-        // Dùng {FAST} + SPEED thấp để chữ gõ ra từng ký tự
+        // Reset label to trigger typing effect
         dialogueLabel = new TypingLabel("{SPEED=0.5}" + text, skin, "tiny");
         dialogueLabel.setWrap(true);
         dialogueLabel.setAlignment(Align.topLeft);
 
-        // Cập nhật cell với label mới – giữ nguyên constraint growX
         dialogueLabelCell.setActor(dialogueLabel);
 
-        // Buộc Table recompute layout để TypingLabel biết preferred width
         invalidateHierarchy();
     }
 
-    /** Overload không cần faceset. */
+    /** Overload helper for missing faceset. */
     public void show(String npcName, String text) {
         show(npcName, text, null);
     }

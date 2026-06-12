@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="25">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="27">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
@@ -35,6 +35,7 @@
   <object id="11" x="160" y="208.732">
    <point/>
   </object>
+  <object id="26" name="checkpoint_trigger" x="78" y="22.25" width="37.5" height="23"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="9" name="Player" gid="818" x="80.9111" y="47.6825" width="32" height="32">

@@ -22,6 +22,9 @@ public class GameViewModel extends ViewModel {
     public static final String QUEST_CHANGED       = "questChanged";
     public static final String MENU_TOGGLED        = "menuToggled";
     public static final String UNLOCKED_WEAPONS_CHANGED = "unlockedWeaponsChanged";
+    public static final String SCARECROW_HITS_CHANGED = "scarecrowHitsChanged";
+    public static final String USE_INVENTORY_ITEM = "useInventoryItem";
+    public static final String SELECTED_ITEM_CHANGED = "selectedItemChanged";
 
 
     private final AudioService audioService;
@@ -44,6 +47,17 @@ public class GameViewModel extends ViewModel {
     private int silverKeys;
     private int soothingHerbs;
     private int jungleMapKeys;
+    private int silverCups;
+    private int heartContainers;
+    private int laurelLeaves;
+    private int magicShards;
+    private int frostOres;
+    private int fishingRods;
+    private int sacredWaters;
+    private int frozenHearts;
+
+
+    private io.github.com.group31.component.Item.Type selectedItemType = null;
 
     private String[] activeDialogue = null;
     private String   currentWeaponName = "Đấm";
@@ -128,23 +142,72 @@ public class GameViewModel extends ViewModel {
     public int getSilverKeys() { return silverKeys; }
     public int getSoothingHerbs() { return soothingHerbs; }
     public int getJungleMapKeys() { return jungleMapKeys; }
+    public int getSilverCups() { return silverCups; }
+    public int getHeartContainers() { return heartContainers; }
+    public int getLaurelLeaves() { return laurelLeaves; }
+    public int getMagicShards() { return magicShards; }
+    public int getFrostOres() { return frostOres; }
+    public int getFishingRods() { return fishingRods; }
+    public int getSacredWaters() { return sacredWaters; }
+    public int getFrozenHearts() { return frozenHearts; }
+
+
+    public io.github.com.group31.component.Item.Type getSelectedItemType() {
+        return selectedItemType;
+    }
+
+    public void setSelectedItemType(io.github.com.group31.component.Item.Type type) {
+        if (this.selectedItemType != type) {
+            this.selectedItemType = type;
+            this.propertyChangeSupport.firePropertyChange(SELECTED_ITEM_CHANGED, null, type);
+        }
+    }
+
+    private io.github.com.group31.component.Item.Type itemToUse = null;
+
+    public void useInventoryItem() {
+        if (this.selectedItemType != null) {
+            this.itemToUse = this.selectedItemType;
+        }
+    }
+
+    public io.github.com.group31.component.Item.Type consumeItemToUse() {
+        io.github.com.group31.component.Item.Type type = this.itemToUse;
+        this.itemToUse = null;
+        return type;
+    }
 
     /**
      * Cập nhật số lượng item trong túi đồ và thông báo cho View.
      */
+    
     public void updateInventory(int potions, int coins, int keys) {
-        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.magicShards);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.magicShards);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs) {
-        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys);
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.magicShards);
     }
 
     public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.magicShards);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, this.heartContainers, this.laurelLeaves, this.magicShards);
+    }
+
+    
+    
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves, int magicShards) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, magicShards, this.frostOres, this.fishingRods, this.sacredWaters, this.frozenHearts);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves, int magicShards, int frostOres, int fishingRods, int sacredWaters, int frozenHearts) {
         this.potions = potions;
         this.coins   = coins;
         this.keys    = keys;
@@ -152,8 +215,51 @@ public class GameViewModel extends ViewModel {
         this.silverKeys = silverKeys;
         this.soothingHerbs = soothingHerbs;
         this.jungleMapKeys = jungleMapKeys;
-        // Gửi các số dưới dạng mảng int[] để View tự parse
-        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys});
+        this.silverCups = silverCups;
+        this.heartContainers = heartContainers;
+        this.laurelLeaves = laurelLeaves;
+        this.magicShards = magicShards;
+        this.frostOres = frostOres;
+        this.fishingRods = fishingRods;
+        this.sacredWaters = sacredWaters;
+        this.frozenHearts = frozenHearts;
+        this.propertyChangeSupport.firePropertyChange(INVENTORY_CHANGED, null, new int[]{
+            this.potions, this.coins, this.keys, this.goldKeys, this.silverKeys, this.soothingHerbs, this.jungleMapKeys, this.silverCups, this.heartContainers, this.laurelLeaves, this.magicShards, this.frostOres, this.fishingRods, this.sacredWaters, this.frozenHearts
+        });
+    }
+
+    
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, this.laurelLeaves, this.magicShards);
+    }
+
+    public void updateInventory(int potions, int coins, int keys, int goldKeys, int silverKeys, int soothingHerbs, int jungleMapKeys, int silverCups, int heartContainers, int laurelLeaves) {
+        updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, this.magicShards);
+    }
+
+    public void updateInventory(io.github.com.group31.component.Inventory inventory) {
+        if (inventory == null) return;
+        updateInventory(
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.POTION_HEALTH),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.COIN),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.KEY),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.GOLD_KEY),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.SILVER_KEY),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.SOOTHING_HERB),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.JUNGLE_MAP_KEY),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.SILVER_CUP),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.HEART_CONTAINER),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.LAUREL_LEAF),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.MAGIC_SHARD),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.FROST_IRON_ORE),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.HEIRLOOM_FISHING_ROD),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.SACRED_SPRING_WATER),
+            inventory.getItemCount(io.github.com.group31.component.Item.Type.FROZEN_HEART)
+        );
+    }
+
+    public void scarecrowHitsChanged(int index, int hits) {
+        this.propertyChangeSupport.firePropertyChange(SCARECROW_HITS_CHANGED, null, new int[]{index, hits});
     }
 
     /** Called by LifeSystem when player life reaches 0. */

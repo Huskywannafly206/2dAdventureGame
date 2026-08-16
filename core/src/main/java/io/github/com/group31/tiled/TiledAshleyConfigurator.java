@@ -30,6 +30,7 @@ import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.asset.MapAsset;
 import io.github.com.group31.asset.SoundAsset;
 import io.github.com.group31.component.Ai;
+import io.github.com.group31.component.BombComponent;
 import io.github.com.group31.component.Animation2D;
 import io.github.com.group31.component.Animation2D.AnimationType;
 import io.github.com.group31.component.Attack;
@@ -45,6 +46,7 @@ import io.github.com.group31.component.Move;
 import io.github.com.group31.component.Npc;
 import io.github.com.group31.component.Physic;
 import io.github.com.group31.component.Player;
+import io.github.com.group31.component.Door;
 import io.github.com.group31.component.Tiled;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.component.Trigger;
@@ -62,6 +64,7 @@ public class TiledAshleyConfigurator {
     private final Vector2 tmpVec2;
     private final AssetService assetService;
     private TiledMap currentMap;
+    private final java.util.Map<String, TiledMapTileMapObject> currentMapObjects = new java.util.HashMap<>();
 
     public TiledAshleyConfigurator(Engine engine, World physicWorld, AssetService assetService) {
         this.engine = engine;
@@ -69,10 +72,49 @@ public class TiledAshleyConfigurator {
         this.tmpMapObjects = new MapObjects();
         this.tmpVec2 = new Vector2();
         this.assetService = assetService;
+        this.coin2SlimePositions.clear();
+        this.chest2SkullPositions.clear();
+    }
+
+    public java.util.Map<String, TiledMapTileMapObject> getCurrentMapObjects() {
+        return currentMapObjects;
+    }
+
+    private final java.util.List<Vector2> coin2SlimePositions = new java.util.ArrayList<>();
+    private final java.util.List<Vector2> chest2SkullPositions = new java.util.ArrayList<>();
+
+    private int getGlobalGidForObjectsTile(int localTileId) {
+        if (currentMap == null) return localTileId;
+        for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+            if ("objects".equals(ts.getName())) {
+                int firstgid = ts.getProperties().get("firstgid", 1, Integer.class);
+                return firstgid + localTileId;
+            }
+        }
+        return localTileId;
+    }
+
+    public void spawnCoin2Slimes() {
+        int slimeGid = getGlobalGidForObjectsTile(9);
+        for (Vector2 pos : coin2SlimePositions) {
+            spawnMob(slimeGid, pos.x, pos.y);
+        }
+        this.coin2SlimePositions.clear();
+    }
+
+    public void spawnChest2Skulls() {
+        int skullGid = getGlobalGidForObjectsTile(20);
+        for (Vector2 pos : chest2SkullPositions) {
+            spawnMob(skullGid, pos.x, pos.y);
+        }
+        this.chest2SkullPositions.clear();
     }
 
     public void setCurrentMap(TiledMap map) {
         this.currentMap = map;
+        this.coin2SlimePositions.clear();
+        this.chest2SkullPositions.clear();
+        this.currentMapObjects.clear();
     }
 
     public void onLoadTile(TiledMapTile tile, float x, float y) {
@@ -102,6 +144,7 @@ public class TiledAshleyConfigurator {
                 rect.getX(), rect.getY(), 0,
                 rect.getWidth(), rect.getHeight(),
                 1f, 1f,
+                0f,
                 0,
                 entity);
             addEntityPhysic(
@@ -122,9 +165,48 @@ public class TiledAshleyConfigurator {
      * Creates and configures an entity from a Tiled map object with all necessary components.
      */
     public void onLoadObject(TiledMapTileMapObject tileMapObject) {
-        Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = getTextureRegion(tile);
+
+        int objTileId = getLocalTileId(tile);
+        MapAsset mapAsset = currentMap != null ? currentMap.getProperties().get("mapAsset", MapAsset.class) : null;
+        boolean isJungleMap = mapAsset == MapAsset.JUNGLEMAP1;
+        boolean isCoin2Slime = false;
+        if (isJungleMap && objTileId == 9) {
+            float dx = tileMapObject.getX() - 253.333f;
+            float dy = tileMapObject.getY() - 90.6667f;
+            float dist = (float) Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100f || "coin2_slime".equalsIgnoreCase(tileMapObject.getName())) {
+                isCoin2Slime = true;
+            }
+        }
+
+        boolean isJungleMap3 = mapAsset == MapAsset.JUNGLEMAP3;
+        boolean isChest2Skull = false;
+        if (isJungleMap3 && objTileId == 20) {
+            float dx = tileMapObject.getX() - 368.333f;
+            float dy = tileMapObject.getY() - 97.0f;
+            float dist = (float) Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150f || "chest2_skull".equalsIgnoreCase(tileMapObject.getName())) {
+                isChest2Skull = true;
+            }
+        }
+
+        if (isCoin2Slime) {
+            float worldCenterX = (tileMapObject.getX() + textureRegion.getRegionWidth() * 0.5f) * GdxGame.UNIT_SCALE;
+            float worldCenterY = (tileMapObject.getY() + textureRegion.getRegionHeight() * 0.5f) * GdxGame.UNIT_SCALE;
+            coin2SlimePositions.add(new Vector2(worldCenterX, worldCenterY));
+            return;
+        }
+
+        if (isChest2Skull) {
+            float worldCenterX = (tileMapObject.getX() + textureRegion.getRegionWidth() * 0.5f) * GdxGame.UNIT_SCALE;
+            float worldCenterY = (tileMapObject.getY() + textureRegion.getRegionHeight() * 0.5f) * GdxGame.UNIT_SCALE;
+            chest2SkullPositions.add(new Vector2(worldCenterX, worldCenterY));
+            return;
+        }
+
+        Entity entity = this.engine.createEntity();
         float sortOffsetY = tile.getProperties().get("sortOffsetY", 0, Integer.class);
         sortOffsetY *= GdxGame.UNIT_SCALE;
         int z = tile.getProperties().get("z", 1, Integer.class);
@@ -134,18 +216,88 @@ public class TiledAshleyConfigurator {
             tileMapObject.getX(), tileMapObject.getY(), z,
             textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
+            -tileMapObject.getRotation(), // LibGDX RenderSystem rotation is CCW, Tiled is CW
             sortOffsetY,
             entity);
 
+        String objName = tileMapObject.getName();
+        if (objName != null) {
+            if (objName.equalsIgnoreCase("scarecrow_1")) {
+                entity.add(new io.github.com.group31.component.ScarecrowComponent(1));
+            } else if (objName.equalsIgnoreCase("scarecrow_2")) {
+                entity.add(new io.github.com.group31.component.ScarecrowComponent(2));
+            } else if (objName.equalsIgnoreCase("scarecrow_3")) {
+                entity.add(new io.github.com.group31.component.ScarecrowComponent(3));
+            }
+        }
+
+        boolean isCoin1 = tileMapObject.getName() != null && tileMapObject.getName().equalsIgnoreCase("coin1");
+        boolean isCoin2 = tileMapObject.getName() != null && tileMapObject.getName().equalsIgnoreCase("coin2");
+        boolean isCoin3 = tileMapObject.getName() != null && tileMapObject.getName().equalsIgnoreCase("coin3");
+        boolean isSilverCup = (tileMapObject.getName() != null && tileMapObject.getName().equalsIgnoreCase("silvercup")) || objTileId == 29;
+        boolean isInteractableCoin = isCoin1 || isCoin2 || isCoin3 || isSilverCup;
+
+        Float respawnTimeObj = tileMapObject.getProperties().get("respawnTime", Float.class);
+        if (respawnTimeObj == null) {
+            Object prop = tile.getProperties().get("respawnTime");
+            if (prop != null) {
+                try { respawnTimeObj = Float.parseFloat(prop.toString()); } catch(Exception ignored){}
+            }
+        }
+        
+        String mapName = mapAsset != null ? mapAsset.name() : "UNKNOWN";
+        Integer objId = tileMapObject.getProperties().get("id", Integer.class);
+        String uniqueId = mapName + "_" + (objId != null ? objId : tileMapObject.hashCode());
+        
+        currentMapObjects.put(uniqueId, tileMapObject);
+        
+        float respawnTime = respawnTimeObj != null ? respawnTimeObj : 0f;
+        entity.add(new io.github.com.group31.component.Respawnable(uniqueId, respawnTime));
+        
+        boolean isRespawning = io.github.com.group31.save.RespawnState.getInstance().isRespawning(uniqueId);
+        
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) classType = tile.getProperties().get("type", "", String.class);
+        
+        if (isRespawning && !"chest".equals(classType)) {
+            return; // Entity is still dead/looted, do not spawn
+        }
+
         // ── Rẽ nhánh riêng cho Item tile (không cần Fsm / Facing / Move / AI) ──
         String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
-        if (itemTypeStr != null && !itemTypeStr.isBlank()) {
+        if (!isInteractableCoin && itemTypeStr != null && !itemTypeStr.isBlank()) {
             BodyType bodyType = BodyType.StaticBody; // item không di chuyển
             addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);
+
+            if (!Physic.MAPPER.has(entity)) {
+                Transform transform = Transform.MAPPER.get(entity);
+                if (transform != null) {
+                    BodyDef bodyDef = new BodyDef();
+                    bodyDef.type = BodyDef.BodyType.StaticBody;
+                    bodyDef.position.set(
+                        transform.getPosition().x + transform.getSize().x * 0.5f,
+                        transform.getPosition().y + transform.getSize().y * 0.5f
+                    );
+                    Body body = this.physicWorld.createBody(bodyDef);
+                    body.setUserData(entity);
+
+                    PolygonShape shape = new PolygonShape();
+                    shape.setAsBox(transform.getSize().x * 0.5f, transform.getSize().y * 0.5f);
+
+                    FixtureDef fixtureDef = new FixtureDef();
+                    fixtureDef.shape = shape;
+                    fixtureDef.isSensor = true;
+                    body.createFixture(fixtureDef);
+                    shape.dispose();
+
+                    entity.add(new Physic(body, new Vector2(body.getPosition())));
+                }
+            }
+
             if (itemTypeStr.startsWith("WEAPON_")) {
                 entity.add(new Npc(itemTypeStr, new String[0]));
             } else {
-                addEntityItem(tile, entity);
+                addEntityItem(tile, entity, itemTypeStr);
             }
             entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
             entity.add(new Tiled(tileMapObject, getLocalTileId(tileMapObject.getTile())));
@@ -158,10 +310,22 @@ public class TiledAshleyConfigurator {
         if (npcName == null) {
             npcName = tile.getProperties().get("npcName", null, String.class);
         }
+        if (isCoin1) {
+            npcName = "coin1";
+        } else if (isCoin2) {
+            npcName = "coin2";
+        } else if (isCoin3) {
+            npcName = "coin3";
+        } else if (isSilverCup) {
+            npcName = "silvercup";
+        }
         if (npcName != null && !npcName.isBlank()) {
             String dialogueStr = tileMapObject.getProperties().get("dialogue", "", String.class);
             if (dialogueStr.isBlank()) {
                 dialogueStr = tile.getProperties().get("dialogue", "...", String.class);
+            }
+            if (isInteractableCoin) {
+                dialogueStr = "";
             }
             String[] dialogue = dialogueStr.split("\\|");
 
@@ -170,15 +334,61 @@ public class TiledAshleyConfigurator {
             if (facesetPath == null || facesetPath.isBlank()) {
                 facesetPath = tile.getProperties().get("faceset", null, String.class);
             }
+            if (facesetPath == null || facesetPath.isBlank()) {
+                String candidatePath1 = "ui/npc_faceset/" + npcName.toLowerCase() + ".png";
+                String candidatePath2 = "ui/npc_faceset/" + npcName + ".png";
+                String candidatePath3 = "ui/npc_faceset/" + npcName + "_faceset.png";
+                if (com.badlogic.gdx.Gdx.files.internal(candidatePath1).exists()) {
+                    facesetPath = candidatePath1;
+                } else if (com.badlogic.gdx.Gdx.files.internal(candidatePath2).exists()) {
+                    facesetPath = candidatePath2;
+                } else if (com.badlogic.gdx.Gdx.files.internal(candidatePath3).exists()) {
+                    facesetPath = candidatePath3;
+                }
+            }
             if (facesetPath != null && facesetPath.isBlank()) {
                 facesetPath = null; // chuẩn hóa chuỗi rỗng → null
+            }
+            if (isInteractableCoin) {
+                facesetPath = null;
             }
 
             entity.add(new Npc(npcName, dialogue, facesetPath));
             entity.add(new Facing(FacingDirection.DOWN));
             entity.add(new Graphic(textureRegion, Color.WHITE.cpy()));
             entity.add(new Tiled(tileMapObject, getLocalTileId(tileMapObject.getTile())));
-            addEntityPhysic(tile.getObjects(), BodyType.StaticBody, Vector2.Zero, entity);
+            if (isInteractableCoin) {
+                addEntityPhysic(tile.getObjects(), BodyType.StaticBody, Vector2.Zero, entity, true);
+            } else {
+                addEntityPhysic(tile.getObjects(), BodyType.StaticBody, Vector2.Zero, entity);
+            }
+
+            // Create default sensor body if interactable coin lacks collision objects
+            if (isInteractableCoin && !Physic.MAPPER.has(entity)) {
+                Transform transform = Transform.MAPPER.get(entity);
+                if (transform != null) {
+                    BodyDef bodyDef = new BodyDef();
+                    bodyDef.type = BodyDef.BodyType.StaticBody;
+                    bodyDef.position.set(
+                        transform.getPosition().x + transform.getSize().x * 0.5f,
+                        transform.getPosition().y + transform.getSize().y * 0.5f
+                    );
+                    Body body = this.physicWorld.createBody(bodyDef);
+                    body.setUserData(entity);
+
+                    PolygonShape shape = new PolygonShape();
+                    shape.setAsBox(transform.getSize().x * 0.5f, transform.getSize().y * 0.5f);
+
+                    FixtureDef fixtureDef = new FixtureDef();
+                    fixtureDef.shape = shape;
+                    fixtureDef.isSensor = true;
+                    body.createFixture(fixtureDef);
+                    shape.dispose();
+
+                    entity.add(new Physic(body, new Vector2(body.getPosition())));
+                }
+            }
+
             addEntityAnimation(tile, entity);
 
             this.engine.addEntity(entity);
@@ -201,6 +411,8 @@ public class TiledAshleyConfigurator {
         addEntityAttack(tile, entity);
         addEntityAi(tile, entity);
         addEntityExperience(tile, entity);
+        addEntityDoor(tile, tileMapObject, entity);
+        addEntityChest(tile, tileMapObject, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
         Color graphicColor = Color.WHITE.cpy();
@@ -214,7 +426,109 @@ public class TiledAshleyConfigurator {
         }
         entity.add(new Tiled(tileMapObject, localTileId));
 
+        io.github.com.group31.component.Chest chest = entity.getComponent(io.github.com.group31.component.Chest.class);
+        if (chest != null && chest.isOpen()) {
+            Graphic graphic = entity.getComponent(Graphic.class);
+            if (graphic != null && chest.getOpenRegion() != null) {
+                graphic.setRegion(chest.getOpenRegion());
+            }
+        }
+
         this.engine.addEntity(entity);
+    }
+
+    private void addEntityDoor(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"door".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        float openRotation = tileMapObject.getProperties().get("openRotation", 0f, Float.class);
+        if (openRotation == 0f) {
+            openRotation = tile.getProperties().get("openRotation", 0f, Float.class);
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    entity.add(new Door(getTextureRegion(tile), getTextureRegion(openTile), openRotation));
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Door tile missing openTileId property!");
+        }
+    }
+
+    private void addEntityChest(TiledMapTile tile, TiledMapTileMapObject tileMapObject, Entity entity) {
+        String classType = tileMapObject.getProperties().get("type", "", String.class);
+        if (classType.isBlank()) {
+            classType = tile.getProperties().get("type", "", String.class);
+        }
+        if (!"chest".equals(classType)) return;
+
+        int openTileLocalId = tileMapObject.getProperties().get("openTileId", -1, Integer.class);
+        if (openTileLocalId == -1) {
+            openTileLocalId = tile.getProperties().get("openTileId", -1, Integer.class);
+        }
+
+        String lootType = tileMapObject.getProperties().get("lootType", "COIN", String.class);
+        if (lootType.equals("COIN")) {
+            lootType = tile.getProperties().get("lootType", "COIN", String.class);
+        }
+
+        float trapDamage = 2f;
+        Object trapDmgObj = tileMapObject.getProperties().get("trapDamage");
+        if (trapDmgObj == null) trapDmgObj = tile.getProperties().get("trapDamage");
+        if (trapDmgObj != null) {
+            try { trapDamage = Float.parseFloat(trapDmgObj.toString()); } catch (Exception ignored) {}
+        }
+
+        if (openTileLocalId != -1) {
+            com.badlogic.gdx.maps.tiled.TiledMapTileSet tileset = null;
+            int firstGid = -1;
+            for (com.badlogic.gdx.maps.tiled.TiledMapTileSet ts : currentMap.getTileSets()) {
+                if (ts.getTile(tile.getId()) != null) {
+                    tileset = ts;
+                    firstGid = ts.getProperties().get("firstgid", 1, Integer.class);
+                    break;
+                }
+            }
+
+            if (tileset != null) {
+                TiledMapTile openTile = tileset.getTile(firstGid + openTileLocalId);
+                if (openTile != null) {
+                    io.github.com.group31.component.Chest chest = new io.github.com.group31.component.Chest(getTextureRegion(tile), getTextureRegion(openTile), lootType, trapDamage);
+                    io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+                    if (respawnable != null && io.github.com.group31.save.RespawnState.getInstance().isRespawning(respawnable.getEntityId())) {
+                        chest.setOpen(true);
+                    }
+                    entity.add(chest);
+                } else {
+                    com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest openTileId " + openTileLocalId + " not found in tileset!");
+                }
+            }
+        } else {
+             com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Chest tile missing openTileId property!");
+        }
     }
 
     private BodyType getObjectBodyType(TiledMapTile tile) {
@@ -282,11 +596,7 @@ public class TiledAshleyConfigurator {
                 float py = transform.getPosition().y;
                 
                 MapAsset asset = currentMap != null ? currentMap.getProperties().get("mapAsset", MapAsset.class) : null;
-                if (asset == MapAsset.VILLAGE) {
-                    spawnTestWeapon(Item.Type.WEAPON_SWORD, px + 1f, py, "weapon_sword/weapon_sword");
-                    spawnTestWeapon(Item.Type.WEAPON_BOW, px + 2f, py, "weapon_bow/weapon_bow");
-                    spawnTestWeapon(Item.Type.WEAPON_MAGIC_WAND, px + 3f, py, "weapon_magicWand/weapon_magicWand");
-                } else if (asset == MapAsset.VILLAGE_HOUSE) {
+                if (asset == MapAsset.VILLAGE_HOUSE) {
                     spawnPotion(px + 2f, py);
                 }
             }
@@ -341,8 +651,131 @@ public class TiledAshleyConfigurator {
         this.engine.addEntity(itemEntity);
     }
 
+    public Entity findNpcByName(String name) {
+        for (Entity entity : engine.getEntities()) {
+            Npc npc = Npc.MAPPER.get(entity);
+            if (npc != null && name.equalsIgnoreCase(npc.getName())) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public Entity findEntityByObjectId(int id) {
+        for (Entity entity : engine.getEntities()) {
+            Tiled tiled = Tiled.MAPPER.get(entity);
+            if (tiled != null && tiled.getId() == id) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
     public void spawnRustySword(float x, float y) {
         spawnTestWeapon(Item.Type.WEAPON_RUSTY_SWORD, x, y, "weapon_rusty_sword/weapon_rusty_sword");
+    }
+
+    /**
+     * Spawn một cái cần câu di truyền (HEIRLOOM_FISHING_ROD) tại (x, y).
+     * Được gọi bởi QuestManager khi Fisherman kích hoạt quest tìm cần câu.
+     */
+    public void spawnFishingRod(float x, float y) {
+        spawnQuestItem(Item.Type.HEIRLOOM_FISHING_ROD, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn Sacred Spring Water item (phần thưởng từ Fisherman) tại vị trí player.
+     */
+    public void spawnSacredSpringWater(float x, float y) {
+        spawnQuestItem(Item.Type.SACRED_SPRING_WATER, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn Frozen Heart item (từ Snow Sprite) tại (x, y).
+     */
+    public void spawnFrozenHeart(float x, float y) {
+        spawnQuestItem(Item.Type.FROZEN_HEART, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn một cục quặng Frost-Iron Ore tại (x, y).
+     */
+    public void spawnFrostOre(float x, float y) {
+        spawnQuestItem(Item.Type.FROST_IRON_ORE, x, y, "jungle_map_key/jungle_map_key");
+    }
+
+    /**
+     * Spawn một cụm 5 cục quặng Frost-Iron Ore rải rác quanh vị trí (centerX, centerY).
+     * Được gọi từ QuestManager khi Blacksmith kích hoạt quest stage 12.
+     */
+    public void spawnFrostOreCluster(float centerX, float centerY) {
+        float[][] offsets = {
+            { 0f,    0f  },
+            { 1.5f,  0.5f},
+            {-1.5f,  1f  },
+            { 0.5f, -1.5f},
+            {-0.5f,  2f  }
+        };
+        for (float[] offset : offsets) {
+            spawnQuestItem(Item.Type.FROST_IRON_ORE,
+                centerX + offset[0],
+                centerY + offset[1],
+                "jungle_map_key/jungle_map_key");
+        }
+    }
+
+
+    private void spawnQuestItem(Item.Type type, float x, float y, String atlasRegion) {
+        Entity itemEntity = this.engine.createEntity();
+
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion(atlasRegion);
+        if (region == null) {
+            // fallback: dùng region đầu tiên có trong atlas
+            region = atlas.findRegion("potion_health/potion_health");
+        }
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.CYAN.cpy()));
+        }
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+        itemEntity.add(new Item(type, 1f, SoundAsset.PICKUP));
+
+        this.engine.addEntity(itemEntity);
+    }
+
+    
+    public void spawnMagicShard(float x, float y) {
+        spawnQuestItem(Item.Type.MAGIC_SHARD, x, y, "magic_shard/magic_shard");
+    }
+    public void spawnLaurelLeaf(float x, float y) {
+        spawnQuestItem(Item.Type.LAUREL_LEAF, x, y, "laurel_leaf/laurel_leaf");
     }
 
     public void spawnJungleMapKey(float x, float y) {
@@ -386,6 +819,99 @@ public class TiledAshleyConfigurator {
         itemEntity.add(new Item(Item.Type.JUNGLE_MAP_KEY, 1f, SoundAsset.PICKUP));
 
         this.engine.addEntity(itemEntity);
+    }
+
+    public void spawnGoldKey(float x, float y) {
+        Entity itemEntity = this.engine.createEntity();
+
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        itemEntity.add(transform);
+
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion("gold_key/gold_key");
+        if (region != null) {
+            itemEntity.add(new Graphic(region, Color.WHITE.cpy()));
+        } else {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Failed to find atlas region: gold_key/gold_key");
+        }
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(itemEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        itemEntity.add(new Physic(body, new Vector2(body.getPosition())));
+        itemEntity.add(new Item(Item.Type.GOLD_KEY, 1f, SoundAsset.PICKUP));
+        itemEntity.add(new Npc("Gold Key", new String[0]));
+
+        this.engine.addEntity(itemEntity);
+    }
+
+    public void spawnBomb(float x, float y) {
+        Entity bombEntity = this.engine.createEntity();
+
+        // 1. Transform
+        float size = 0.5f;
+        Transform transform = new Transform(
+            new Vector2(x, y),
+            1,
+            new Vector2(size, size),
+            new Vector2(1f, 1f),
+            0f,
+            0f
+        );
+        bombEntity.add(transform);
+
+        // 2. Graphic
+        TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
+        TextureRegion region = atlas.findRegion("bomb/bomb");
+        if (region != null) {
+            bombEntity.add(new Graphic(region, Color.WHITE.cpy()));
+        } else {
+            com.badlogic.gdx.Gdx.app.error("TiledAshleyConfigurator", "Failed to find atlas region: bomb/bomb");
+        }
+
+        // 3. Physic Body (StaticBody sensor)
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x + size * 0.5f, y + size * 0.5f);
+        Body body = this.physicWorld.createBody(bodyDef);
+        body.setUserData(bombEntity);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(size * 0.5f, size * 0.5f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        bombEntity.add(new Physic(body, new Vector2(body.getPosition())));
+
+        // 4. Item and Bomb components
+        bombEntity.add(new Item(Item.Type.BOMB, 1f, SoundAsset.TRAP));
+        bombEntity.add(new BombComponent());
+
+        this.engine.addEntity(bombEntity);
     }
 
     private void spawnTestWeapon(Item.Type type, float x, float y, String atlasRegionName) {
@@ -440,8 +966,7 @@ public class TiledAshleyConfigurator {
      * Nếu tile có property "itemType", tạo và gắn component Item tương ứng.
      * Item entity sử dụng sensor fixture nên không cần các component AI, Move, Life.
      */
-    private void addEntityItem(TiledMapTile tile, Entity entity) {
-        String itemTypeStr = tile.getProperties().get("itemType", null, String.class);
+    private void addEntityItem(TiledMapTile tile, Entity entity, String itemTypeStr) {
         if (itemTypeStr == null || itemTypeStr.isBlank()) return;
 
         Item.Type type;
@@ -464,9 +989,21 @@ public class TiledAshleyConfigurator {
             case WEAPON_MAGIC_WAND -> SoundAsset.PICKUP;
             case WEAPON_RUSTY_SWORD -> SoundAsset.PICKUP;
             case JUNGLE_MAP_KEY -> SoundAsset.PICKUP;
+            case BOMB          -> SoundAsset.TRAP;
+            case SILVER_CUP    -> SoundAsset.PICKUP;
+            case HEART_CONTAINER -> SoundAsset.HEAL;
+            case LAUREL_LEAF   -> SoundAsset.PICKUP;
+            case MAGIC_SHARD   -> SoundAsset.PICKUP;
+            case FROST_IRON_ORE -> SoundAsset.PICKUP;
+            case HEIRLOOM_FISHING_ROD -> SoundAsset.PICKUP;
+            case SACRED_SPRING_WATER -> SoundAsset.PICKUP;
+            case FROZEN_HEART -> SoundAsset.PICKUP;
         };
 
         entity.add(new Item(type, 1f, sound));
+        if (type == Item.Type.BOMB) {
+            entity.add(new BombComponent());
+        }
     }
 
     private void addEntityLife(TiledMapTile tile, Entity entity) {
@@ -601,6 +1138,7 @@ public class TiledAshleyConfigurator {
         float x, float y, int z,
         float w, float h,
         float scaleX, float scaleY,
+        float rotation,
         float sortOffsetY,
         Entity entity
     ) {
@@ -611,7 +1149,7 @@ public class TiledAshleyConfigurator {
         position.scl(GdxGame.UNIT_SCALE);
         size.scl(GdxGame.UNIT_SCALE);
 
-        entity.add(new Transform(position, z, size, scaling, 0f, sortOffsetY));
+        entity.add(new Transform(position, z, size, scaling, rotation, sortOffsetY));
     }
 
     /**
@@ -660,7 +1198,7 @@ public class TiledAshleyConfigurator {
         float pixelY = worldY / GdxGame.UNIT_SCALE - tileH * 0.5f;
 
         Entity entity = this.engine.createEntity();
-        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, sortOffsetY, entity);
+        addEntityTransform(pixelX, pixelY, z, tileW, tileH, 1f, 1f, 0f, sortOffsetY, entity);
 
         BodyType bodyType = getObjectBodyType(tile);
         addEntityPhysic(tile.getObjects(), bodyType, Vector2.Zero, entity);

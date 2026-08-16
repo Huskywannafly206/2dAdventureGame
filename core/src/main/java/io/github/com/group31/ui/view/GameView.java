@@ -29,6 +29,9 @@ import io.github.com.group31.asset.AssetService;
 import io.github.com.group31.asset.AtlasAsset;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.DialogueBox;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
+import io.github.com.group31.component.Transform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +59,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
 
     // Tabbed Menu Overlay
     private Table menuContainer;
+    private final Label[] scarecrowLabels = new Label[4];
 
     // Atlas để lấy icon item
     private final AssetService assetService;
@@ -81,9 +85,22 @@ public class GameView extends View<GameViewModel> implements Disposable {
         viewModel.onPropertyChange(GameViewModel.FLOATING_TEXT, Map.Entry.class, this::showFloatingText);
         viewModel.onPropertyChange(GameViewModel.XP_CHANGED, Float.class, this::updateXp);
         viewModel.onPropertyChange(GameViewModel.LEVEL_CHANGED, Integer.class, this::updateLevel);
+        viewModel.onPropertyChange(GameViewModel.SCARECROW_HITS_CHANGED, int[].class, indexAndHits -> {
+            if (indexAndHits != null && indexAndHits.length >= 2) {
+                int index = indexAndHits[0];
+                int hits = indexAndHits[1];
+                if (index >= 1 && index <= 3 && scarecrowLabels[index] != null) {
+                    scarecrowLabels[index].setText(hits + "/" + index);
+                    scarecrowLabels[index].addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence(
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.color(Color.RED),
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.color(Color.YELLOW, 0.5f)
+                    ));
+                }
+            }
+        });
         viewModel.onPropertyChange(GameViewModel.INVENTORY_CHANGED, int[].class, counts -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.DIALOGUE_CHANGED, String[].class, this::updateDialogue);
@@ -95,18 +112,23 @@ public class GameView extends View<GameViewModel> implements Disposable {
         viewModel.onPropertyChange(GameViewModel.WEAPON_CHANGED, String.class, this::updateWeaponLabel);
         viewModel.onPropertyChange(GameViewModel.QUEST_CHANGED, String[].class, questInfo -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.MENU_TOGGLED, Boolean.class, this::setMenuVisible);
         viewModel.onPropertyChange(GameViewModel.TAB_CHANGED, Integer.class, tab -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
         viewModel.onPropertyChange(GameViewModel.UNLOCKED_WEAPONS_CHANGED, java.util.List.class, weapons -> {
             if (menuContainer != null && menuContainer.isVisible()) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
+            }
+        });
+        viewModel.onPropertyChange(GameViewModel.SELECTED_ITEM_CHANGED, io.github.com.group31.component.Item.Type.class, type -> {
+            if (menuContainer != null && menuContainer.isVisible()) {
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         });
     }
@@ -282,7 +304,7 @@ public class GameView extends View<GameViewModel> implements Disposable {
         if (menuContainer != null) {
             menuContainer.setVisible(visible);
             if (visible) {
-                rebuildMenu();
+                com.badlogic.gdx.Gdx.app.postRunnable(this::rebuildMenu);
             }
         }
     }
@@ -367,9 +389,11 @@ public class GameView extends View<GameViewModel> implements Disposable {
         class InvItem {
             TextureRegion region;
             int count;
-            InvItem(TextureRegion region, int count) {
+            io.github.com.group31.component.Item.Type type;
+            InvItem(TextureRegion region, int count, io.github.com.group31.component.Item.Type type) {
                 this.region = region;
                 this.count = count;
+                this.type = type;
             }
         }
         java.util.List<InvItem> items = new java.util.ArrayList<>();
@@ -377,35 +401,59 @@ public class GameView extends View<GameViewModel> implements Disposable {
         TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
         if (atlas != null) {
             if (viewModel.getPotions() > 0) {
-                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getPotions()));
+                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getPotions(), io.github.com.group31.component.Item.Type.POTION_HEALTH));
+            }
+            if (viewModel.getHeartContainers() > 0) {
+                items.add(new InvItem(atlas.findRegion("heart_container/heart_container"), viewModel.getHeartContainers(), io.github.com.group31.component.Item.Type.HEART_CONTAINER));
             }
             if (viewModel.getCoins() > 0) {
-                items.add(new InvItem(atlas.findRegion("coin/coin"), viewModel.getCoins()));
+                items.add(new InvItem(atlas.findRegion("coin/coin"), viewModel.getCoins(), io.github.com.group31.component.Item.Type.COIN));
             }
             if (viewModel.getKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("key/key"), viewModel.getKeys()));
+                items.add(new InvItem(atlas.findRegion("key/key"), viewModel.getKeys(), io.github.com.group31.component.Item.Type.KEY));
             }
             if (viewModel.getGoldKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("gold_key/gold_key"), viewModel.getGoldKeys()));
+                items.add(new InvItem(atlas.findRegion("gold_key/gold_key"), viewModel.getGoldKeys(), io.github.com.group31.component.Item.Type.GOLD_KEY));
             }
             if (viewModel.getSilverKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("silver_key/silver_key"), viewModel.getSilverKeys()));
+                items.add(new InvItem(atlas.findRegion("silver_key/silver_key"), viewModel.getSilverKeys(), io.github.com.group31.component.Item.Type.SILVER_KEY));
             }
             if (viewModel.getSoothingHerbs() > 0) {
-                items.add(new InvItem(atlas.findRegion("soothing_herb/soothing_herb"), viewModel.getSoothingHerbs()));
+                items.add(new InvItem(atlas.findRegion("soothing_herb/soothing_herb"), viewModel.getSoothingHerbs(), io.github.com.group31.component.Item.Type.SOOTHING_HERB));
             }
             if (viewModel.getJungleMapKeys() > 0) {
-                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys()));
+                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getJungleMapKeys(), io.github.com.group31.component.Item.Type.JUNGLE_MAP_KEY));
+            }
+            if (viewModel.getSilverCups() > 0) {
+                items.add(new InvItem(atlas.findRegion("silver_cup/silver_cup"), viewModel.getSilverCups(), io.github.com.group31.component.Item.Type.SILVER_CUP));
+            }
+            if (viewModel.getLaurelLeaves() > 0) {
+                items.add(new InvItem(atlas.findRegion("laurel_leaf/laurel_leaf"), viewModel.getLaurelLeaves(), io.github.com.group31.component.Item.Type.LAUREL_LEAF));
+            }
+            if (viewModel.getMagicShards() > 0) {
+                items.add(new InvItem(atlas.findRegion("magic_shard/magic_shard"), viewModel.getMagicShards(), io.github.com.group31.component.Item.Type.MAGIC_SHARD));
+            }
+            if (viewModel.getFrostOres() > 0) {
+                items.add(new InvItem(atlas.findRegion("frost_iron_ore_block/frost_iron_ore_block"), viewModel.getFrostOres(), io.github.com.group31.component.Item.Type.FROST_IRON_ORE));
+            }
+            if (viewModel.getFishingRods() > 0) {
+                items.add(new InvItem(atlas.findRegion("jungle_map_key/jungle_map_key"), viewModel.getFishingRods(), io.github.com.group31.component.Item.Type.HEIRLOOM_FISHING_ROD));
+            }
+            if (viewModel.getSacredWaters() > 0) {
+                items.add(new InvItem(atlas.findRegion("potion_health/potion_health"), viewModel.getSacredWaters(), io.github.com.group31.component.Item.Type.SACRED_SPRING_WATER));
+            }
+            if (viewModel.getFrozenHearts() > 0) {
+                items.add(new InvItem(atlas.findRegion("heart_container/heart_container"), viewModel.getFrozenHearts(), io.github.com.group31.component.Item.Type.FROZEN_HEART));
             }
             for (String wName : viewModel.getUnlockedWeapons()) {
                 if ("SWORD".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_sword/weapon_sword"), 1, io.github.com.group31.component.Item.Type.WEAPON_SWORD));
                 } else if ("BOW".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_bow/weapon_bow"), 1, io.github.com.group31.component.Item.Type.WEAPON_BOW));
                 } else if ("MAGIC_WAND".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_magicWand/weapon_magicWand"), 1, io.github.com.group31.component.Item.Type.WEAPON_MAGIC_WAND));
                 } else if ("RUSTY_SWORD".equalsIgnoreCase(wName)) {
-                    items.add(new InvItem(atlas.findRegion("weapon_rusty_sword/weapon_rusty_sword"), 1));
+                    items.add(new InvItem(atlas.findRegion("weapon_rusty_sword/weapon_rusty_sword"), 1, io.github.com.group31.component.Item.Type.WEAPON_RUSTY_SWORD));
                 }
             }
         }
@@ -433,9 +481,24 @@ public class GameView extends View<GameViewModel> implements Disposable {
                         stack.add(countWrapper);
                     }
                     slot.add(stack).size(16f, 16f).center();
+
+                    slot.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
+                    slot.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                            viewModel.setSelectedItemType(item.type);
+                        }
+                    });
+
+                    if (viewModel.getSelectedItemType() == item.type) {
+                        slot.setColor(Color.YELLOW);
+                    } else {
+                        slot.setColor(Color.WHITE);
+                    }
                 }
             } else {
                 slot.add().size(16f, 16f);
+                slot.setColor(Color.WHITE);
             }
 
             grid.add(slot).size(24f, 24f).pad(2f);
@@ -444,7 +507,32 @@ public class GameView extends View<GameViewModel> implements Disposable {
             }
         }
 
-        content.add(grid).center();
+        content.add(grid).center().row();
+
+        com.badlogic.gdx.scenes.scene2d.ui.TextButton useBtn = new com.badlogic.gdx.scenes.scene2d.ui.TextButton("USE", skin);
+        io.github.com.group31.component.Item.Type selType = viewModel.getSelectedItemType();
+        boolean canUse = false;
+        if (selType == io.github.com.group31.component.Item.Type.POTION_HEALTH && viewModel.getPotions() > 0) canUse = true;
+        if (selType == io.github.com.group31.component.Item.Type.HEART_CONTAINER && viewModel.getHeartContainers() > 0) canUse = true;
+        useBtn.setDisabled(!canUse);
+        if (!canUse) {
+            useBtn.setColor(Color.DARK_GRAY);
+        } else {
+            useBtn.setColor(Color.WHITE);
+        }
+        useBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                if (!useBtn.isDisabled()) {
+                    viewModel.useInventoryItem();
+                }
+            }
+        });
+        
+        Table btnTable = new Table();
+        btnTable.add(useBtn).height(20f);
+        content.add(btnTable).padTop(4f).center();
+
         return content;
     }
 
@@ -527,18 +615,70 @@ public class GameView extends View<GameViewModel> implements Disposable {
         final Vector2 position = textAndPos.getKey();
         String text = textAndPos.getValue();
 
-        TextraLabel textraLabel = new TypingLabel("[%75]{JUMP=1.5;0.4;0.8}" + text, skin, "small");
+        boolean hasRainbow = false;
+        if (text.toUpperCase().contains("[RAINBOW]")) {
+            hasRainbow = true;
+            text = text.replaceAll("(?i)\\[RAINBOW\\]", "");
+        }
+
+        float duration = 3.0f;
+        String formatting = hasRainbow ? "[%75]{JUMP=1.5;0.4;0.8}{RAINBOW}" : "[%75]{JUMP=1.5;0.4;0.8}";
+
+        TextraLabel textraLabel = new TypingLabel(formatting + text, skin, "small");
         stage.addActor(textraLabel);
 
         textraLabel.addAction(
             Actions.parallel(
-                Actions.sequence(Actions.delay(1.0f), Actions.removeActor()),
+                Actions.sequence(Actions.delay(duration), Actions.removeActor()),
                 Actions.forever(Actions.run(() -> {
                     Vector2 stageCoords = toStageCoords(position);
                     textraLabel.setPosition(stageCoords.x, stageCoords.y);
                 }))
             )
         );
+    }
+
+    public void clearScarecrowLabels() {
+        for (int i = 1; i <= 3; i++) {
+            if (scarecrowLabels[i] != null) {
+                scarecrowLabels[i].remove();
+                scarecrowLabels[i] = null;
+            }
+        }
+    }
+
+    public void setupScarecrowLabels(com.badlogic.ashley.core.Engine engine) {
+        clearScarecrowLabels();
+
+        ImmutableArray<Entity> scarecrows = engine.getEntitiesFor(
+            com.badlogic.ashley.core.Family.all(io.github.com.group31.component.ScarecrowComponent.class, Transform.class).get()
+        );
+        for (Entity sc : scarecrows) {
+            final io.github.com.group31.component.ScarecrowComponent scComp = io.github.com.group31.component.ScarecrowComponent.MAPPER.get(sc);
+            if (scComp != null) {
+                int index = scComp.getIndex();
+                int target = index;
+                int current = io.github.com.group31.puzzle.ScarecrowPuzzleManager.INSTANCE.getHits(index);
+
+                final Label label = new Label(current + "/" + target, skin, "small");
+                label.setColor(Color.YELLOW);
+                stage.addActor(label);
+                scarecrowLabels[index] = label;
+                scComp.setLabel(label);
+
+                label.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.forever(
+                    com.badlogic.gdx.scenes.scene2d.actions.Actions.run(() -> {
+                        Transform transform = Transform.MAPPER.get(sc);
+                        if (transform != null) {
+                            Vector2 pos = transform.getPosition();
+                            Vector2 size = transform.getSize();
+                            Vector2 stageCoords = toStageCoords(new Vector2(pos.x + size.x * 0.5f, pos.y + size.y + 0.2f));
+                            label.setPosition(stageCoords.x - label.getPrefWidth() * 0.5f, stageCoords.y);
+                        }
+                    })
+                ));
+            }
+        }
     }
 
     /** Giải phóng tất cả texture faceset đã cache và nền dialogue khi screen bị hủy. */

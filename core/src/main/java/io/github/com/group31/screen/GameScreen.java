@@ -27,6 +27,7 @@ import io.github.com.group31.input.KeyboardController;
 import io.github.com.group31.save.SaveData;
 import io.github.com.group31.save.SaveService;
 import io.github.com.group31.system.AiSystem;
+import io.github.com.group31.system.BombSystem;
 import io.github.com.group31.system.AnimationSystem;
 import io.github.com.group31.system.SlashFxLifetimeSystem;
 import io.github.com.group31.system.SlashFxSystem;
@@ -36,6 +37,7 @@ import io.github.com.group31.system.CameraSystem;
 import io.github.com.group31.system.ControllerSystem;
 import io.github.com.group31.system.DamagedSystem;
 import io.github.com.group31.system.DeadSystem;
+import io.github.com.group31.system.DoorSystem;
 import io.github.com.group31.system.FacingSystem;
 import io.github.com.group31.system.FsmSystem;
 import io.github.com.group31.system.ItemSystem;
@@ -45,6 +47,7 @@ import io.github.com.group31.system.PhysicDebugRenderSystem;
 import io.github.com.group31.system.PhysicMoveSystem;
 import io.github.com.group31.system.PhysicSystem;
 import io.github.com.group31.system.ProjectileSystem;
+import io.github.com.group31.system.RespawnSystem;
 import io.github.com.group31.system.RenderSystem;
 import io.github.com.group31.system.SpawnSystem;
 import io.github.com.group31.system.TriggerSystem;
@@ -52,6 +55,7 @@ import io.github.com.group31.tiled.TiledAshleyConfigurator;
 import io.github.com.group31.tiled.TiledService;
 import io.github.com.group31.ui.model.GameViewModel;
 import io.github.com.group31.ui.view.GameView;
+import io.github.com.group31.puzzle.ScarecrowPuzzleManager;
 
 import java.util.function.Consumer;
 
@@ -96,11 +100,13 @@ public class GameScreen extends ScreenAdapter {
         // This is done by checking if an entity has a Damaged component,
         // and this component is removed in the DamagedSystem.
         this.engine.addSystem(new MapHazardSystem(this.tiledService, this.audioService));
+        this.engine.addSystem(new BombSystem(this.audioService, this.viewModel));
         this.engine.addSystem(new DamagedSystem(viewModel));
         this.engine.addSystem(new TriggerSystem(audioService));
+        this.engine.addSystem(new DoorSystem());
         this.engine.addSystem(new ItemSystem(audioService, viewModel));
-        this.engine.addSystem(new LifeSystem(this.viewModel));
-        this.engine.addSystem(new DeadSystem(this.viewModel));
+        this.engine.addSystem(new io.github.com.group31.system.LifeSystem(this.viewModel));
+        this.engine.addSystem(new DeadSystem(this.viewModel, this.tiledAshleyConfigurator));
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new CameraSystem(game.getCamera()));
         this.engine.addSystem(new SlashFxLifetimeSystem());
@@ -110,8 +116,9 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), weaponHandSystem));
         this.engine.addSystem(new PhysicDebugRenderSystem(this.physicWorld, game.getCamera()));
         this.engine.addSystem(new ProjectileSystem());
+        this.engine.addSystem(new RespawnSystem(this.tiledAshleyConfigurator, this.audioService));
         this.engine.addSystem(new ControllerSystem(game, audioService, viewModel,
-            physicWorld, game.getAssetService()));
+            physicWorld, game.getAssetService(), tiledAshleyConfigurator, keyboardController));
     }
 
     @Override
@@ -140,28 +147,33 @@ public class GameScreen extends ScreenAdapter {
         this.tiledService.setLoadObjectConsumer(tiledAshleyConfigurator::onLoadObject);
         this.tiledService.setLoadTileConsumer(tiledAshleyConfigurator::onLoadTile);
 
-//        TiledMap startMap = this.tiledService.loadMap(MapAsset.ICEMAP1);
+//        TiledMap startMap = this.tiledService.loadMap(MapAsset.VILLAGE);
 //        this.tiledService.setMap(startMap);
 
         // Load Game State
 
         this.engine.getSystem(TriggerSystem.class).registerTrigger("portal_trigger", this::portalTrigger);
-        MapAsset startMapAsset = MapAsset.ICEMAP1;
+        this.engine.getSystem(TriggerSystem.class).registerTrigger("checkpoint_trigger", this::checkpointTrigger);
+        MapAsset startMapAsset = MapAsset.VILLAGE;
         SaveService saveService = game.getSaveService();
         SaveData data = null;
         if(saveService != null && saveService.hasSaveFile()){
             data = saveService.load();
-            if(data != null && data.mapName != null){
-                try{
-                    startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
-                } catch(IllegalArgumentException e){
-                    startMapAsset = MapAsset.ICEMAP1;
+            if(data != null) {
+                io.github.com.group31.save.RespawnState.getInstance().setEntityRespawnTimes(data.respawnTimes);
+                if (data.mapName != null){
+                    try{
+                        startMapAsset = MapAsset.valueOf(data.mapName.toUpperCase());
+                    } catch(IllegalArgumentException e){
+                        startMapAsset = MapAsset.VILLAGE;
+                    }
                 }
             }
         }
 
         TiledMap startMap = this.tiledService.loadMap(startMapAsset);
         this.tiledService.setMap(startMap);
+        checkMapPuzzleSetup(startMapAsset);
 
         if (data != null) {
             ImmutableArray<com.badlogic.ashley.core.Entity> players =
@@ -173,6 +185,10 @@ public class GameScreen extends ScreenAdapter {
                 io.github.com.group31.quest.QuestManager.INSTANCE.setViewModel(viewModel);
                 io.github.com.group31.quest.QuestManager.INSTANCE.setPlayer(player);
                 io.github.com.group31.quest.QuestManager.INSTANCE.setStage(data.questStage);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setFrostOreCount(data.frostOreCount);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setHasSacredSpringWater(data.hasSacredSpringWater);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setHasFrozenHeart(data.hasFrozenHeart);
+                io.github.com.group31.quest.QuestManager.INSTANCE.setFishingRodSpawned(data.fishingRodSpawned);
 
                 Life life = Life.MAPPER.get(player);
                 if(life != null){
@@ -205,7 +221,11 @@ public class GameScreen extends ScreenAdapter {
                     inventory.setItemCount(Item.Type.SILVER_KEY,    data.playerSilverKeys);
                     inventory.setItemCount(Item.Type.SOOTHING_HERB, data.playerSoothingHerbs);
                     inventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, data.playerJungleMapKeys);
-                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys);
+                    inventory.setItemCount(Item.Type.SILVER_CUP, data.playerSilverCups);
+                    inventory.setItemCount(Item.Type.HEART_CONTAINER, data.playerHeartContainers);
+                    inventory.setItemCount(Item.Type.LAUREL_LEAF, data.playerLaurelLeaves);
+                    inventory.setItemCount(Item.Type.MAGIC_SHARD, data.playerMagicShards);
+                    viewModel.updateInventory(data.playerPotions, data.playerCoins, data.playerKeys, data.playerGoldKeys, data.playerSilverKeys, data.playerSoothingHerbs, data.playerJungleMapKeys, data.playerSilverCups, data.playerHeartContainers, data.playerLaurelLeaves, data.playerMagicShards);
                 }
 
                 // Khôi phục CombatState từ file lưu
@@ -245,10 +265,36 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    @Override
-    public void hide() {
-        // Chỉ lưu save khi player còn sống (HP > 0)
-        // Nếu lưu HP=0 vào file, lần sau load lên sẽ chết ngay lập tức
+    private long lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
+    private com.badlogic.gdx.math.Rectangle lastCheckpointRect = null;
+
+    private void checkpointTrigger(Trigger trigger, Entity player) {
+        if (com.badlogic.gdx.utils.TimeUtils.timeSinceMillis(lastCheckpointTime) < 5000) {
+            return; // 5-second cooldown on checkpoints
+        }
+
+        com.badlogic.gdx.math.Rectangle currentRect = null;
+        if (trigger.getMapObject() instanceof com.badlogic.gdx.maps.objects.RectangleMapObject rectObj) {
+            currentRect = rectObj.getRectangle();
+        }
+
+        if (lastCheckpointRect != null && currentRect != null && lastCheckpointRect.equals(currentRect)) {
+            return; // Already at this checkpoint
+        }
+
+        lastCheckpointRect = currentRect;
+        lastCheckpointTime = com.badlogic.gdx.utils.TimeUtils.millis();
+
+        saveGame(true);
+
+        Transform transform = Transform.MAPPER.get(player);
+        if (transform != null) {
+            viewModel.showFloatingText("[GREEN]Checkpoint Reached! Game Saved.[]", transform.getPosition().x, transform.getPosition().y + 1f);
+        }
+        audioService.playSound(io.github.com.group31.asset.SoundAsset.PICKUP);
+    }
+
+    public void saveGame(boolean restoreHealth) {
         SaveService saveService = game.getSaveService();
         if (saveService != null) {
             ImmutableArray<com.badlogic.ashley.core.Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
@@ -258,12 +304,25 @@ public class GameScreen extends ScreenAdapter {
                 Life life = Life.MAPPER.get(player);
                 float currentHp = life != null ? life.getLife() : 0f;
 
-                // Không lưu nếu player đã chết
                 if (currentHp > 0f) {
                     SaveData data = new SaveData();
-                    data.playerHp = currentHp;
                     data.playerMaxHp = life != null ? life.getMaxLife() : 100f;
+                    
+                    if (restoreHealth) {
+                        data.playerHp = data.playerMaxHp;
+                        if (life != null) {
+                            life.setLife(life.getMaxLife());
+                            viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+                        }
+                    } else {
+                        data.playerHp = currentHp;
+                    }
+
                     data.questStage = io.github.com.group31.quest.QuestManager.INSTANCE.getStage();
+                    data.frostOreCount = io.github.com.group31.quest.QuestManager.INSTANCE.getFrostOreCount();
+                    data.hasSacredSpringWater = io.github.com.group31.quest.QuestManager.INSTANCE.isHasSacredSpringWater();
+                    data.hasFrozenHeart = io.github.com.group31.quest.QuestManager.INSTANCE.isHasFrozenHeart();
+                    data.fishingRodSpawned = io.github.com.group31.quest.QuestManager.INSTANCE.isFishingRodSpawned();
 
                     Experience xp = Experience.MAPPER.get(player);
                     if (xp != null) {
@@ -286,7 +345,6 @@ public class GameScreen extends ScreenAdapter {
                     }
                     data.mapName = currentAsset.name();
 
-                    // Lưu trạng thái Inventory
                     Inventory inventory = Inventory.MAPPER.get(player);
                     if (inventory != null) {
                         data.playerPotions    = inventory.getItemCount(Item.Type.POTION_HEALTH);
@@ -296,9 +354,12 @@ public class GameScreen extends ScreenAdapter {
                         data.playerSilverKeys = inventory.getItemCount(Item.Type.SILVER_KEY);
                         data.playerSoothingHerbs = inventory.getItemCount(Item.Type.SOOTHING_HERB);
                         data.playerJungleMapKeys = inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY);
+                        data.playerSilverCups = inventory.getItemCount(Item.Type.SILVER_CUP);
+                        data.playerHeartContainers = inventory.getItemCount(Item.Type.HEART_CONTAINER);
+                        data.playerLaurelLeaves = inventory.getItemCount(Item.Type.LAUREL_LEAF);
+                        data.playerMagicShards = inventory.getItemCount(Item.Type.MAGIC_SHARD);
                     }
 
-                    // Lưu trạng thái CombatState (vũ khí)
                     CombatState cs = CombatState.MAPPER.get(player);
                     if (cs != null) {
                         data.unlockedWeapons = new java.util.ArrayList<>();
@@ -308,11 +369,16 @@ public class GameScreen extends ScreenAdapter {
                         data.currentWeaponIndex = cs.getCurrentIndex();
                     }
 
+                    data.respawnTimes = io.github.com.group31.save.RespawnState.getInstance().getEntityRespawnTimes();
                     saveService.save(data);
                 }
             }
         }
+    }
 
+    @Override
+    public void hide() {
+        saveGame(false);
         this.viewModel.clearPropertyChanges();
         this.engine.removeAllEntities();
         this.stage.clear();
@@ -371,6 +437,19 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
+        if (targetMapStr.equalsIgnoreCase("ICEMAP1")) {
+            Inventory inventory = Inventory.MAPPER.get(player);
+            int magicShards = inventory != null ? inventory.getItemCount(Item.Type.MAGIC_SHARD) : 0;
+            if (magicShards <= 0) {
+                Transform transform = Transform.MAPPER.get(player);
+                if (transform != null) {
+                    viewModel.showFloatingText("[RED]Yeu cau: Manh ghep ma thuat (Magic Shard)![]",
+                        transform.getPosition().x, transform.getPosition().y + 1f);
+                }
+                return;
+            }
+        }
+
         Float targetX = trigger.getMapObject().getProperties().get("targetX", Float.class);
         Float targetY = trigger.getMapObject().getProperties().get("targetY", Float.class);
 
@@ -392,6 +471,10 @@ public class GameScreen extends ScreenAdapter {
         int silverKeys = inventory != null ? inventory.getItemCount(Item.Type.SILVER_KEY) : 0;
         int soothingHerbs = inventory != null ? inventory.getItemCount(Item.Type.SOOTHING_HERB) : 0;
         int jungleMapKeys = inventory != null ? inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY) : 0;
+        int silverCups = inventory != null ? inventory.getItemCount(Item.Type.SILVER_CUP) : 0;
+        int heartContainers = inventory != null ? inventory.getItemCount(Item.Type.HEART_CONTAINER) : 0;
+        int laurelLeaves = inventory != null ? inventory.getItemCount(Item.Type.LAUREL_LEAF) : 0;
+        int magicShards = inventory != null ? inventory.getItemCount(Item.Type.MAGIC_SHARD) : 0;
 
         // Lưu lại trạng thái CombatState trước khi chuyển map
         CombatState cs = CombatState.MAPPER.get(player);
@@ -419,6 +502,7 @@ public class GameScreen extends ScreenAdapter {
             MapAsset targetMapAsset = MapAsset.valueOf(targetMapStr.toUpperCase());
             TiledMap newMap = tiledService.loadMap(targetMapAsset);
             tiledService.setMap(newMap);
+            checkMapPuzzleSetup(targetMapAsset);
 
             // 4. Khôi phục trạng thái cho Player được tạo mới ở bản đồ tiếp theo
             ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(Player.class).get());
@@ -454,7 +538,11 @@ public class GameScreen extends ScreenAdapter {
                     newInventory.setItemCount(Item.Type.SILVER_KEY, silverKeys);
                     newInventory.setItemCount(Item.Type.SOOTHING_HERB, soothingHerbs);
                     newInventory.setItemCount(Item.Type.JUNGLE_MAP_KEY, jungleMapKeys);
-                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys);
+                    newInventory.setItemCount(Item.Type.SILVER_CUP, silverCups);
+                    newInventory.setItemCount(Item.Type.HEART_CONTAINER, heartContainers);
+                    newInventory.setItemCount(Item.Type.LAUREL_LEAF, laurelLeaves);
+                    newInventory.setItemCount(Item.Type.MAGIC_SHARD, magicShards);
+                    viewModel.updateInventory(potions, coins, keys, goldKeys, silverKeys, soothingHerbs, jungleMapKeys, silverCups, heartContainers, laurelLeaves, magicShards);
                 }
 
                 // Khôi phục CombatState
@@ -505,5 +593,31 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         });
+    }
+
+    private void checkMapPuzzleSetup(MapAsset mapAsset) {
+        if (mapAsset == MapAsset.JUNGLEMAP2) {
+            ScarecrowPuzzleManager.INSTANCE.reset();
+            ScarecrowPuzzleManager.INSTANCE.setViewModel(viewModel);
+
+            ImmutableArray<Entity> tiledEntities = engine.getEntitiesFor(Family.all(Tiled.class).get());
+            Entity silverCupEntity = null;
+            for (Entity e : tiledEntities) {
+                Tiled tiled = Tiled.MAPPER.get(e);
+                if (tiled != null && (tiled.getTileId() == 29 || (tiled.getMapObjectRef() != null && "silvercup".equalsIgnoreCase(tiled.getMapObjectRef().getName())))) {
+                    silverCupEntity = e;
+                    break;
+                }
+            }
+            ScarecrowPuzzleManager.INSTANCE.registerSilverCup(silverCupEntity);
+
+            if (gameView != null) {
+                gameView.setupScarecrowLabels(engine);
+            }
+        } else {
+            if (gameView != null) {
+                gameView.clearScarecrowLabels();
+            }
+        }
     }
 }

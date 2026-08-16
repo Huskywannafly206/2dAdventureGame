@@ -11,5 +11,7 @@ public enum Command {
     INTERACT,
     DASH,
     SWITCH_WEAPON,
-    TOGGLE_MENU
+    TOGGLE_MENU,
+    OPEN_QUEST,
+    OPEN_INVENTORY
 }

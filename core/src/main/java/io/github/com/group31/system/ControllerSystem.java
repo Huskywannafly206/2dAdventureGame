@@ -25,6 +25,7 @@ import io.github.com.group31.component.Animation2D.AnimationType;
 import io.github.com.group31.component.Attack;
 import io.github.com.group31.component.CombatState;
 import io.github.com.group31.component.Controller;
+import io.github.com.group31.component.Damaged;
 import io.github.com.group31.component.Facing;
 import io.github.com.group31.component.Facing.FacingDirection;
 import io.github.com.group31.component.Graphic;
@@ -38,8 +39,10 @@ import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Projectile;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.input.Command;
+import io.github.com.group31.input.KeyboardController;
 import io.github.com.group31.screen.MenuScreen;
 import io.github.com.group31.ui.model.GameViewModel;
+import io.github.com.group31.tiled.TiledAshleyConfigurator;
 
 public class ControllerSystem extends IteratingSystem {
     private static final float POTION_HEAL_AMOUNT = 4f;
@@ -57,6 +60,8 @@ public class ControllerSystem extends IteratingSystem {
     private final GameViewModel viewModel;
     private final World physicWorld;
     private final AssetService assetService;
+    private final TiledAshleyConfigurator configurator;
+    private final KeyboardController keyboardController;
     private Entity activeNpcEntity = null;
 
     // --- Dash state (per-player, gắn trên system vì chỉ có 1 player) ---
@@ -66,13 +71,16 @@ public class ControllerSystem extends IteratingSystem {
 
     public ControllerSystem(GdxGame game, AudioService audioService,
                             GameViewModel viewModel, World physicWorld,
-                            AssetService assetService) {
+                            AssetService assetService, TiledAshleyConfigurator configurator,
+                            KeyboardController keyboardController) {
         super(Family.all(Controller.class).get());
-        this.game         = game;
-        this.audioService = audioService;
-        this.viewModel    = viewModel;
-        this.physicWorld  = physicWorld;
-        this.assetService = assetService;
+        this.game               = game;
+        this.audioService       = audioService;
+        this.viewModel          = viewModel;
+        this.physicWorld        = physicWorld;
+        this.assetService       = assetService;
+        this.configurator       = configurator;
+        this.keyboardController = keyboardController;
     }
 
     /**
@@ -90,6 +98,12 @@ public class ControllerSystem extends IteratingSystem {
             if (dashCooldown < 0f) dashCooldown = 0f;
         }
 
+        // Always poll for item use from UI regardless of keyboard input
+        io.github.com.group31.component.Item.Type typeToUse = viewModel.consumeItemToUse();
+        if (typeToUse != null) {
+            handleInventoryItemUse(typeToUse);
+        }
+
         Controller controller = Controller.MAPPER.get(entity);
         if (controller.getPressedCommands().isEmpty() && controller.getReleasedCommands().isEmpty()) {
             return;
@@ -99,6 +113,21 @@ public class ControllerSystem extends IteratingSystem {
             if (controller.getPressedCommands().contains(Command.TOGGLE_MENU) ||
                 controller.getPressedCommands().contains(Command.CANCEL)) {
                 viewModel.toggleMenu();
+                keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+            } else if (controller.getPressedCommands().contains(Command.OPEN_QUEST)) {
+                if (viewModel.getCurrentTab() == 1) {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                } else {
+                    viewModel.setCurrentTab(1);
+                }
+            } else if (controller.getPressedCommands().contains(Command.OPEN_INVENTORY)) {
+                if (viewModel.getCurrentTab() == 0) {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                } else {
+                    viewModel.setCurrentTab(0);
+                }
             } else if (controller.getPressedCommands().contains(Command.LEFT)) {
                 viewModel.prevTab();
             } else if (controller.getPressedCommands().contains(Command.RIGHT)) {
@@ -130,7 +159,20 @@ public class ControllerSystem extends IteratingSystem {
                 case INTERACT      -> interactWithNpc(entity);
                 case DASH          -> startDash(entity);
                 case SWITCH_WEAPON -> switchWeapon(entity);
-                case TOGGLE_MENU   -> viewModel.toggleMenu();
+                case TOGGLE_MENU   -> {
+                    viewModel.toggleMenu();
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
+                case OPEN_QUEST    -> {
+                    viewModel.toggleMenu();
+                    viewModel.setCurrentTab(1);
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
+                case OPEN_INVENTORY -> {
+                    viewModel.toggleMenu();
+                    viewModel.setCurrentTab(0);
+                    keyboardController.setActiveState(io.github.com.group31.input.GameControllerState.class);
+                }
             }
         }
         controller.getPressedCommands().clear();
@@ -347,34 +389,56 @@ public class ControllerSystem extends IteratingSystem {
     // =========================================================================
 
     private void usePotion(Entity entity) {
+        // Keep the method but do nothing or keep it for hotkey "Q" if we want.
+        // Actually, let's keep the Q hotkey working for potion, but it uses whatever is selected.
+        // Wait, the plan says remove it from USE_ITEM if we move entirely, or map it.
+        // Let's just make the Q key use the currently selected item.
+        io.github.com.group31.component.Item.Type type = viewModel.getSelectedItemType();
+        if (type != null) {
+            handleInventoryItemUse(type);
+        }
+    }
+
+    private void handleInventoryItemUse(Item.Type type) {
+        if (getEntities().size() == 0) return;
+        Entity entity = getEntities().first(); // the player
         Inventory inventory = Inventory.MAPPER.get(entity);
         Life life = Life.MAPPER.get(entity);
         if (inventory == null || life == null) return;
 
-        if (inventory.getItemCount(Item.Type.POTION_HEALTH) <= 0) return;
-        if (life.getLife() >= life.getMaxLife()) return;
+        if (inventory.getItemCount(type) <= 0) return;
 
-        life.addLife(POTION_HEAL_AMOUNT);
-        inventory.removeItem(Item.Type.POTION_HEALTH, 1);
-        audioService.playSound(SoundAsset.HEAL);
-        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+        if (type == Item.Type.POTION_HEALTH) {
+            if (life.getLife() >= life.getMaxLife()) return;
+            life.addLife(POTION_HEAL_AMOUNT);
+            inventory.removeItem(Item.Type.POTION_HEALTH, 1);
+            audioService.playSound(SoundAsset.HEAL);
 
-        Transform transform = Transform.MAPPER.get(entity);
-        if (transform != null) {
-            float x = transform.getPosition().x + transform.getSize().x * 0.5f;
-            float y = transform.getPosition().y + transform.getSize().y;
-            viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+            Transform transform = Transform.MAPPER.get(entity);
+            if (transform != null) {
+                float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+                float y = transform.getPosition().y + transform.getSize().y;
+                viewModel.showFloatingText("[GREEN]+" + (int) POTION_HEAL_AMOUNT + " HP[]", x, y);
+            }
+        } else if (type == Item.Type.HEART_CONTAINER) {
+            float oldMax = life.getMaxLife();
+            life.setMaxLife(oldMax + 4f);
+            life.setLife(life.getMaxLife());
+            inventory.removeItem(Item.Type.HEART_CONTAINER, 1);
+            audioService.playSound(SoundAsset.HEAL);
+
+            Transform transform = Transform.MAPPER.get(entity);
+            if (transform != null) {
+                float x = transform.getPosition().x + transform.getSize().x * 0.5f;
+                float y = transform.getPosition().y + transform.getSize().y;
+                viewModel.showFloatingText("[RED]Max HP + 4![]", x, y);
+            }
+        } else {
+            return;
         }
 
-        viewModel.updateInventory(
-            inventory.getItemCount(Item.Type.POTION_HEALTH),
-            inventory.getItemCount(Item.Type.COIN),
-            inventory.getItemCount(Item.Type.KEY),
-            inventory.getItemCount(Item.Type.GOLD_KEY),
-            inventory.getItemCount(Item.Type.SILVER_KEY),
-            inventory.getItemCount(Item.Type.SOOTHING_HERB),
-            inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-        );
+        viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+        viewModel.updateInventory(inventory);
     }
 
     private void moveEntity(Entity entity, float dx, float dy) {
@@ -407,6 +471,16 @@ public class ControllerSystem extends IteratingSystem {
                 }
                 npc.resetDialogue();
                 activeNpcEntity = null;
+                Move move = Move.MAPPER.get(player);
+                if (move != null) {
+                    float dx = 0f;
+                    float dy = 0f;
+                    if (keyboardController.isCommandPressed(Command.UP)) dy += 1f;
+                    if (keyboardController.isCommandPressed(Command.DOWN)) dy -= 1f;
+                    if (keyboardController.isCommandPressed(Command.LEFT)) dx -= 1f;
+                    if (keyboardController.isCommandPressed(Command.RIGHT)) dx += 1f;
+                    move.getDirection().set(dx, dy);
+                }
             }
             return;
         }
@@ -426,23 +500,155 @@ public class ControllerSystem extends IteratingSystem {
             }
         }
 
+        Entity closestChest = null;
+        float minChestDistance = 1.5f;
+        for (Entity chestEntity : getEngine().getEntitiesFor(Family.all(io.github.com.group31.component.Chest.class, Transform.class).get())) {
+            io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(chestEntity);
+            if (chest.isOpen()) continue;
+            Transform chestTransform = Transform.MAPPER.get(chestEntity);
+            float dist = playerTransform.getPosition().dst(chestTransform.getPosition());
+            if (dist < minChestDistance) {
+                minChestDistance = dist;
+                closestChest = chestEntity;
+            }
+        }
+
+        if (closestChest != null) {
+            io.github.com.group31.component.Chest chest = io.github.com.group31.component.Chest.MAPPER.get(closestChest);
+            chest.setOpen(true);
+
+            io.github.com.group31.component.Respawnable respawnable = closestChest.getComponent(io.github.com.group31.component.Respawnable.class);
+            if (respawnable != null) {
+                io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
+            }
+
+            Graphic graphic = Graphic.MAPPER.get(closestChest);
+            if (graphic != null && chest.getOpenRegion() != null) {
+                graphic.setRegion(chest.getOpenRegion());
+            }
+            audioService.playSound(SoundAsset.PICKUP);
+
+            io.github.com.group31.component.Tiled tiled = io.github.com.group31.component.Tiled.MAPPER.get(closestChest);
+            if (tiled != null && tiled.getMapObjectRef() != null && "chest2".equalsIgnoreCase(tiled.getMapObjectRef().getName())) {
+                configurator.spawnChest2Skulls();
+            }
+
+            Transform chestTransform = Transform.MAPPER.get(closestChest);
+            String lootType = chest.getLootType();
+
+            if (lootType.startsWith("WEAPON_")) {
+                CombatState combatState = CombatState.MAPPER.get(player);
+                if (combatState != null) {
+                    io.github.com.group31.combat.Weapon unlocked = null;
+                    if (lootType.endsWith("SWORD")) unlocked = io.github.com.group31.combat.Weapon.SWORD;
+                    else if (lootType.endsWith("BOW")) unlocked = io.github.com.group31.combat.Weapon.BOW;
+                    else if (lootType.endsWith("MAGIC_WAND")) unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
+                    else if (lootType.endsWith("RUSTY_SWORD")) unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
+
+                    if (unlocked != null) {
+                        boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
+                        if (newlyUnlocked) {
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]",
+                                chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        } else {
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!",
+                                chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        }
+                        java.util.List<String> wNames = new java.util.ArrayList<>();
+                        for (io.github.com.group31.combat.Weapon w : combatState.getUnlockedWeapons()) {
+                            wNames.add(w.name());
+                        }
+                        viewModel.updateUnlockedWeapons(wNames);
+                    }
+                }
+            } else if ("EXPLOSION".equalsIgnoreCase(lootType) || "BOMB".equalsIgnoreCase(lootType) || "TRAP".equalsIgnoreCase(lootType)) {
+                audioService.playSound(SoundAsset.TRAP);
+                float dmg = chest.getTrapDamage();
+                viewModel.showFloatingText("[RED]It's a trap! -" + (int)dmg + " HP[]", chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+
+                Damaged currentDamage = Damaged.MAPPER.get(player);
+                if (currentDamage != null) {
+                    currentDamage.addDamage(dmg);
+                } else {
+                    player.add(new Damaged(dmg, closestChest));
+                }
+            } else {
+                try {
+                    Item.Type type = Item.Type.valueOf(lootType);
+                    Inventory inventory = Inventory.MAPPER.get(player);
+                    if (inventory != null) {
+                        inventory.addItem(type, 1);
+                        viewModel.showFloatingText("+1 " + type.name(), chestTransform.getPosition().x, chestTransform.getPosition().y + 1f);
+                        viewModel.updateInventory(inventory);
+                    }
+                } catch (Exception e) {
+                    com.badlogic.gdx.Gdx.app.error("ControllerSystem", "Invalid loot type in chest: " + lootType);
+                }
+            }
+            return;
+        }
+
         if (closestNpc != null) {
             Npc npc = Npc.MAPPER.get(closestNpc);
-            if (npc != null && "Heart Container".equalsIgnoreCase(npc.getName())) {
-                audioService.playSound(SoundAsset.HEAL);
-                Life life = Life.MAPPER.get(player);
-                if (life != null) {
-                    life.setMaxLife(life.getMaxLife() + 4);
-                    life.addLife(4);
-                    viewModel.updateLifeInfo(life.getMaxLife(), life.getLife());
+            if (npc != null && "coin1".equalsIgnoreCase(npc.getName())) {
+                getEngine().removeEntity(closestNpc);
+                Transform coinTransform = Transform.MAPPER.get(closestNpc);
+                if (coinTransform != null) {
+                    float cx = coinTransform.getPosition().x;
+                    float cy = coinTransform.getPosition().y;
+                    configurator.spawnBomb(cx - 1f, cy);
+                    configurator.spawnBomb(cx + 1f, cy);
                 }
-                viewModel.showFloatingText("[RED]+4 Max HP![]", 
-                    playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                return;
+            }
 
+            if (npc != null && "coin2".equalsIgnoreCase(npc.getName())) {
+                getEngine().removeEntity(closestNpc);
+                configurator.spawnCoin2Slimes();
+                return;
+            }
 
+            if (npc != null && "coin3".equalsIgnoreCase(npc.getName())) {
+                audioService.playSound(SoundAsset.PICKUP);
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    inventory.addItem(Item.Type.COIN, 1);
+                    viewModel.updateInventory(inventory);
+                    int count = 0;
+                    if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                    Transform transform = Transform.MAPPER.get(player);
+                    if (transform != null) {
+                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Coin (" + count + "/3)![]",
+                            transform.getPosition().x, transform.getPosition().y + 1f);
+                    }
+                }
                 getEngine().removeEntity(closestNpc);
                 return;
             }
+
+            if (npc != null && "silvercup".equalsIgnoreCase(npc.getName())) {
+                audioService.playSound(SoundAsset.PICKUP);
+                Inventory inventory = Inventory.MAPPER.get(player);
+                if (inventory != null) {
+                    inventory.addItem(Item.Type.SILVER_CUP, 1);
+                    viewModel.updateInventory(inventory);
+                    int count = 0;
+                    if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                    if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                    Transform transform = Transform.MAPPER.get(player);
+                    if (transform != null) {
+                        viewModel.showFloatingText("[YELLOW]Nhat: Silver Cup (" + count + "/3)![]",
+                            transform.getPosition().x, transform.getPosition().y + 1f);
+                    }
+                }
+                getEngine().removeEntity(closestNpc);
+                return;
+            }
+
+
 
             if (npc != null && ("Gold Key".equalsIgnoreCase(npc.getName()) || "Silver Key".equalsIgnoreCase(npc.getName()))) {
                 audioService.playSound(SoundAsset.PICKUP);
@@ -450,22 +656,19 @@ public class ControllerSystem extends IteratingSystem {
                 if (inventory != null) {
                     if ("Gold Key".equalsIgnoreCase(npc.getName())) {
                         inventory.addItem(Item.Type.GOLD_KEY, 1);
-                        viewModel.showFloatingText("[GOLD]+1 Gold Key![]", 
+                        viewModel.showFloatingText("[GOLD]+1 Gold Key![]",
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
+                        io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(player);
                     } else {
                         inventory.addItem(Item.Type.SILVER_KEY, 1);
-                        viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key![]", 
+                        int count = 0;
+                        if (inventory.getItemCount(Item.Type.COIN) >= 1) count++;
+                        if (inventory.getItemCount(Item.Type.SILVER_CUP) >= 1) count++;
+                        if (inventory.getItemCount(Item.Type.SILVER_KEY) >= 1) count++;
+                        viewModel.showFloatingText("[LIGHT_GRAY]+1 Silver Key (" + count + "/3)![]",
                             playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                     }
-                    viewModel.updateInventory(
-                        inventory.getItemCount(Item.Type.POTION_HEALTH),
-                        inventory.getItemCount(Item.Type.COIN),
-                        inventory.getItemCount(Item.Type.KEY),
-                        inventory.getItemCount(Item.Type.GOLD_KEY),
-                        inventory.getItemCount(Item.Type.SILVER_KEY),
-                        inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                        inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-                    );
+                    viewModel.updateInventory(inventory);
                 }
                 getEngine().removeEntity(closestNpc);
                 return;
@@ -476,27 +679,27 @@ public class ControllerSystem extends IteratingSystem {
                 CombatState combatState = CombatState.MAPPER.get(player);
                 if (combatState != null) {
                     io.github.com.group31.combat.Weapon unlocked = null;
-                    if (npc.getName().endsWith("SWORD")) {
+                    if (npc.getName().endsWith("RUSTY_SWORD")) {
+                        unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
+                    } else if (npc.getName().endsWith("SWORD")) {
                         unlocked = io.github.com.group31.combat.Weapon.SWORD;
                     } else if (npc.getName().endsWith("BOW")) {
                         unlocked = io.github.com.group31.combat.Weapon.BOW;
                     } else if (npc.getName().endsWith("MAGIC_WAND")) {
                         unlocked = io.github.com.group31.combat.Weapon.MAGIC_WAND;
-                    } else if (npc.getName().endsWith("RUSTY_SWORD")) {
-                        unlocked = io.github.com.group31.combat.Weapon.RUSTY_SWORD;
                     }
 
                     if (unlocked != null) {
                         boolean newlyUnlocked = combatState.unlockWeapon(unlocked);
                         if (newlyUnlocked) {
-                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]", 
+                            viewModel.showFloatingText("[YELLOW]Nhận: " + unlocked.displayName + "![]",
                                 playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                             io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(player);
                         } else {
-                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!", 
+                            viewModel.showFloatingText("Đã có " + unlocked.displayName + "!",
                                 playerTransform.getPosition().x, playerTransform.getPosition().y + 1f);
                         }
-                        
+
                         // Sync to viewModel
                         java.util.List<String> wNames = new java.util.ArrayList<>();
                         for (io.github.com.group31.combat.Weapon w : combatState.getUnlockedWeapons()) {
@@ -513,6 +716,10 @@ public class ControllerSystem extends IteratingSystem {
             Move move = Move.MAPPER.get(player);
             if (move != null) {
                 move.getDirection().setZero();
+            }
+            Physic physic = Physic.MAPPER.get(player);
+            if (physic != null) {
+                physic.getBody().setLinearVelocity(0f, 0f);
             }
 
             // Cập nhật dialogue của NPC dựa trên tiến trình Quest trước khi hiển thị
@@ -545,7 +752,46 @@ public class ControllerSystem extends IteratingSystem {
             animation2D.setType(animType);
         }
 
-        viewModel.showDialogue(npc.getName(), cleanLine, npc.getFacesetPath());
+        // Phân tích người nói từ tiền tố (ví dụ "Player: ..." hoặc "Youth: ...")
+        String displayName = npc.getName();
+        String facesetPath = npc.getFacesetPath();
+
+        if (cleanLine.startsWith("Player:") || cleanLine.startsWith("Player :")) {
+            displayName = "Player";
+            facesetPath = "ui/player_faceset.png";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Youth:") || cleanLine.startsWith("Youth :")) {
+            displayName = "Player";
+            facesetPath = "ui/player_faceset.png";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Blacksmith:") || cleanLine.startsWith("Blacksmith :")) {
+            displayName = "Blacksmith";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        } else if (cleanLine.startsWith("Fisherman:") || cleanLine.startsWith("Fisherman :")) {
+            displayName = "Fisherman";
+            int colonIndex = cleanLine.indexOf(":");
+            cleanLine = cleanLine.substring(colonIndex + 1).trim();
+        }
+
+        // Normalize display name for UI
+        if ("black_smith".equalsIgnoreCase(displayName)) {
+            displayName = "Blacksmith";
+        } else if ("fisher_man".equalsIgnoreCase(displayName)) {
+            displayName = "Fisherman";
+        } else if ("tho_san".equalsIgnoreCase(displayName)) {
+            displayName = "Hunter";
+        } else if ("truong_lang".equalsIgnoreCase(displayName)) {
+            displayName = "Village Chief";
+        } else if ("monk".equalsIgnoreCase(displayName)) {
+            displayName = "Monk";
+        } else if ("old man".equalsIgnoreCase(displayName)) {
+            displayName = "Old Man";
+        }
+
+        viewModel.showDialogue(displayName, cleanLine, facesetPath);
     }
 
     // =========================================================================

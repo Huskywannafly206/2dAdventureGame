@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="12">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="27">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
@@ -35,11 +35,7 @@
   <object id="11" x="160" y="208.732">
    <point/>
   </object>
- </objectgroup>
- <objectgroup id="3" name="Object Layer 1">
-  <object id="3" gid="816" x="63.5256" y="211.345" width="32" height="32"/>
-  <object id="4" gid="816" x="346.402" y="135.555" width="32" height="32"/>
-  <object id="5" gid="816" x="201.761" y="56.0297" width="32" height="32"/>
+  <object id="26" name="checkpoint_trigger" x="78" y="22.25" width="37.5" height="23"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="9" name="Player" gid="818" x="80.9111" y="47.6825" width="32" height="32">
@@ -48,6 +44,15 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="18" name="scarecrow_1" gid="824" x="63.3005" y="220.511" width="32" height="32"/>
+  <object id="19" name="scarecrow_2" gid="824" x="336.382" y="145.384" width="32" height="32"/>
+  <object id="20" name="scarecrow_3" gid="824" x="209.182" y="51.9718" width="32" height="32"/>
+  <object id="23" type="Object" gid="844" x="127.547" y="42.1848" width="16" height="16">
+   <properties>
+    <property name="dialogue" value="The strong use swords, the wise use their minds. Look upon nature’s creations to correct these motionless figures."/>
+   </properties>
+  </object>
+  <object id="24" gid="846" x="180.333" y="122.667" width="9" height="11"/>
  </objectgroup>
  <layer id="6" name="fore1" width="27" height="15">
   <data encoding="base64" compression="zlib">

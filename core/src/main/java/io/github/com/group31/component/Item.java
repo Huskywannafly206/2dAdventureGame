@@ -25,7 +25,17 @@ public class Item implements Component {
         WEAPON_BOW,
         WEAPON_MAGIC_WAND,
         WEAPON_RUSTY_SWORD,
-        JUNGLE_MAP_KEY
+        JUNGLE_MAP_KEY,
+        BOMB,
+        SILVER_CUP,
+        HEART_CONTAINER,
+        LAUREL_LEAF,
+        MAGIC_SHARD,
+        // Ice World quest items
+        FROST_IRON_ORE,
+        HEIRLOOM_FISHING_ROD,
+        SACRED_SPRING_WATER,
+        FROZEN_HEART
     }
 
     private final Type type;

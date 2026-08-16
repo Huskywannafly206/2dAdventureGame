@@ -8,6 +8,7 @@ import io.github.com.group31.component.Damaged;
 import io.github.com.group31.component.Life;
 import io.github.com.group31.component.Player;
 import io.github.com.group31.component.Tiled;
+import io.github.com.group31.component.ScarecrowComponent;
 import io.github.com.group31.component.Transform;
 import io.github.com.group31.ui.model.GameViewModel;
 
@@ -44,6 +45,11 @@ public class DamagedSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         Damaged damaged = Damaged.MAPPER.get(entity);
         entity.remove(Damaged.class);
+
+        ScarecrowComponent scarecrow = ScarecrowComponent.MAPPER.get(entity);
+        if (scarecrow != null) {
+            io.github.com.group31.puzzle.ScarecrowPuzzleManager.INSTANCE.onScarecrowHit(scarecrow.getIndex(), getEngine());
+        }
 
         Tiled tiled = Tiled.MAPPER.get(entity);
         if (tiled != null && tiled.getTileId() == 16) {

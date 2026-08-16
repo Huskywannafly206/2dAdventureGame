@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="19">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="36">
  <tileset firstgid="1" source="TilesetFloor.tsx"/>
  <tileset firstgid="573" source="TilesetVillageAbandoned.tsx"/>
  <tileset firstgid="813" source="Tree.tsx"/>
  <tileset firstgid="817" source="objects.tsx"/>
+ <tileset firstgid="861" source="TilesetElement.tsx"/>
  <layer id="1" name="background" width="27" height="15">
   <data encoding="base64" compression="zlib">
    eJzjZGRg4ETCGxkYGDYh4c0MqPKkYmTz8MnR2q7jQLETSPgkDe2iNh61a9SuwWDXcTraBcK47JoNFJsDxHOB+AGV3EJMGUVp+TSY7EKOS0rLQnS7AB0JPv0=
@@ -11,7 +12,7 @@
  </layer>
  <layer id="2" name="obstacle" width="27" height="15">
   <data encoding="base64" compression="zlib">
-   eJytlLlOAzEQhoODQEHwABwFeRBqam4KoONIuOkRVw0S4qoRAoUeKgLpoUjNjYQEFZfEA/BZ8mpHZp2sWUb65LU8M789Y28mnUo1gI91qsrrX2L923xfmrGjSqzLhogbhhE4snLUsf96c4Z71h7MehdjN/RAbwXdadZmYNb4zDHOwwKcirhmNFqgFdpEzfR+RmEMxmHij2fUput0lSDeZQci574K6/QITyq6Z0lsnRwbEXmC3smeSd0CHP/j+aN6FugW0Tm3tPas+Qrz1QT7se+KbbZeNXvB/1XEnFjxhx75zizfC+almPFLnvsux/C/xucGbuHO+BdEXCN1bPL8V7nsjbzv8AGfRqMotNrRyXpoLRLbB/0wAIMq7EUNeRSkodbKqeu47KiN67yb+OcgD5MwpcJ7uiZyyTet//FbzLcdWsF5n2P0aQefXfX77gZv+geTGDvH
+   eJytlEkvBEEUx0eNEMIHsBz4IM7Odgfc7Lu72M4kYjuLkHG1nAxOlnCQcLJLJJxsiQ/gV0l1+qV0TU8ZL/mlp+Yt/6r3qrsomUgUg4/Vqsz+L+H/Nr/PzLMmJtdlbeS1QwdsWDUK2H+hOcM9vgfjr+NZDw3QmEF3EN8QDJuYEZ6jMAa7Iq8MjXKogErRM72fTuiCbuj54xm16T6d55DvsjVRc1WFfXqEJxU9s1xslhpzEXWC2cmZSd0UbP7j+aNmFuim0dm3tFas9RTr6Zj9XOK/csTYd8U2Wy/OXoh/hS3Yhh0rf92j3p4Ve8D60PrviPUxnMCp8E147vsii/hrYm7gFu5MfErkldDHUs9vlcveqPsOH/BpNNJCqwqdag+tcXKboBlaoFWFs8ijjoIk5Fs1dR8nHb1xnXee+F7og34YUOE9nRG15Dutv/ELrBcdWsF5n7OY0xIxy+r33Q3e6R8lZEH7
   </data>
  </layer>
  <objectgroup id="6" name="trigger">
@@ -35,6 +36,7 @@
   <object id="18" x="95.5134" y="211.993">
    <point/>
   </object>
+  <object id="35" name="checkpoint_trigger" x="85.5" y="26.5" width="37.5" height="25.25"/>
  </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="14" name="Player" gid="818" x="90.2295" y="49.5462" width="32" height="32">
@@ -43,11 +45,18 @@
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup id="3" name="Object Layer 1">
-  <object id="9" gid="814" x="34.5" y="62.5" width="12" height="8"/>
-  <object id="10" gid="814" x="250" y="93" width="12" height="8"/>
-  <object id="11" gid="814" x="282.5" y="197" width="12" height="8"/>
+  <object id="20" type="Object" gid="844" x="130.329" y="47.3522" width="16" height="16">
+   <properties>
+    <property name="dialogue" value="The courageous are those who dare to face fear and deception. Trust not what your eyes behold, but feel it with your body!"/>
+   </properties>
+  </object>
+  <object id="25" name="coin1" gid="845" x="59" y="65" width="6" height="6"/>
+  <object id="26" name="coin2" gid="845" x="253.333" y="90.6667" width="6" height="6"/>
+  <object id="27" name="coin3" gid="845" x="283" y="225.333" width="6" height="6"/>
+  <object id="31" gid="826" x="277" y="111.333" width="32" height="32"/>
+  <object id="32" gid="826" x="240.333" y="129.333" width="32" height="32"/>
+  <object id="33" gid="826" x="186.333" y="81.6667" width="32" height="32"/>
+  <object id="34" gid="855" x="110.667" y="125" width="16" height="16"/>
  </objectgroup>
  <layer id="7" name="fore1" width="27" height="15">
   <data encoding="base64" compression="zlib">

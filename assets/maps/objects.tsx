@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="27" columns="0">
+<tileset version="1.10" tiledversion="1.12.2" name="objects" tilewidth="96" tileheight="112" tilecount="41" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="1" type="Object">
   <properties>
@@ -266,11 +266,15 @@
  <tile id="18" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
-   <property name="npcName" value="Heart Container"/>
+   <property name="itemType" value="HEART_CONTAINER"/>
   </properties>
   <image source="objects/heart_container.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="19" type="Object">
@@ -362,21 +366,31 @@
  <tile id="21" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="GOLD_KEY"/>
    <property name="npcName" value="Gold Key"/>
   </properties>
   <image source="objects/gold_key.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="22" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="SILVER_KEY"/>
    <property name="npcName" value="Silver Key"/>
   </properties>
   <image source="objects/silver_key.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="23" type="Object">
@@ -423,9 +437,38 @@
  </tile>
  <tile id="26" type="Object">
   <properties>
+   <property name="dialogue" value="The Chief told me about your plan. You intend to venture into the Ancient Forest all by yourself? That place has become treacherous lately. One careless mistake, and it'll cost you your life."/>
+   <property name="faceset" value="ui/npc_faceset/hunter_Faceset.png"/>
+   <property name="npcName" value="Hunter"/>
+  </properties>
+  <image source="objects/hunter.png" width="16" height="16"/>
+ </tile>
+ <tile id="27" type="Object">
+  <properties>
+   <property name="npcName" value="Stone Table"/>
+  </properties>
+  <image source="objects/stonetable.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="7.8125" y="7.8125"/>
+  </objectgroup>
+ </tile>
+ <tile id="28" type="Object">
+  <image source="objects/SilverCoin.png" width="6" height="6"/>
+ </tile>
+ <tile id="29">
+  <image source="objects/SilverCup.png" width="9" height="11"/>
+ </tile>
+ <tile id="30" type="Object">
+  <properties>
+   <property name="npcName" value="Chest"/>
+  </properties>
+  <image source="objects/red_chest.png" width="16" height="14"/>
+ </tile>
+ <tile id="31" type="Object">
+  <properties>
    <property name="bodyType" value="StaticBody"/>
-   <property name="npcName" value="truong_lang"/>
    <property name="dialogue" value="Chào cậu bé! Ta là Trưởng Làng.|Có biến lớn ở ngoài kia đấy, hãy cẩn thận!"/>
+   <property name="npcName" value="truong_lang"/>
   </properties>
   <image source="objects/truong_lang.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
@@ -434,7 +477,7 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="27" type="Object">
+ <tile id="32" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="itemType" value="SOOTHING_HERB"/>
@@ -448,7 +491,7 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="28" type="Object">
+ <tile id="33" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="npcName" value="tho_san"/>
@@ -460,7 +503,7 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="29" type="Object">
+ <tile id="34" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="itemType" value="WEAPON_RUSTY_SWORD"/>
@@ -474,7 +517,7 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="30" type="Object">
+ <tile id="35" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="itemType" value="JUNGLE_MAP_KEY"/>
@@ -488,7 +531,7 @@
    </object>
   </objectgroup>
  </tile>
- <tile id="31" type="Object">
+ <tile id="36" type="Object">
   <properties>
    <property name="bodyType" value="StaticBody"/>
    <property name="itemType" value="POTION_HEALTH"/>
@@ -502,4 +545,98 @@
    </object>
   </objectgroup>
  </tile>
+ <tile id="37" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="BOMB"/>
+  </properties>
+  <image source="objects/bomb.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="38" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="dialogue" value="Chào chiến binh! Ta là Thần Rừng.|Khu rừng này đang bị ô nhiễm bởi năng lượng hắc ám, hãy cẩn thận!"/>
+   <property name="npcName" value="Forest_Spirit"/>
+  </properties>
+  <image source="objects/forest_spirit.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="39" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="LAUREL_LEAF"/>
+  </properties>
+  <image source="objects/laurel_leaf.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="40" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="MAGIC_SHARD"/>
+  </properties>
+  <image source="objects/magic_shard.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="41" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="black_smith"/>
+  </properties>
+  <image source="objects/black_smith.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="42" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="npcName" value="fisher_man"/>
+  </properties>
+  <image source="objects/fisher_man.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4" y="11" width="8" height="4">
+    <ellipse/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="43" type="Object">
+  <properties>
+   <property name="bodyType" value="StaticBody"/>
+   <property name="itemType" value="FROST_IRON_ORE"/>
+  </properties>
+  <image source="objects/frost_iron_ore_block.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16">
+    <properties>
+     <property name="sensor" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
 </tileset>
+

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="16">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="32">
  <tileset firstgid="1" source="fields.tsx"/>
  <tileset firstgid="15" source="Dungeon_Tileset.tsx"/>
- <tileset firstgid="115" source="TilesetHouse.tsx"/>
- <tileset firstgid="874" source="TilesetReliefDetail.tsx"/>
- <tileset firstgid="1018" source="Combined3.tsx"/>
- <tileset firstgid="1130" source="objects.tsx"/>
+ <tileset firstgid="125" source="TilesetHouse.tsx"/>
+ <tileset firstgid="884" source="TilesetReliefDetail.tsx"/>
+ <tileset firstgid="1028" source="Combined3.tsx"/>
+ <tileset firstgid="1140" source="objects.tsx"/>
  <layer id="1" name="floor" width="30" height="20">
   <data encoding="csv">
 93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,93,
@@ -48,6 +48,7 @@
   <object id="15" x="242.75" y="298.75">
    <point/>
   </object>
+  <object id="28" name="checkpoint_trigger" x="240" y="272" width="32.25" height="16"/>
  </objectgroup>
  <layer id="7" name="floor2" width="30" height="20">
   <data encoding="csv">
@@ -76,25 +77,25 @@
  <layer id="8" name="back" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,785,786,787,1036,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,1036,0,0,0,0,0,0,0,0,0,0,0,785,786,787,813,814,0,1018,99,1018,0,0,0,
-0,0,573,574,408,409,0,0,743,744,0,0,0,0,0,0,0,0,818,819,820,846,847,0,0,0,0,0,0,0,
-0,0,606,607,441,442,0,0,776,777,0,2147484675,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,1027,0,0,0,0,808,809,810,808,0,0,0,0,0,0,0,1018,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,843,843,0,0,0,0,0,0,0,0,0,0,0,0,0,1027,0,0,0,0,0,0,
-0,0,167,168,169,170,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,200,201,202,203,0,0,0,0,0,2147484675,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,532,565,0,598,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1027,0,0,0,0,0,0,
-0,0,562,529,0,561,0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,63,0,0,0,0,0,0,0,
-0,0,1027,0,0,0,0,0,0,0,0,0,72,0,0,0,0,0,0,0,0,0,73,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1027,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,1074,81,82,1074,0,0,0,0,0,1114,1114,1114,1114,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,0,0,110,0,0,0,0,0,1114,1114,98,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1114,1114,1114,1114,1114,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,106,0,0,98,0,0,0,2147483754,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,795,796,797,1046,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1046,0,0,0,0,0,0,0,0,0,0,0,795,796,797,823,824,0,1028,0,1028,0,0,0,
+0,0,583,584,418,419,0,0,753,754,0,0,0,0,0,0,0,0,828,829,830,856,857,0,0,0,0,0,0,0,
+0,0,616,617,451,452,0,0,786,787,0,2147484685,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1037,0,0,0,0,818,819,820,818,0,0,0,0,0,0,0,1028,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,853,853,0,0,0,0,0,0,0,0,0,0,0,0,0,1037,0,0,0,0,0,0,
+0,0,177,178,179,180,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,210,211,212,213,0,0,0,0,0,2147484685,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,542,575,0,608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1037,0,0,0,0,0,0,
+0,0,572,539,0,571,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1037,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1037,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,1084,0,0,1084,0,0,0,0,0,1124,1124,1124,1124,1124,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,0,0,110,0,0,0,0,0,1124,1124,0,1124,1124,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1124,1124,1124,1124,1124,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,106,0,0,0,0,0,0,2147483754,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,620,622,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,653,655,57,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,630,632,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,663,665,57,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <layer id="10" name="back2" width="30" height="20">
@@ -122,25 +123,100 @@
 </data>
  </layer>
  <objectgroup id="13" name="objects">
-  <object id="4" name="Player" gid="1131" x="240.182" y="297.182" width="32" height="32">
+  <object id="4" name="Player" gid="1141" x="240.182" y="297.182" width="32" height="32">
    <properties>
     <property name="camFollow" type="bool" value="true"/>
     <property name="controller" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="11" gid="1139" x="389.5" y="110.25" width="32" height="32"/>
-  <object id="12" gid="1150" x="412" y="128.333" width="16" height="16"/>
-  <object id="13" gid="1149" x="427" y="82" width="16" height="16"/>
+  <object id="11" gid="1149" x="389.5" y="110.25" width="32" height="32">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="12" gid="1160" x="412" y="128.333" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="13" gid="1159" x="427" y="82" width="16" height="16">
+   <properties>
+    <property name="respawnTime" type="float" value="60"/>
+   </properties>
+  </object>
+  <object id="19" gid="82" x="256.25" y="224.5" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="58"/>
+   </properties>
+  </object>
+  <object id="20" gid="81" x="239.75" y="224.5" width="16" height="16">
+   <properties>
+    <property name="openTileId" type="int" value="57"/>
+   </properties>
+  </object>
+  <object id="21" gid="62" x="351.25" y="175.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="48"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="22" gid="72" x="351.25" y="192.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="47"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="23" gid="63" x="192.75" y="175.75" width="16" height="16">
+   <properties>
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="58"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="24" gid="73" x="192.75" y="192.5" width="16" height="16">
+   <properties>
+    <property name="openRotation" type="float" value="90"/>
+    <property name="openTileId" type="int" value="57"/>
+    <property name="type" value="door"/>
+   </properties>
+  </object>
+  <object id="25" gid="98" x="239.25" y="271" width="16" height="16">
+   <properties>
+    <property name="lootType" value="POTION_HEALTH"/>
+    <property name="openTileId" type="int" value="103"/>
+    <property name="respawnTime" type="float" value="60"/>
+    <property name="type" value="chest"/>
+   </properties>
+  </object>
+  <object id="26" gid="97" x="400" y="240.5" width="16" height="16">
+   <properties>
+    <property name="lootType" value="TRAP"/>
+    <property name="openTileId" type="int" value="102"/>
+    <property name="respawnTime" type="float" value="60"/>
+    <property name="trapDamage" type="float" value="5"/>
+    <property name="type" value="chest"/>
+   </properties>
+  </object>
+  <object id="29" gid="99" x="400" y="50.5" width="16" height="16">
+   <properties>
+    <property name="lootType" value="HEART_CONTAINER"/>
+    <property name="openTileId" type="int" value="104"/>
+    <property name="respawnTime" type="float" value="60"/>
+    <property name="type" value="chest"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="11" name="fore1" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,742,0,0,742,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,775,0,0,775,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,752,0,0,752,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,785,0,0,785,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,134,135,136,137,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,144,145,146,147,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -162,7 +238,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,1074,0,0,1074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,1084,0,0,1084,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

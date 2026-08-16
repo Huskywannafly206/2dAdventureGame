@@ -49,7 +49,11 @@ public class TriggerSystem extends IteratingSystem {
         Entity triggeringEntity = trigger.getTriggeringEntity();
         trigger.setTriggeringEntity(null);
 
-        BiConsumer<Trigger, Entity> handler = triggerHandlers.get(trigger.getName());
+        String triggerName = trigger.getName();
+        BiConsumer<Trigger, Entity> handler = triggerHandlers.get(triggerName);
+        if (handler == null && triggerName != null && triggerName.startsWith("portal_trigger")) {
+            handler = triggerHandlers.get("portal_trigger");
+        }
         if (handler != null) {
             handler.accept(trigger, triggeringEntity);
         } else {

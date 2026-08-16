@@ -60,7 +60,7 @@ public class ItemSystem extends IteratingSystem {
                     float x = t.getPosition().x + t.getSize().x * 0.5f;
                     float y = t.getPosition().y + t.getSize().y;
                     viewModel.showFloatingText(
-                        "[YELLOW]Nhận: " + unlocked.displayName + "![]", x, y);
+                        "[RAINBOW]Nhận: " + unlocked.displayName + "![]", x, y);
                 }
                 audioService.playSound(item.getPickupSound());
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkWeaponPickup(collector);
@@ -72,11 +72,15 @@ public class ItemSystem extends IteratingSystem {
                 }
                 viewModel.updateUnlockedWeapons(wNames);
             }
+            io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+            if (respawnable != null) {
+                io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
+            }
             toRemove.add(entity);
             return;
         }
 
-        // --- Xử lý vật phẩm thường ---
+        // --- Xử lý vật phẩm ---
         Inventory inventory = Inventory.MAPPER.get(collector);
         if (inventory != null) {
             inventory.addItem(type, 1);
@@ -84,30 +88,43 @@ public class ItemSystem extends IteratingSystem {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkPotionPickup(collector);
             } else if (type == Item.Type.SOOTHING_HERB) {
                 io.github.com.group31.quest.QuestManager.INSTANCE.checkHerbPickup(collector);
+            } else if (type == Item.Type.GOLD_KEY) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkGoldKeyPickup(collector);
             } else if (type == Item.Type.JUNGLE_MAP_KEY) {
                 Transform t = Transform.MAPPER.get(collector);
                 if (t != null) {
                     float x = t.getPosition().x + t.getSize().x * 0.5f;
                     float y = t.getPosition().y + t.getSize().y;
-                    viewModel.showFloatingText("[GOLD]Nhan: Ban do da de![]", x, y);
+                    viewModel.showFloatingText("[RAINBOW]Nhan: Ban do da de![]", x, y);
                 }
+            } else if (type == Item.Type.FROST_IRON_ORE) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFrostOrePickup(collector);
+            } else if (type == Item.Type.HEIRLOOM_FISHING_ROD) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFishingRodPickup(collector);
+            } else if (type == Item.Type.SACRED_SPRING_WATER) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkSacredWaterPickup(collector);
+            } else if (type == Item.Type.FROZEN_HEART) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkFrozenHeartPickup(collector);
+            } else if (type == Item.Type.MAGIC_SHARD) {
+                io.github.com.group31.quest.QuestManager.INSTANCE.checkMagicShardPickup(collector);
             }
         }
 
         // Phát âm thanh
-        audioService.playSound(item.getPickupSound());
+        if (type == Item.Type.SOOTHING_HERB) {
+            audioService.playSound(io.github.com.group31.asset.SoundAsset.PICKUP);
+        } else {
+            audioService.playSound(item.getPickupSound());
+        }
 
         // Cập nhật HUD
         if (inventory != null) {
-            viewModel.updateInventory(
-                inventory.getItemCount(Item.Type.POTION_HEALTH),
-                inventory.getItemCount(Item.Type.COIN),
-                inventory.getItemCount(Item.Type.KEY),
-                inventory.getItemCount(Item.Type.GOLD_KEY),
-                inventory.getItemCount(Item.Type.SILVER_KEY),
-                inventory.getItemCount(Item.Type.SOOTHING_HERB),
-                inventory.getItemCount(Item.Type.JUNGLE_MAP_KEY)
-            );
+            viewModel.updateInventory(inventory);
+        }
+
+        io.github.com.group31.component.Respawnable respawnable = entity.getComponent(io.github.com.group31.component.Respawnable.class);
+        if (respawnable != null) {
+            io.github.com.group31.save.RespawnState.getInstance().registerDeath(respawnable.getEntityId(), respawnable.getRespawnTimeSec());
         }
 
         toRemove.add(entity);

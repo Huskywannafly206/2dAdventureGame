@@ -57,4 +57,7 @@ public class Transform implements Component, Comparable<Transform> {
         return rotationDeg;
     }
 
+    public void setRotationDeg(float rotationDeg) {
+        this.rotationDeg = rotationDeg;
+    }
 }
